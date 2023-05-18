@@ -1,0 +1,16 @@
+{
+    "name": "valeriomonti/auto-alt-text",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "ValerioMonti\\AutoAltText\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Valerio Monti",
+            "email": "valerio.monti@vmweb.it"
+        }
+    ],
+    "require": {}
+}
