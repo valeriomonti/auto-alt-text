@@ -2,6 +2,8 @@
 
 namespace ValerioMonti\AutoAltText\App\Admin;
 
+use ValerioMonti\AutoAltText\Config\Constants;
+
 class PluginOptions
 {
     private static ?self $instance = null;
@@ -22,12 +24,14 @@ class PluginOptions
     }
 
     // Aggiunge il link al menu delle opzioni nel pannello di amministrazione di WordPress
-    public static function addOptionsPageToTheMenu():void {
+    public static function addOptionsPageToTheMenu(): void
+    {
         add_options_page('Auto Alt Text Options', 'Auto Alt Text Options', 'manage_options', 'auto-alt-text-options', [self::$instance, 'optionsPageContent']);
     }
 
     // Crea la pagina delle opzioni e i campi di input
-    public static function optionsPageContent() {
+    public static function optionsPageContent()
+    {
         ?>
         <div class="wrap">
             <h1>Auto Alt Text Options</h1>
@@ -44,16 +48,17 @@ class PluginOptions
 
 
 // Registra i campi di input e le impostazioni delle opzioni
-    public static function setupPluginOptions() {
-        register_setting('auto_alt_text_options', 'api_key');
-        register_setting('auto_alt_text_options', 'prompt');
-        register_setting('auto_alt_text_options', 'typology');
+    public static function setupPluginOptions()
+    {
+        register_setting('auto_alt_text_options', Constants::AAT_OPTION_FIELD_API_KEY);
+        register_setting('auto_alt_text_options', Constants::AAT_OPTION_FIELD_PROMPT);
+        register_setting('auto_alt_text_options', Constants::AAT_OPTION_FIELD_TYPOLOGY);
 
         add_settings_section('auto_alt_text_section', 'Impostazioni del Plugin', [self::$instance, 'autoAltTextOptionsSection'], 'auto_alt_text_options');
 
-        add_settings_field('api_key', 'API Key', [self::$instance, 'autoAltTextapiKeyCallback'], 'auto_alt_text_options', 'auto_alt_text_section');
-        add_settings_field('prompt', 'Prompt', [self::$instance, 'autoAltTextPromptCallback'], 'auto_alt_text_options', 'auto_alt_text_section');
-        add_settings_field('typology', 'Tipologia', [self::$instance, 'autoAltTextTypologyCallback'], 'auto_alt_text_options', 'auto_alt_text_section');
+        add_settings_field(Constants::AAT_OPTION_FIELD_API_KEY, 'API Key', [self::$instance, 'autoAltTextapiKeyCallback'], 'auto_alt_text_options', 'auto_alt_text_section');
+        add_settings_field(Constants::AAT_OPTION_FIELD_PROMPT, 'Prompt', [self::$instance, 'autoAltTextPromptCallback'], 'auto_alt_text_options', 'auto_alt_text_section');
+        add_settings_field(Constants::AAT_OPTION_FIELD_TYPOLOGY, 'Tipologia', [self::$instance, 'autoAltTextTypologyCallback'], 'auto_alt_text_options', 'auto_alt_text_section');
     }
 
 
@@ -64,35 +69,56 @@ class PluginOptions
     }
 
     // Callback per il campo Api Key
-    public static function autoAltTextapiKeyCallback() {
-        $api_key = get_option('api_key');
-        echo "<input type='password' name='api_key' value='$api_key' />";
+    public static function autoAltTextapiKeyCallback()
+    {
+        $api_key = get_option(Constants::AAT_OPTION_FIELD_API_KEY);
+        echo '<input type="password" name="' . Constants::AAT_OPTION_FIELD_API_KEY . '" value="' . $api_key . '" />';
     }
 
     // Callback per il campo Prompt
-    public static function autoAltTextPromptCallback() {
-        $prompt = get_option('prompt');
-        echo "<textarea name='prompt' rows='5' cols='50'>$prompt</textarea>";
+    public static function autoAltTextPromptCallback()
+    {
+        $prompt = get_option(Constants::AAT_OPTION_FIELD_PROMPT);
+        echo '<textarea name="' . Constants::AAT_OPTION_FIELD_PROMPT . '" rows="5" cols="50">' . $prompt . '</textarea>';
     }
 
     // Callback per il campo Tipologia
-    public static function autoAltTextTypologyCallback() {
-        $typology = get_option('typology');
+    public static function autoAltTextTypologyCallback()
+    {
+        $typology = get_option(Constants::AAT_OPTION_FIELD_TYPOLOGY);
         ?>
         <label>
-            <input type="radio" name="typology" value="gpt4" <?php checked($typology, 'gpt4'); ?> />
+            <input type="radio" name="<?php echo Constants::AAT_OPTION_FIELD_TYPOLOGY; ?>" value="gpt4" <?php checked($typology, 'gpt4'); ?> />
             GPT 4
         </label>
         <br>
         <label>
-            <input type="radio" name="typology" value="article-title" <?php checked($typology, 'article-title'); ?> />
+            <input type="radio" name="<?php echo Constants::AAT_OPTION_FIELD_TYPOLOGY; ?>"
+                   value="article-title" <?php checked($typology, 'article-title'); ?> />
             Titolo dell'articolo
         </label>
         <br>
         <label>
-            <input type="radio" name="typology" value="file-name" <?php checked($typology, 'file-name'); ?> />
+            <input type="radio" name="<?php echo Constants::AAT_OPTION_FIELD_TYPOLOGY; ?>"
+                   value="file-name" <?php checked($typology, 'file-name'); ?> />
             Nome del file
         </label>
         <?php
     }
+
+    public static function prompt(): string
+    {
+        return get_option(Constants::AAT_OPTION_FIELD_PROMPT);
+    }
+
+    public static function typology(): string
+    {
+        return get_option(Constants::AAT_OPTION_FIELD_TYPOLOGY);
+    }
+
+    public static function apiKey(): string
+    {
+        return get_option(Constants::AAT_OPTION_FIELD_API_KEY);
+    }
+
 }

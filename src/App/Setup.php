@@ -25,18 +25,30 @@ class Setup
 
         $api_key = get_option('api_key');
 
-        add_action('add_attachment', [self::$instance,'addAltTextOnUpload']);
+        add_action('add_attachment', [self::$instance, 'addAltTextOnUpload']);
 
 //        add_action('init', function(){
-//            var_dump((new AltTextGeneratorAi())->altText(4));
+//            self::addAltTextOnUpload(4);
 //        });
     }
 
     public static function addAltTextOnUpload($postId): void
     {
         if (wp_attachment_is_image($postId)) {
-            $altText = (new AltTextGeneratorParentPostTitle())->altText($postId);
-            update_post_meta( $postId, '_wp_attachment_image_alt', $altText);
+            $altText = '';
+            switch (PluginOptions::typology()) {
+                case 'gpt4':
+                    $altText = (new AltTextGeneratorAi())->altText($postId);
+                    break;
+                case 'article-title':
+                    $altText = (new AltTextGeneratorParentPostTitle())->altText($postId);
+                    break;
+                case 'file-name':
+                    $altText = (new AltTextGeneratorFileName())->altText($postId);
+                    break;
+            }
+
+            update_post_meta($postId, '_wp_attachment_image_alt', $altText);
         }
     }
 
