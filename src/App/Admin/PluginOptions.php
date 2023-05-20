@@ -88,19 +88,20 @@ class PluginOptions
         $typology = get_option(Constants::AAT_OPTION_FIELD_TYPOLOGY);
         ?>
         <label>
-            <input type="radio" name="<?php echo Constants::AAT_OPTION_FIELD_TYPOLOGY; ?>" value="gpt4" <?php checked($typology, 'gpt4'); ?> />
+            <input type="radio" name="<?php echo Constants::AAT_OPTION_FIELD_TYPOLOGY; ?>"
+                   value="<?php echo Constants::AAT_OPTION_TYPOLOGY_CHOICE_AI; ?>" <?php checked($typology, Constants::AAT_OPTION_TYPOLOGY_CHOICE_AI); ?> />
             GPT 4
         </label>
         <br>
         <label>
             <input type="radio" name="<?php echo Constants::AAT_OPTION_FIELD_TYPOLOGY; ?>"
-                   value="article-title" <?php checked($typology, 'article-title'); ?> />
+                   value="<?php echo Constants::AAT_OPTION_TYPOLOGY_CHOICE_ARTICLE_TITLE; ?>" <?php checked($typology, Constants::AAT_OPTION_TYPOLOGY_CHOICE_ARTICLE_TITLE); ?> />
             Title of the article
         </label>
         <br>
         <label>
             <input type="radio" name="<?php echo Constants::AAT_OPTION_FIELD_TYPOLOGY; ?>"
-                   value="attachment-title" <?php checked($typology, 'attachment-title'); ?> />
+                   value="<?php echo Constants::AAT_OPTION_TYPOLOGY_CHOICE_ATTACHMENT_TITLE; ?>" <?php checked($typology, Constants::AAT_OPTION_TYPOLOGY_CHOICE_ATTACHMENT_TITLE); ?> />
             Title of the attachment
         </label>
         <?php
