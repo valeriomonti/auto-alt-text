@@ -48,7 +48,7 @@ class PluginOptions
 
 
 // Registra i campi di input e le impostazioni delle opzioni
-    public static function setupPluginOptions()
+    public static function setupPluginOptions(): void
     {
         register_setting('auto_alt_text_options', Constants::AAT_OPTION_FIELD_API_KEY);
         register_setting('auto_alt_text_options', Constants::AAT_OPTION_FIELD_PROMPT);
@@ -58,7 +58,7 @@ class PluginOptions
 
         add_settings_field(Constants::AAT_OPTION_FIELD_API_KEY, 'API Key', [self::$instance, 'autoAltTextapiKeyCallback'], 'auto_alt_text_options', 'auto_alt_text_section');
         add_settings_field(Constants::AAT_OPTION_FIELD_PROMPT, 'Prompt', [self::$instance, 'autoAltTextPromptCallback'], 'auto_alt_text_options', 'auto_alt_text_section');
-        add_settings_field(Constants::AAT_OPTION_FIELD_TYPOLOGY, 'Tipologia', [self::$instance, 'autoAltTextTypologyCallback'], 'auto_alt_text_options', 'auto_alt_text_section');
+        add_settings_field(Constants::AAT_OPTION_FIELD_TYPOLOGY, 'Typology', [self::$instance, 'autoAltTextTypologyCallback'], 'auto_alt_text_options', 'auto_alt_text_section');
     }
 
 
@@ -95,13 +95,13 @@ class PluginOptions
         <label>
             <input type="radio" name="<?php echo Constants::AAT_OPTION_FIELD_TYPOLOGY; ?>"
                    value="article-title" <?php checked($typology, 'article-title'); ?> />
-            Titolo dell'articolo
+            Title of the article
         </label>
         <br>
         <label>
             <input type="radio" name="<?php echo Constants::AAT_OPTION_FIELD_TYPOLOGY; ?>"
-                   value="file-name" <?php checked($typology, 'file-name'); ?> />
-            Nome del file
+                   value="attachment-title" <?php checked($typology, 'attachment-title'); ?> />
+            Title of the attachment
         </label>
         <?php
     }
