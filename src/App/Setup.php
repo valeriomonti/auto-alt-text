@@ -5,6 +5,7 @@ namespace ValerioMonti\AutoAltText\App;
 use ValerioMonti\AutoAltText\App\Admin\PluginOptions;
 use ValerioMonti\AutoAltText\App\AltTextGeneratorParentPostTitle;
 use ValerioMonti\AutoAltText\App\AltTextGeneratorAi;
+use ValerioMonti\AutoAltText\App\AltTextGeneratorAttachmentTitle;
 
 
 class Setup
@@ -44,7 +45,7 @@ class Setup
                     $altText = (new AltTextGeneratorParentPostTitle())->altText($postId);
                     break;
                 case 'file-name':
-                    $altText = (new AltTextGeneratorFileName())->altText($postId);
+                    $altText = (new AltTextGeneratorAttachmentTitle())->altText($postId);
                     break;
             }
 
