@@ -24,19 +24,15 @@ class Setup
 
         PluginOptions::register();
 
-        $api_key = get_option('api_key');
-
         add_action('add_attachment', [self::$instance, 'addAltTextOnUpload']);
 
-//        add_action('init', function(){
-//            self::addAltTextOnUpload(4);
-//        });
     }
 
     public static function addAltTextOnUpload($postId): void
     {
         if (wp_attachment_is_image($postId)) {
             $altText = '';
+
             switch (PluginOptions::typology()) {
                 case 'gpt4':
                     $altText = (new AltTextGeneratorAi())->altText($postId);
@@ -54,13 +50,3 @@ class Setup
     }
 
 }
-
-//
-//function aggiungi_alt_text_all_imagini($post_id) {
-//    if (wp_attachment_is_image($post_id)) {
-//        $immagine = get_post($post_id);
-//        $alt_text = 'ciao';
-//        update_post_meta( $post_id, '_wp_attachment_image_alt', $alt_text);
-//    }
-//}
-//add_action('add_attachment', 'aggiungi_alt_text_all_imagini');
