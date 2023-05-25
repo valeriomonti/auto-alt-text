@@ -12,5 +12,14 @@
             "email": "valerio.monti@vmweb.it"
         }
     ],
-    "require": {}
+    "require": {
+        "openai-php/client": "^0.5.1",
+        "symfony/http-client": "^6.2",
+        "nyholm/psr7": "^1.8"
+    },
+    "config": {
+        "allow-plugins": {
+            "php-http/discovery": true
+        }
+    }
 }
