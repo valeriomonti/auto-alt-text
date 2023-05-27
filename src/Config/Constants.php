@@ -12,7 +12,7 @@ class Constants
 
     const AAT_OPTION_TYPOLOGY_CHOICE_ATTACHMENT_TITLE = 'attachment-title';
 
-    const AAT_OPTION_TYPOLOGY_CHOICE_AI = 'gpt4';
+    const AAT_OPTION_TYPOLOGY_CHOICE_AI = 'openai';
 
 
 }

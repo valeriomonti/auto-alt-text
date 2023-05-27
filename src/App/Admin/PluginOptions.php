@@ -90,7 +90,7 @@ class PluginOptions
         <label>
             <input type="radio" name="<?php echo Constants::AAT_OPTION_FIELD_TYPOLOGY; ?>"
                    value="<?php echo Constants::AAT_OPTION_TYPOLOGY_CHOICE_AI; ?>" <?php checked($typology, Constants::AAT_OPTION_TYPOLOGY_CHOICE_AI); ?> />
-            GPT 4
+            Open AI
         </label>
         <br>
         <label>

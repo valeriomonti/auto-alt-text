@@ -6,6 +6,7 @@ use ValerioMonti\AutoAltText\App\Admin\PluginOptions;
 use ValerioMonti\AutoAltText\App\AltTextGeneratorParentPostTitle;
 use ValerioMonti\AutoAltText\App\AltTextGeneratorAi;
 use ValerioMonti\AutoAltText\App\AltTextGeneratorAttachmentTitle;
+use ValerioMonti\AutoAltText\Config\Constants;
 
 
 class Setup
@@ -34,13 +35,13 @@ class Setup
             $altText = '';
 
             switch (PluginOptions::typology()) {
-                case 'gpt4':
+                case Constants::AAT_OPTION_TYPOLOGY_CHOICE_AI:
                     $altText = (new AltTextGeneratorAi())->altText($postId);
                     break;
-                case 'article-title':
+                case Constants::AAT_OPTION_TYPOLOGY_CHOICE_ARTICLE_TITLE:
                     $altText = (new AltTextGeneratorParentPostTitle())->altText($postId);
                     break;
-                case 'file-name':
+                case Constants::AAT_OPTION_TYPOLOGY_CHOICE_ATTACHMENT_TITLE:
                     $altText = (new AltTextGeneratorAttachmentTitle())->altText($postId);
                     break;
             }
