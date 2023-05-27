@@ -78,7 +78,8 @@ class PluginOptions
     // Callback per il campo Prompt
     public static function autoAltTextPromptCallback()
     {
-        $prompt = get_option(Constants::AAT_OPTION_FIELD_PROMPT);
+        $prompt = get_option(Constants::AAT_OPTION_FIELD_PROMPT) ?: Constants::AAT_DEFAULT_PROMPT;
+
         echo '<textarea name="' . Constants::AAT_OPTION_FIELD_PROMPT . '" rows="5" cols="50">' . $prompt . '</textarea>';
     }
 
