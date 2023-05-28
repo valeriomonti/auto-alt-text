@@ -13,6 +13,9 @@ class PluginOptions
 
     }
 
+    /**
+     * @return void
+     */
     public static function register(): void
     {
         if (is_null(self::$instance)) {
@@ -23,13 +26,19 @@ class PluginOptions
         add_action('admin_init', [self::$instance, 'setupPluginOptions']);
     }
 
-    // Aggiunge il link al menu delle opzioni nel pannello di amministrazione di WordPress
+    /**
+     * Aggiunge il link al menu delle opzioni nel pannello di amministrazione di WordPress
+     * @return void
+     */
     public static function addOptionsPageToTheMenu(): void
     {
         add_options_page('Auto Alt Text Options', 'Auto Alt Text Options', 'manage_options', 'auto-alt-text-options', [self::$instance, 'optionsPageContent']);
     }
 
-    // Crea la pagina delle opzioni e i campi di input
+    /**
+     * Crea la pagina delle opzioni e i campi di input
+     * @return void
+     */
     public static function optionsPageContent()
     {
         ?>
@@ -47,7 +56,10 @@ class PluginOptions
     }
 
 
-// Registra i campi di input e le impostazioni delle opzioni
+    /**
+     * Registra i campi di input e le impostazioni delle opzioni
+     * @return void
+     */
     public static function setupPluginOptions(): void
     {
         register_setting('auto_alt_text_options', Constants::AAT_OPTION_FIELD_API_KEY);
@@ -62,29 +74,41 @@ class PluginOptions
     }
 
 
-    // Callback per la sezione delle opzioni
+    /**
+     * Callback per la sezione delle opzioni
+     * @return void
+     */
     public static function autoAltTextOptionsSection(): void
     {
         echo 'Personalizza le opzioni del plugin:';
     }
 
-    // Callback per il campo Api Key
-    public static function autoAltTextapiKeyCallback()
+    /**
+     * Callback per il campo Api Key
+     * @return void
+     */
+    public static function autoAltTextapiKeyCallback(): void
     {
         $api_key = get_option(Constants::AAT_OPTION_FIELD_API_KEY);
         echo '<input type="password" name="' . Constants::AAT_OPTION_FIELD_API_KEY . '" value="' . $api_key . '" />';
     }
 
-    // Callback per il campo Prompt
-    public static function autoAltTextPromptCallback()
+    /**
+     * Callback per il campo Prompt
+     * @return void
+     */
+    public static function autoAltTextPromptCallback(): void
     {
         $prompt = get_option(Constants::AAT_OPTION_FIELD_PROMPT) ?: Constants::AAT_DEFAULT_PROMPT;
 
         echo '<textarea name="' . Constants::AAT_OPTION_FIELD_PROMPT . '" rows="5" cols="50">' . $prompt . '</textarea>';
     }
 
-    // Callback per il campo Tipologia
-    public static function autoAltTextTypologyCallback()
+    /**
+     * Callback per il campo Tipologia
+     * @return void
+     */
+    public static function autoAltTextTypologyCallback(): void
     {
         $typology = get_option(Constants::AAT_OPTION_FIELD_TYPOLOGY);
         ?>
@@ -108,16 +132,25 @@ class PluginOptions
         <?php
     }
 
+    /**
+     * @return string
+     */
     public static function prompt(): string
     {
         return get_option(Constants::AAT_OPTION_FIELD_PROMPT);
     }
 
+    /**
+     * @return string
+     */
     public static function typology(): string
     {
         return get_option(Constants::AAT_OPTION_FIELD_TYPOLOGY);
     }
 
+    /**
+     * @return string
+     */
     public static function apiKey(): string
     {
         return get_option(Constants::AAT_OPTION_FIELD_API_KEY);
