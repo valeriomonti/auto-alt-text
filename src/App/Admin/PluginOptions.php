@@ -2,6 +2,7 @@
 
 namespace ValerioMonti\AutoAltText\App\Admin;
 
+use OpenAI;
 use ValerioMonti\AutoAltText\Config\Constants;
 
 class PluginOptions
@@ -65,12 +66,15 @@ class PluginOptions
         register_setting('auto_alt_text_options', Constants::AAT_OPTION_FIELD_API_KEY);
         register_setting('auto_alt_text_options', Constants::AAT_OPTION_FIELD_PROMPT);
         register_setting('auto_alt_text_options', Constants::AAT_OPTION_FIELD_TYPOLOGY);
+        register_setting('auto_alt_text_options', Constants::AAT_OPTION_FIELD_MODEL);
 
         add_settings_section('auto_alt_text_section', 'Impostazioni del Plugin', [self::$instance, 'autoAltTextOptionsSection'], 'auto_alt_text_options');
 
+        add_settings_field(Constants::AAT_OPTION_FIELD_TYPOLOGY, 'Typology', [self::$instance, 'autoAltTextTypologyCallback'], 'auto_alt_text_options', 'auto_alt_text_section');
+        add_settings_field(Constants::AAT_OPTION_FIELD_MODEL, 'Model', [self::$instance, 'autoAltTextAiModelCallback'], 'auto_alt_text_options', 'auto_alt_text_section');
         add_settings_field(Constants::AAT_OPTION_FIELD_API_KEY, 'API Key', [self::$instance, 'autoAltTextApiKeyCallback'], 'auto_alt_text_options', 'auto_alt_text_section');
         add_settings_field(Constants::AAT_OPTION_FIELD_PROMPT, 'Prompt', [self::$instance, 'autoAltTextPromptCallback'], 'auto_alt_text_options', 'auto_alt_text_section');
-        add_settings_field(Constants::AAT_OPTION_FIELD_TYPOLOGY, 'Typology', [self::$instance, 'autoAltTextTypologyCallback'], 'auto_alt_text_options', 'auto_alt_text_section');
+
     }
 
 
@@ -132,12 +136,40 @@ class PluginOptions
         <?php
     }
 
-    /**
-     * @return string
-     */
-    public static function prompt(): string
+    public static function isModelSelected($modelSaved, $currentModel): bool
     {
-        return get_option(Constants::AAT_OPTION_FIELD_PROMPT);
+        if (empty($modelSaved)) {
+            return Constants::AAT_DEFAULT_MODEL == $currentModel;
+        }
+
+        return $modelSaved == $currentModel;
+    }
+
+    public static function autoAltTextAiModelCallback(): void
+    {
+        $modelSaved = get_option(Constants::AAT_OPTION_FIELD_MODEL);
+        ?>
+        <label>
+            <select name="<?php echo Constants::AAT_OPTION_FIELD_MODEL; ?>"
+                    id="<?php echo Constants::AAT_OPTION_FIELD_MODEL; ?>">
+                <?php
+                $models = get_transient(Constants::AAT_TRANSIENT_OPENAI_API_MODELS);
+                if (empty($models)) {
+                    $client = OpenAI::client(PluginOptions::apiKey());
+                    $models = $client->models()->list();
+                    set_transient(Constants::AAT_TRANSIENT_OPENAI_API_MODELS, $models, DAY_IN_SECONDS);
+                    die;
+                }
+
+                foreach ($models->data as $model):
+                    ?>
+                    <option value="<?php echo $model->id; ?>" <?php echo self::isModelSelected($modelSaved, $model->id) ? 'selected="selected"' : ''; ?>><?php echo $model->id; ?></option>
+                <?php
+                endforeach;
+                ?>
+            </select>
+        </label>
+        <?php
     }
 
     /**
@@ -151,9 +183,25 @@ class PluginOptions
     /**
      * @return string
      */
+    public static function prompt(): string
+    {
+        return get_option(Constants::AAT_OPTION_FIELD_PROMPT);
+    }
+
+    /**
+     * @return string
+     */
     public static function apiKey(): string
     {
         return get_option(Constants::AAT_OPTION_FIELD_API_KEY);
+    }
+
+    /**
+     * @return string
+     */
+    public static function model(): string
+    {
+        return get_option(Constants::AAT_OPTION_FIELD_MODEL);
     }
 
 }

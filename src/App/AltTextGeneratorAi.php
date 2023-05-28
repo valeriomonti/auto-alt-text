@@ -14,11 +14,10 @@ class AltTextGeneratorAi implements AltTextGeneratorInterface
     {
         $imageUrl = wp_get_attachment_url($imageId);
         $apiKey = PluginOptions::apiKey();
-
         $client = OpenAI::client($apiKey);
 
         $result = $client->completions()->create([
-            'model' => 'text-davinci-003',
+            'model' => PluginOptions::model(),
             'prompt' => $this->prompt($imageUrl),
             'temperature' => 1
         ]);
