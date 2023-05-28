@@ -68,7 +68,7 @@ class PluginOptions
 
         add_settings_section('auto_alt_text_section', 'Impostazioni del Plugin', [self::$instance, 'autoAltTextOptionsSection'], 'auto_alt_text_options');
 
-        add_settings_field(Constants::AAT_OPTION_FIELD_API_KEY, 'API Key', [self::$instance, 'autoAltTextapiKeyCallback'], 'auto_alt_text_options', 'auto_alt_text_section');
+        add_settings_field(Constants::AAT_OPTION_FIELD_API_KEY, 'API Key', [self::$instance, 'autoAltTextApiKeyCallback'], 'auto_alt_text_options', 'auto_alt_text_section');
         add_settings_field(Constants::AAT_OPTION_FIELD_PROMPT, 'Prompt', [self::$instance, 'autoAltTextPromptCallback'], 'auto_alt_text_options', 'auto_alt_text_section');
         add_settings_field(Constants::AAT_OPTION_FIELD_TYPOLOGY, 'Typology', [self::$instance, 'autoAltTextTypologyCallback'], 'auto_alt_text_options', 'auto_alt_text_section');
     }
@@ -87,7 +87,7 @@ class PluginOptions
      * Callback per il campo Api Key
      * @return void
      */
-    public static function autoAltTextapiKeyCallback(): void
+    public static function autoAltTextApiKeyCallback(): void
     {
         $api_key = get_option(Constants::AAT_OPTION_FIELD_API_KEY);
         echo '<input type="password" name="' . Constants::AAT_OPTION_FIELD_API_KEY . '" value="' . $api_key . '" />';
