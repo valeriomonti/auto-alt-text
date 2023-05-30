@@ -66,11 +66,13 @@ class PluginOptions
         register_setting('auto_alt_text_options', Constants::AAT_OPTION_FIELD_API_KEY);
         register_setting('auto_alt_text_options', Constants::AAT_OPTION_FIELD_PROMPT);
         register_setting('auto_alt_text_options', Constants::AAT_OPTION_FIELD_TYPOLOGY);
+        register_setting('auto_alt_text_options', Constants::AAT_OPTION_FIELD_ENDPOINT);
         register_setting('auto_alt_text_options', Constants::AAT_OPTION_FIELD_MODEL);
 
         add_settings_section('auto_alt_text_section', 'Impostazioni del Plugin', [self::$instance, 'autoAltTextOptionsSection'], 'auto_alt_text_options');
 
         add_settings_field(Constants::AAT_OPTION_FIELD_TYPOLOGY, 'Typology', [self::$instance, 'autoAltTextTypologyCallback'], 'auto_alt_text_options', 'auto_alt_text_section');
+        add_settings_field(Constants::AAT_OPTION_FIELD_ENDPOINT, 'Endpoint', [self::$instance, 'autoAltTextEndpointCallback'], 'auto_alt_text_options', 'auto_alt_text_section');
         add_settings_field(Constants::AAT_OPTION_FIELD_MODEL, 'Model', [self::$instance, 'autoAltTextAiModelCallback'], 'auto_alt_text_options', 'auto_alt_text_section');
         add_settings_field(Constants::AAT_OPTION_FIELD_API_KEY, 'API Key', [self::$instance, 'autoAltTextApiKeyCallback'], 'auto_alt_text_options', 'auto_alt_text_section');
         add_settings_field(Constants::AAT_OPTION_FIELD_PROMPT, 'Prompt', [self::$instance, 'autoAltTextPromptCallback'], 'auto_alt_text_options', 'auto_alt_text_section');
@@ -136,6 +138,29 @@ class PluginOptions
         <?php
     }
 
+    /**
+     * Callback per il campo Tipologia
+     * @return void
+     */
+    public static function autoAltTextEndpointCallback(): void
+    {
+        $endpoint = get_option(Constants::AAT_OPTION_FIELD_ENDPOINT);
+        ?>
+        <label>
+            <input type="radio" name="<?php echo Constants::AAT_OPTION_FIELD_ENDPOINT; ?>"
+                   value="<?php echo Constants::AAT_OPTION_ENDPOINT_CHOICE_CHAT_COMPLETION; ?>" <?php checked($endpoint, Constants::AAT_OPTION_ENDPOINT_CHOICE_CHAT_COMPLETION); ?> />
+            Chat Completion
+        </label>
+        <br>
+        <label>
+            <input type="radio" name="<?php echo Constants::AAT_OPTION_FIELD_ENDPOINT; ?>"
+                   value="<?php echo Constants::AAT_OPTION_ENDPOINT_CHOICE_TEXT_COMPLETION; ?>" <?php checked($endpoint, Constants::AAT_OPTION_ENDPOINT_CHOICE_TEXT_COMPLETION); ?> />
+            Text Completion
+        </label>
+        <?php
+    }
+
+
     public static function isModelSelected($modelSaved, $currentModel): bool
     {
         if (empty($modelSaved)) {
@@ -158,7 +183,6 @@ class PluginOptions
                     $client = OpenAI::client(PluginOptions::apiKey());
                     $models = $client->models()->list();
                     set_transient(Constants::AAT_TRANSIENT_OPENAI_API_MODELS, $models, DAY_IN_SECONDS);
-                    die;
                 }
 
                 foreach ($models->data as $model):
@@ -178,6 +202,11 @@ class PluginOptions
     public static function typology(): string
     {
         return get_option(Constants::AAT_OPTION_FIELD_TYPOLOGY);
+    }
+
+    public static function endpoint(): string
+    {
+        return get_option(Constants::AAT_OPTION_FIELD_ENDPOINT);
     }
 
     /**
