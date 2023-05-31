@@ -15,7 +15,7 @@ class AltTextGeneratorAi implements AltTextGeneratorInterface
     public function altText(int $imageId): string
     {
         $model = PluginOptions::model();
-        $endpoint = PluginOptions::endpoint();
+        //$endpoint = PluginOptions::endpoint();
         $apiKey = PluginOptions::apiKey();
 
         $imageUrl = wp_get_attachment_url($imageId);
@@ -23,7 +23,7 @@ class AltTextGeneratorAi implements AltTextGeneratorInterface
 
         $client = OpenAI::client($apiKey);
 
-        if (Constants::AAT_OPTION_ENDPOINT_CHOICE_TEXT_COMPLETION == $endpoint) {
+        if (Constants::AAT_ENDPOINT_TEXT_COMPLETION == Constants::AAT_OPENAI_MODELS[$model]) {
             return (new TextCompletionAIResponse())->response($client, $model, $prompt);
         }
 
