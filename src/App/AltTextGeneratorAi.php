@@ -8,12 +8,15 @@ use ValerioMonti\AutoAltText\App\AIProviders\OpenAI\ChatCompletionAIResponse;
 use ValerioMonti\AutoAltText\App\AIProviders\OpenAI\TextCompletionAIResponse;
 use ValerioMonti\AutoAltText\App\AltTextGeneratorInterface;
 use ValerioMonti\AutoAltText\App\Admin\PluginOptions;
+use ValerioMonti\AutoAltText\App\Logging\FileLogger;
 use ValerioMonti\AutoAltText\Config\Constants;
+use OpenAI\Exceptions\ErrorException;
 
 class AltTextGeneratorAi implements AltTextGeneratorInterface
 {
     public function altText(int $imageId): string
     {
+        $altText = '';
         $model = PluginOptions::model();
         //$endpoint = PluginOptions::endpoint();
         $apiKey = PluginOptions::apiKey();
@@ -23,11 +26,16 @@ class AltTextGeneratorAi implements AltTextGeneratorInterface
 
         $client = OpenAI::client($apiKey);
 
-        if (Constants::AAT_ENDPOINT_TEXT_COMPLETION == Constants::AAT_OPENAI_MODELS[$model]) {
-            return (new TextCompletionAIResponse())->response($client, $model, $prompt);
+        try {
+            if (Constants::AAT_ENDPOINT_TEXT_COMPLETION == Constants::AAT_OPENAI_MODELS[$model]) {
+                $altText = (new TextCompletionAIResponse())->response($client, $model, $prompt);
+            }
+            $altText = (new ChatCompletionAIResponse())->response($client, $model, $prompt);
+        } catch(ErrorException $e) {
+            (new FileLogger())->writeImageLog($imageId, $e);
         }
 
-        return (new ChatCompletionAIResponse())->response($client, $model, $prompt);
+        return $altText;
     }
 
     /**

@@ -2,7 +2,9 @@
 namespace ValerioMonti\AutoAltText\App\AIProviders\OpenAI;
 
 use ValerioMonti\AutoAltText\App\Admin\PluginOptions;
+use ValerioMonti\AutoAltText\App\Setup;
 use OpenAI\Client;
+use OpenAI\Exceptions\ErrorException;
 
 class ChatCompletionAIResponse implements AIResponseInterface
 {
@@ -17,7 +19,6 @@ class ChatCompletionAIResponse implements AIResponseInterface
                 ],
             ],
         ]);
-
         return trim($result->toArray()['choices'][0]['message']['content']);
     }
 }

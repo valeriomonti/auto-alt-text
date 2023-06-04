@@ -4,6 +4,7 @@ namespace ValerioMonti\AutoAltText\Config;
 
 class Constants
 {
+    const AAT_PLUGIN_SLUG = 'auto-alt-text';
     const AAT_OPTION_FIELD_TYPOLOGY = 'aat_typology';
     const AAT_OPTION_FIELD_PROMPT = 'aat_prompt_openai';
     const AAT_OPTION_FIELD_MODEL = 'aat_model_openai';
