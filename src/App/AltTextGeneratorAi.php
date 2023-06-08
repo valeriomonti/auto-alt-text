@@ -16,7 +16,7 @@ class AltTextGeneratorAi implements AltTextGeneratorInterface
 {
     public function altText(int $imageId): string
     {
-        $altText = '';
+        $altText = 'aaaa';
         $model = PluginOptions::model();
         //$endpoint = PluginOptions::endpoint();
         $apiKey = PluginOptions::apiKey();
@@ -29,8 +29,9 @@ class AltTextGeneratorAi implements AltTextGeneratorInterface
         try {
             if (Constants::AAT_ENDPOINT_TEXT_COMPLETION == Constants::AAT_OPENAI_MODELS[$model]) {
                 $altText = (new TextCompletionAIResponse())->response($client, $model, $prompt);
+            } else {
+                $altText = (new ChatCompletionAIResponse())->response($client, $model, $prompt);
             }
-            $altText = (new ChatCompletionAIResponse())->response($client, $model, $prompt);
         } catch(ErrorException $e) {
             (new FileLogger())->writeImageLog($imageId, $e);
         }
