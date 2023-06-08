@@ -1,0 +1,64 @@
+# Copyright (C) 2023 Valerio Monti
+# This file is distributed under the same license as the Auto alt text plugin.
+msgid ""
+msgstr ""
+"Project-Id-Version: Auto alt text 1.0.0\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/auto-alt-text\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2023-06-06T11:46:40+00:00\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"X-Generator: WP-CLI 2.7.1\n"
+"X-Domain: auto-alt-text\n"
+
+#. Plugin Name of the plugin
+msgid "Auto alt text"
+msgstr ""
+
+#. Plugin URI of the plugin
+#. Author URI of the plugin
+msgid "https://www.vmweb.it"
+msgstr ""
+
+#. Author of the plugin
+msgid "Valerio Monti"
+msgstr ""
+
+#: src/App/Admin/PluginOptions.php:71
+msgid "Plugin options"
+msgstr ""
+
+#: src/App/Admin/PluginOptions.php:73
+msgid "Typology"
+msgstr ""
+
+#: src/App/Admin/PluginOptions.php:74
+msgid "Model"
+msgstr ""
+
+#: src/App/Admin/PluginOptions.php:75
+msgid "API Key"
+msgstr ""
+
+#: src/App/Admin/PluginOptions.php:76
+msgid "Prompt"
+msgstr ""
+
+#: src/App/Admin/PluginOptions.php:86
+msgid "Customize options"
+msgstr ""
+
+#: src/App/Admin/PluginOptions.php:121
+msgid "Open AI"
+msgstr ""
+
+#: src/App/Admin/PluginOptions.php:127
+msgid "Title of the article"
+msgstr ""
+
+#: src/App/Admin/PluginOptions.php:133
+msgid "Title of the attachment"
+msgstr ""

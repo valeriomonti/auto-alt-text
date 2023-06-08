@@ -17,6 +17,9 @@ class Setup
     {
     }
 
+    /**
+     * @return void
+     */
     public static function register(): void
     {
         if (is_null(self::$instance)) {
@@ -26,9 +29,22 @@ class Setup
         PluginOptions::register();
 
         add_action('add_attachment', [self::$instance, 'addAltTextOnUpload']);
+        add_action('plugins_loaded', [self::$instance, 'loadTextDomain']);
 
     }
 
+    /**
+     * @return void
+     */
+    public static function loadTextDomain(): void
+    {
+        load_plugin_textdomain( 'auto-alt-text', false, AUTO_ALT_TEXT_LANGUAGES_RELATIVE_PATH );
+    }
+
+    /**
+     * @param $postId
+     * @return void
+     */
     public static function addAltTextOnUpload($postId): void
     {
         if (wp_attachment_is_image($postId)) {
