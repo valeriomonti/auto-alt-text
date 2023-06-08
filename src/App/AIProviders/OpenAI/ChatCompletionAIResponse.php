@@ -19,6 +19,6 @@ class ChatCompletionAIResponse implements AIResponseInterface
                 ],
             ],
         ]);
-        return trim($result->toArray()['choices'][0]['message']['content']);
+        return trim($result->toArray()['choices'][0]['message']['content'], '"');
     }
 }

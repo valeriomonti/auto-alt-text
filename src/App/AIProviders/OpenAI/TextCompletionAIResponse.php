@@ -14,6 +14,6 @@ class TextCompletionAIResponse implements AIResponseInterface
             'temperature' => 1
         ]);
 
-        return trim($result['choices'][0]['text']);
+        return trim($result['choices'][0]['text'], '"');
     }
 }
