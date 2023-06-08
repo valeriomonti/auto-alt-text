@@ -102,7 +102,8 @@ class PluginOptions
      */
     public static function autoAltTextPromptCallback(): void
     {
-        $prompt = get_option(Constants::AAT_OPTION_FIELD_PROMPT) ?: __(Constants::AAT_DEFAULT_PROMPT,'auto-alt-text');
+        $defaultPrompt = sprintf(__("Act like an SEO expert and write an English alt text for this image %s, using a maximum of 15 words. Just return the text without any additional comments.", "auto-alt-text"), Constants::AAT_IMAGE_URL_TAG);
+        $prompt = get_option(Constants::AAT_OPTION_FIELD_PROMPT) ?: $defaultPrompt;
 
         echo '<textarea name="' . Constants::AAT_OPTION_FIELD_PROMPT . '" rows="5" cols="50">' . $prompt . '</textarea>';
     }
