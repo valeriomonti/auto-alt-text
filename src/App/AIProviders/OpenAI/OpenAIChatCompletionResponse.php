@@ -6,7 +6,7 @@ use ValerioMonti\AutoAltText\App\Setup;
 use OpenAI\Client;
 use OpenAI\Exceptions\ErrorException;
 
-class ChatCompletionAIResponse implements AIResponseInterface
+class OpenAIChatCompletionResponse implements OpenAIResponseInterface
 {
     public function response(Client $client, string $model, string $prompt): string
     {

@@ -4,8 +4,8 @@ namespace ValerioMonti\AutoAltText\App;
 
 use Composer\Installers\Plugin;
 use OpenAI;
-use ValerioMonti\AutoAltText\App\AIProviders\OpenAI\ChatCompletionAIResponse;
-use ValerioMonti\AutoAltText\App\AIProviders\OpenAI\TextCompletionAIResponse;
+use ValerioMonti\AutoAltText\App\AIProviders\OpenAI\OpenAIChatCompletionResponse;
+use ValerioMonti\AutoAltText\App\AIProviders\OpenAI\OpenAITextCompletionResponse;
 use ValerioMonti\AutoAltText\App\AltTextGeneratorInterface;
 use ValerioMonti\AutoAltText\App\Admin\PluginOptions;
 use ValerioMonti\AutoAltText\App\Logging\FileLogger;
@@ -16,21 +16,20 @@ class AltTextGeneratorAi implements AltTextGeneratorInterface
 {
     public function altText(int $imageId): string
     {
-        $altText = 'aaaa';
+        $altText = '';
         $model = PluginOptions::model();
         //$endpoint = PluginOptions::endpoint();
         $apiKey = PluginOptions::apiKey();
 
         $imageUrl = wp_get_attachment_url($imageId);
         $prompt = $this->prompt($imageUrl);
-
         $client = OpenAI::client($apiKey);
 
         try {
             if (Constants::AAT_ENDPOINT_TEXT_COMPLETION == Constants::AAT_OPENAI_MODELS[$model]) {
-                $altText = (new TextCompletionAIResponse())->response($client, $model, $prompt);
+                $altText = (new OpenAITextCompletionResponse())->response($client, $model, $prompt);
             } else {
-                $altText = (new ChatCompletionAIResponse())->response($client, $model, $prompt);
+                $altText = (new OpenAIChatCompletionResponse())->response($client, $model, $prompt);
             }
         } catch(ErrorException $e) {
             (new FileLogger())->writeImageLog($imageId, $e);
