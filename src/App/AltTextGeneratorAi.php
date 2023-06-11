@@ -4,6 +4,7 @@ namespace ValerioMonti\AutoAltText\App;
 
 use Composer\Installers\Plugin;
 use OpenAI;
+use ValerioMonti\AutoAltText\App\AIProviders\AIProviderInterface;
 use ValerioMonti\AutoAltText\App\AIProviders\OpenAI\OpenAIChatCompletionResponse;
 use ValerioMonti\AutoAltText\App\AIProviders\OpenAI\OpenAITextCompletionResponse;
 use ValerioMonti\AutoAltText\App\AltTextGeneratorInterface;
@@ -14,16 +15,19 @@ use OpenAI\Exceptions\ErrorException;
 
 class AltTextGeneratorAi implements AltTextGeneratorInterface
 {
+    private AIProviderInterface $AIProvider;
+
+    public function __construct(AIProviderInterface $AIProvider)
+    {
+        $this->AIProvider = $AIProvider;
+    }
+
     public function altText(int $imageId): string
     {
         $altText = '';
-        $model = PluginOptions::model();
-        //$endpoint = PluginOptions::endpoint();
-        $apiKey = PluginOptions::apiKey();
-
         $imageUrl = wp_get_attachment_url($imageId);
-        $prompt = $this->prompt($imageUrl);
-        $client = OpenAI::client($apiKey);
+
+        $altText = $this->AIProvider->response($imageUrl);
 
         try {
             if (Constants::AAT_ENDPOINT_TEXT_COMPLETION == Constants::AAT_OPENAI_MODELS[$model]) {

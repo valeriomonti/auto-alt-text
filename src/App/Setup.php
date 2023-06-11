@@ -3,6 +3,9 @@
 namespace ValerioMonti\AutoAltText\App;
 
 use ValerioMonti\AutoAltText\App\Admin\PluginOptions;
+use ValerioMonti\AutoAltText\App\AIProviders\Azure\AzureComputerVisionCaptionsResponse;
+use ValerioMonti\AutoAltText\App\AIProviders\OpenAI\OpenAIChatCompletionResponse;
+use ValerioMonti\AutoAltText\App\AIProviders\OpenAI\OpenAITextCompletionResponse;
 use ValerioMonti\AutoAltText\App\AltTextGeneratorParentPostTitle;
 use ValerioMonti\AutoAltText\App\AltTextGeneratorAi;
 use ValerioMonti\AutoAltText\App\AltTextGeneratorAttachmentTitle;
@@ -49,6 +52,10 @@ class Setup
     {
         if (wp_attachment_is_image($postId)) {
             $altText = '';
+
+            //$altText = (new AltTextGeneratorAi(new AzureComputerVisionCaptionsResponse()))->altText($postId);
+            //$altText = (new AltTextGeneratorAi(new OpenAITextCompletionResponse()))->altText($postId);
+            $altText = (new AltTextGeneratorAi(new OpenAIChatCompletionResponse()))->altText($postId);
 
             switch (PluginOptions::typology()) {
                 case Constants::AAT_OPTION_TYPOLOGY_CHOICE_AI:

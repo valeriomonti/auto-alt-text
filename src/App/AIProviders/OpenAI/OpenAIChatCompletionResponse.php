@@ -1,15 +1,21 @@
 <?php
 namespace ValerioMonti\AutoAltText\App\AIProviders\OpenAI;
 
+use OpenAI;
 use ValerioMonti\AutoAltText\App\Admin\PluginOptions;
 use ValerioMonti\AutoAltText\App\Setup;
 use OpenAI\Client;
 use OpenAI\Exceptions\ErrorException;
 
-class OpenAIChatCompletionResponse implements OpenAIResponseInterface
+class OpenAIChatCompletionResponse extends OpenAIResponse
 {
-    public function response(Client $client, string $model, string $prompt): string
+    public function response(string $imageUrl): string
     {
+        $model = PluginOptions::model();
+        $apiKey = PluginOptions::apiKey();
+        $prompt = parent::prompt($imageUrl);
+        $client = OpenAI::client($apiKey);
+
         $result = $client->chat()->create([
             'model' => $model,
             'messages' => [

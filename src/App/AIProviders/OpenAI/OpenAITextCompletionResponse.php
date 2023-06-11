@@ -1,13 +1,20 @@
 <?php
 namespace ValerioMonti\AutoAltText\App\AIProviders\OpenAI;
 
+use OpenAI;
 use OpenAI\Client;
 use ValerioMonti\AutoAltText\App\Admin\PluginOptions;
 
-class OpenAITextCompletionResponse implements OpenAIResponseInterface
+class OpenAITextCompletionResponse extends OpenAIResponse
 {
-    public function response(Client $client, string $model, string $prompt): string
+    public function response(string $imageUrl): string
     {
+
+        $model = PluginOptions::model();
+        $apiKey = PluginOptions::apiKey();
+        $prompt = parent::prompt($imageUrl);
+        $client = OpenAI::client($apiKey);
+
         $result = $client->completions()->create([
             'model' => $model,
             'prompt' => $prompt,
