@@ -11,7 +11,7 @@ class OpenAITextCompletionResponse extends OpenAIResponse
     {
 
         $model = PluginOptions::model();
-        $apiKey = PluginOptions::apiKey();
+        $apiKey = PluginOptions::apiKeyOpenAI();
         $prompt = parent::prompt($imageUrl);
         $client = OpenAI::client($apiKey);
 

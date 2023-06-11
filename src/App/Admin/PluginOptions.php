@@ -63,17 +63,20 @@ class PluginOptions
      */
     public static function setupPluginOptions(): void
     {
-        register_setting('auto_alt_text_options', Constants::AAT_OPTION_FIELD_API_KEY);
-        register_setting('auto_alt_text_options', Constants::AAT_OPTION_FIELD_PROMPT);
+        register_setting('auto_alt_text_options', Constants::AAT_OPTION_FIELD_API_KEY_OPENAI);
+        register_setting('auto_alt_text_options', Constants::AAT_OPTION_FIELD_PROMPT_OPENAI);
         register_setting('auto_alt_text_options', Constants::AAT_OPTION_FIELD_TYPOLOGY);
-        register_setting('auto_alt_text_options', Constants::AAT_OPTION_FIELD_MODEL);
+        register_setting('auto_alt_text_options', Constants::AAT_OPTION_FIELD_MODEL_OPENAI);
+        register_setting('auto_alt_text_options', Constants::AAT_OPTION_FIELD_API_KEY_AZURE);
 
         add_settings_section('auto_alt_text_section', __('Plugin options','auto-alt-text'), [self::$instance, 'autoAltTextOptionsSection'], 'auto_alt_text_options');
 
         add_settings_field(Constants::AAT_OPTION_FIELD_TYPOLOGY, __('Typology','auto-alt-text'), [self::$instance, 'autoAltTextTypologyCallback'], 'auto_alt_text_options', 'auto_alt_text_section');
-        add_settings_field(Constants::AAT_OPTION_FIELD_MODEL, __('Model','auto-alt-text'), [self::$instance, 'autoAltTextAiModelCallback'], 'auto_alt_text_options', 'auto_alt_text_section');
-        add_settings_field(Constants::AAT_OPTION_FIELD_API_KEY, __('API Key','auto-alt-text'), [self::$instance, 'autoAltTextApiKeyCallback'], 'auto_alt_text_options', 'auto_alt_text_section');
-        add_settings_field(Constants::AAT_OPTION_FIELD_PROMPT, __('Prompt','auto-alt-text'), [self::$instance, 'autoAltTextPromptCallback'], 'auto_alt_text_options', 'auto_alt_text_section');
+        add_settings_field(Constants::AAT_OPTION_FIELD_MODEL_OPENAI, __('Model','auto-alt-text'), [self::$instance, 'autoAltTextAiModelCallback'], 'auto_alt_text_options', 'auto_alt_text_section');
+        add_settings_field(Constants::AAT_OPTION_FIELD_API_KEY_OPENAI, __('OpenAI API Key','auto-alt-text'), [self::$instance, 'autoAltTextOpenAIApiKeyCallback'], 'auto_alt_text_options', 'auto_alt_text_section');
+        add_settings_field(Constants::AAT_OPTION_FIELD_PROMPT_OPENAI, __('Prompt','auto-alt-text'), [self::$instance, 'autoAltTextPromptCallback'], 'auto_alt_text_options', 'auto_alt_text_section');
+
+        add_settings_field(Constants::AAT_OPTION_FIELD_API_KEY_AZURE, __('Azure API Key','auto-alt-text'), [self::$instance, 'autoAltTextAzureApiKeyCallback'], 'auto_alt_text_options', 'auto_alt_text_section');
 
     }
 
@@ -87,13 +90,23 @@ class PluginOptions
     }
 
     /**
-     * Callback per il campo Api Key
+     * Callback per il campo Api Key OPen AI
      * @return void
      */
-    public static function autoAltTextApiKeyCallback(): void
+    public static function autoAltTextOpenAIApiKeyCallback(): void
     {
-        $api_key = get_option(Constants::AAT_OPTION_FIELD_API_KEY);
-        echo '<input type="password" name="' . Constants::AAT_OPTION_FIELD_API_KEY . '" value="' . $api_key . '" />';
+        $apiKey = get_option(Constants::AAT_OPTION_FIELD_API_KEY_OPENAI);
+        echo '<input type="password" name="' . Constants::AAT_OPTION_FIELD_API_KEY_OPENAI . '" value="' . $apiKey . '" />';
+    }
+
+    /**
+     * Callback per il campo Api Key Azure
+     * @return void
+     */
+    public static function autoAltTextAzureApiKeyCallback(): void
+    {
+        $apiKey = get_option(Constants::AAT_OPTION_FIELD_API_KEY_AZURE);
+        echo '<input type="password" name="' . Constants::AAT_OPTION_FIELD_API_KEY_AZURE . '" value="' . $apiKey . '" />';
     }
 
     /**
@@ -103,9 +116,9 @@ class PluginOptions
     public static function autoAltTextPromptCallback(): void
     {
         $defaultPrompt = sprintf(__("Act like an SEO expert and write an English alt text for this image %s, using a maximum of 15 words. Just return the text without any additional comments.", "auto-alt-text"), Constants::AAT_IMAGE_URL_TAG);
-        $prompt = get_option(Constants::AAT_OPTION_FIELD_PROMPT) ?: $defaultPrompt;
+        $prompt = get_option(Constants::AAT_OPTION_FIELD_PROMPT_OPENAI) ?: $defaultPrompt;
 
-        echo '<textarea name="' . Constants::AAT_OPTION_FIELD_PROMPT . '" rows="5" cols="50">' . $prompt . '</textarea>';
+        echo '<textarea name="' . Constants::AAT_OPTION_FIELD_PROMPT_OPENAI . '" rows="5" cols="50">' . $prompt . '</textarea>';
     }
 
     /**
@@ -118,7 +131,13 @@ class PluginOptions
         ?>
         <label>
             <input type="radio" name="<?php echo Constants::AAT_OPTION_FIELD_TYPOLOGY; ?>"
-                   value="<?php echo Constants::AAT_OPTION_TYPOLOGY_CHOICE_AI; ?>" <?php checked($typology, Constants::AAT_OPTION_TYPOLOGY_CHOICE_AI); ?> />
+                   value="<?php echo Constants::AAT_OPTION_TYPOLOGY_CHOICE_AZURE; ?>" <?php checked($typology, Constants::AAT_OPTION_TYPOLOGY_CHOICE_AZURE); ?> />
+            <?php _e('Azure','auto-alt-text'); ?>
+        </label>
+        <br>
+        <label>
+            <input type="radio" name="<?php echo Constants::AAT_OPTION_FIELD_TYPOLOGY; ?>"
+                   value="<?php echo Constants::AAT_OPTION_TYPOLOGY_CHOICE_OPENAI; ?>" <?php checked($typology, Constants::AAT_OPTION_TYPOLOGY_CHOICE_OPENAI); ?> />
             <?php _e('Open AI','auto-alt-text'); ?>
         </label>
         <br>
@@ -139,7 +158,7 @@ class PluginOptions
     public static function isModelSelected($modelSaved, $currentModel): bool
     {
         if (empty($modelSaved)) {
-            return Constants::AAT_DEFAULT_MODEL == $currentModel;
+            return Constants::AAT_OPENAI_DEFAULT_MODEL == $currentModel;
         }
 
         return $modelSaved == $currentModel;
@@ -147,11 +166,11 @@ class PluginOptions
 
     public static function autoAltTextAiModelCallback(): void
     {
-        $modelSaved = get_option(Constants::AAT_OPTION_FIELD_MODEL);
+        $modelSaved = get_option(Constants::AAT_OPTION_FIELD_MODEL_OPENAI);
         ?>
         <label>
-            <select name="<?php echo Constants::AAT_OPTION_FIELD_MODEL; ?>"
-                    id="<?php echo Constants::AAT_OPTION_FIELD_MODEL; ?>">
+            <select name="<?php echo Constants::AAT_OPTION_FIELD_MODEL_OPENAI; ?>"
+                    id="<?php echo Constants::AAT_OPTION_FIELD_MODEL_OPENAI; ?>">
                 <?php
                 foreach(Constants::AAT_OPENAI_MODELS as $modelName => $a) :
                 ?>
@@ -177,15 +196,23 @@ class PluginOptions
      */
     public static function prompt(): string
     {
-        return get_option(Constants::AAT_OPTION_FIELD_PROMPT);
+        return get_option(Constants::AAT_OPTION_FIELD_PROMPT_OPENAI);
     }
 
     /**
      * @return string
      */
-    public static function apiKey(): string
+    public static function apiKeyOpenAI(): string
     {
-        return get_option(Constants::AAT_OPTION_FIELD_API_KEY);
+        return get_option(Constants::AAT_OPTION_FIELD_API_KEY_OPENAI);
+    }
+
+    /**
+     * @return string
+     */
+    public static function apiKeyAzure(): string
+    {
+        return get_option(Constants::AAT_OPTION_FIELD_API_KEY_AZURE);
     }
 
     /**
@@ -193,7 +220,7 @@ class PluginOptions
      */
     public static function model(): string
     {
-        return get_option(Constants::AAT_OPTION_FIELD_MODEL);
+        return get_option(Constants::AAT_OPTION_FIELD_MODEL_OPENAI);
     }
 
 }

@@ -1,6 +1,7 @@
 <?php
 namespace ValerioMonti\AutoAltText\App\AIProviders\Azure;
 
+use ValerioMonti\AutoAltText\App\Admin\PluginOptions;
 use ValerioMonti\AutoAltText\App\AIProviders\AIProviderInterface;
 
 class AzureComputerVisionCaptionsResponse implements AIProviderInterface
@@ -12,7 +13,7 @@ class AzureComputerVisionCaptionsResponse implements AIProviderInterface
             [
                 'headers'   => [
                     'content-type' => 'application/json',
-                    'Ocp-Apim-Subscription-Key'     => '',
+                    'Ocp-Apim-Subscription-Key'     => PluginOptions::apiKeyAzure(),
                 ],
                 'body' => json_encode([
                     'url' => 'https://images.unsplash.com/photo-1668554245790-bfdc72f0bb3d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=774&q=80',

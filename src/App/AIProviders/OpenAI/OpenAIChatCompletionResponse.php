@@ -12,7 +12,7 @@ class OpenAIChatCompletionResponse extends OpenAIResponse
     public function response(string $imageUrl): string
     {
         $model = PluginOptions::model();
-        $apiKey = PluginOptions::apiKey();
+        $apiKey = PluginOptions::apiKeyOpenAI();
         $prompt = parent::prompt($imageUrl);
         $client = OpenAI::client($apiKey);
 
