@@ -68,6 +68,8 @@ class PluginOptions
         register_setting('auto_alt_text_options', Constants::AAT_OPTION_FIELD_TYPOLOGY);
         register_setting('auto_alt_text_options', Constants::AAT_OPTION_FIELD_MODEL_OPENAI);
         register_setting('auto_alt_text_options', Constants::AAT_OPTION_FIELD_API_KEY_AZURE);
+        register_setting('auto_alt_text_options', Constants::AAT_OPTION_FIELD_ENDPOINT_AZURE);
+
 
         add_settings_section('auto_alt_text_section', __('Plugin options','auto-alt-text'), [self::$instance, 'autoAltTextOptionsSection'], 'auto_alt_text_options');
 
@@ -77,6 +79,7 @@ class PluginOptions
         add_settings_field(Constants::AAT_OPTION_FIELD_PROMPT_OPENAI, __('Prompt','auto-alt-text'), [self::$instance, 'autoAltTextPromptCallback'], 'auto_alt_text_options', 'auto_alt_text_section');
 
         add_settings_field(Constants::AAT_OPTION_FIELD_API_KEY_AZURE, __('Azure API Key','auto-alt-text'), [self::$instance, 'autoAltTextAzureApiKeyCallback'], 'auto_alt_text_options', 'auto_alt_text_section');
+        add_settings_field(Constants::AAT_OPTION_FIELD_ENDPOINT_AZURE, __('Azure Endpoint','auto-alt-text'), [self::$instance, 'autoAltTextAzureEndpointCallback'], 'auto_alt_text_options', 'auto_alt_text_section');
 
     }
 
@@ -107,6 +110,15 @@ class PluginOptions
     {
         $apiKey = get_option(Constants::AAT_OPTION_FIELD_API_KEY_AZURE);
         echo '<input type="password" name="' . Constants::AAT_OPTION_FIELD_API_KEY_AZURE . '" value="' . $apiKey . '" />';
+    }
+
+    /**
+     * @return void
+     */
+    public static function autoAltTextAzureEndpointCallback(): void
+    {
+        $endpoint = get_option(Constants::AAT_OPTION_FIELD_ENDPOINT_AZURE);
+        echo '<input type="text" name="' . Constants::AAT_OPTION_FIELD_ENDPOINT_AZURE . '" value="' . $endpoint . '" />';
     }
 
     /**
@@ -213,6 +225,11 @@ class PluginOptions
     public static function apiKeyAzure(): string
     {
         return get_option(Constants::AAT_OPTION_FIELD_API_KEY_AZURE);
+    }
+
+    public static function endpointAzure(): string
+    {
+        return get_option(Constants::AAT_OPTION_FIELD_ENDPOINT_AZURE);
     }
 
     /**

@@ -14,7 +14,7 @@ class Constants
     const AAT_OPTION_TYPOLOGY_CHOICE_ATTACHMENT_TITLE = 'attachment-title';
     const AAT_OPTION_TYPOLOGY_CHOICE_OPENAI = 'openai';
     const AAT_OPTION_TYPOLOGY_CHOICE_AZURE = 'azure';
-
+    const AAT_OPTION_FIELD_ENDPOINT_AZURE = 'endpoint-azure';
 
     const AAT_ENDPOINT_OPENAI_CHAT_COMPLETION = 'chat-completion';
     const AAT_ENDPOINT_OPENAI_TEXT_COMPLETION = 'text-completion';
