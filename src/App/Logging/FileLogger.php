@@ -1,14 +1,14 @@
 <?php
 namespace ValerioMonti\AutoAltText\App\Logging;
 
-use OpenAI\Exceptions\ErrorException;
+use Exception;
 use ValerioMonti\AutoAltText\Config\Constants;
 
 class FileLogger implements LoggerInterface
 {
-    public function writeImageLog(int $imageId, ErrorException $e): void
+    public function writeImageLog(int $imageId, string $errorMessage): void
     {
-        $errorMessage = "[" . date('Y-m-d h:i:s') . "][ERROR][IMAGE_ID:" . $imageId . "] " . $e->getErrorType() . " - " . $e->getErrorCode() . "\n";
+        $errorMessage = "[" . date('Y-m-d h:i:s') . "][ERROR][IMAGE_ID:" . $imageId . "] " . $errorMessage . "\n";
         $uploadDir = wp_upload_dir();
         $logDir = trailingslashit($uploadDir['basedir']) . Constants::AAT_PLUGIN_SLUG;
         if(! file_exists($logDir)) {

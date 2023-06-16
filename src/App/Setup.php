@@ -10,6 +10,7 @@ use ValerioMonti\AutoAltText\App\AIProviders\OpenAI\OpenAITextCompletionResponse
 use ValerioMonti\AutoAltText\App\AltTextGeneratorParentPostTitle;
 use ValerioMonti\AutoAltText\App\AltTextGeneratorAi;
 use ValerioMonti\AutoAltText\App\AltTextGeneratorAttachmentTitle;
+use ValerioMonti\AutoAltText\App\Exceptions\AzureComputerVisionException;
 use ValerioMonti\AutoAltText\App\Logging\FileLogger;
 use ValerioMonti\AutoAltText\Config\Constants;
 
@@ -57,7 +58,11 @@ class Setup
 
             switch (PluginOptions::typology()) {
                 case Constants::AAT_OPTION_TYPOLOGY_CHOICE_AZURE:
-                    $altText = (new AltTextGeneratorAi(new AzureComputerVisionCaptionsResponse()))->altText($postId);
+                    try {
+                        $altText = (new AltTextGeneratorAi(new AzureComputerVisionCaptionsResponse()))->altText($postId);
+                    } catch (AzureComputerVisionException $e) {
+                        (new FileLogger())->writeImageLog($postId, "Azure - " . $e->getMessage());
+                    }
                     break;
                 case Constants::AAT_OPTION_TYPOLOGY_CHOICE_OPENAI:
                     $model = PluginOptions::model();
@@ -68,7 +73,8 @@ class Setup
                             $altText = (new AltTextGeneratorAi(new OpenAIChatCompletionResponse()))->altText($postId);
                         }
                     } catch(ErrorException $e) {
-                        (new FileLogger())->writeImageLog($postId, $e);
+                        $errorMessage = "OpenAI - " . $e->getErrorType() . " - " . $e->getMessage();
+                        (new FileLogger())->writeImageLog($postId, $errorMessage);
                     }
                     break;
                 case Constants::AAT_OPTION_TYPOLOGY_CHOICE_ARTICLE_TITLE:
