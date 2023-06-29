@@ -23,8 +23,26 @@ class PluginOptions
             self::$instance = new self();
         }
 
+        add_action('admin_enqueue_scripts', [self::$instance, 'enqueueAdminScripts']);
         add_action('admin_menu', [self::$instance, 'addOptionsPageToTheMenu']);
         add_action('admin_init', [self::$instance, 'setupPluginOptions']);
+    }
+
+    /**
+     * @return void
+     */
+    public static function enqueueAdminScripts(): void
+    {
+        if ( array_key_exists('page',  $_GET) && Constants::AAT_PLUGIN_OPTIONS_PAGE_SLUG == $_GET["page"]) {
+            $entryPoints = AUTO_ALT_TEXT_ABSPATH .'/dist/mix-manifest.json';
+            $json = json_decode(file_get_contents($entryPoints), JSON_OBJECT_AS_ARRAY);
+            $adminJs = $json['/js/admin.js'];
+            $adminCss = $json['/css/admin-style.css'];
+
+            wp_enqueue_script(Constants::AAT_PLUGIN_OPTIONS_PAGE_SLUG, AUTO_ALT_TEXT_URL . 'dist' . $adminJs, [], false, true);
+            wp_enqueue_style(Constants::AAT_PLUGIN_OPTIONS_PAGE_SLUG, AUTO_ALT_TEXT_URL . 'dist' . $adminCss, [], false, true);
+
+        }
     }
 
     /**
@@ -56,6 +74,16 @@ class PluginOptions
         <?php
     }
 
+    /**
+     * @param string $selectedValue
+     * @param string $inputValue
+     * @return string
+     */
+    public static function selected(string $selectedValue, string $inputValue) : string
+    {
+        return $selectedValue == $inputValue ? ' selected' : '';
+    }
+
 
     /**
      * Registra i campi di input e le impostazioni delle opzioni
@@ -73,13 +101,15 @@ class PluginOptions
 
         add_settings_section('auto_alt_text_section', __('Plugin options','auto-alt-text'), [self::$instance, 'autoAltTextOptionsSection'], 'auto_alt_text_options');
 
+        // Open AI options
         add_settings_field(Constants::AAT_OPTION_FIELD_TYPOLOGY, __('Typology','auto-alt-text'), [self::$instance, 'autoAltTextTypologyCallback'], 'auto_alt_text_options', 'auto_alt_text_section');
-        add_settings_field(Constants::AAT_OPTION_FIELD_MODEL_OPENAI, __('Model','auto-alt-text'), [self::$instance, 'autoAltTextAiModelCallback'], 'auto_alt_text_options', 'auto_alt_text_section');
-        add_settings_field(Constants::AAT_OPTION_FIELD_API_KEY_OPENAI, __('OpenAI API Key','auto-alt-text'), [self::$instance, 'autoAltTextOpenAIApiKeyCallback'], 'auto_alt_text_options', 'auto_alt_text_section');
-        add_settings_field(Constants::AAT_OPTION_FIELD_PROMPT_OPENAI, __('Prompt','auto-alt-text'), [self::$instance, 'autoAltTextPromptCallback'], 'auto_alt_text_options', 'auto_alt_text_section');
+        add_settings_field(Constants::AAT_OPTION_FIELD_MODEL_OPENAI, __('Model','auto-alt-text'), [self::$instance, 'autoAltTextAiModelCallback'], 'auto_alt_text_options', 'auto_alt_text_section', ['class' => 'plugin-option type-openai']);
+        add_settings_field(Constants::AAT_OPTION_FIELD_API_KEY_OPENAI, __('OpenAI API Key','auto-alt-text'), [self::$instance, 'autoAltTextOpenAIApiKeyCallback'], 'auto_alt_text_options', 'auto_alt_text_section', ['class' => 'plugin-option type-openai']);
+        add_settings_field(Constants::AAT_OPTION_FIELD_PROMPT_OPENAI, __('Prompt','auto-alt-text'), [self::$instance, 'autoAltTextPromptCallback'], 'auto_alt_text_options', 'auto_alt_text_section', ['class' => 'plugin-option type-openai']);
 
-        add_settings_field(Constants::AAT_OPTION_FIELD_API_KEY_AZURE, __('Azure API Key','auto-alt-text'), [self::$instance, 'autoAltTextAzureApiKeyCallback'], 'auto_alt_text_options', 'auto_alt_text_section');
-        add_settings_field(Constants::AAT_OPTION_FIELD_ENDPOINT_AZURE, __('Azure Endpoint','auto-alt-text'), [self::$instance, 'autoAltTextAzureEndpointCallback'], 'auto_alt_text_options', 'auto_alt_text_section');
+        //Azure Options
+        add_settings_field(Constants::AAT_OPTION_FIELD_API_KEY_AZURE, __('Azure API Key','auto-alt-text'), [self::$instance, 'autoAltTextAzureApiKeyCallback'], 'auto_alt_text_options', 'auto_alt_text_section', ['class' => 'plugin-option type-azure']);
+        add_settings_field(Constants::AAT_OPTION_FIELD_ENDPOINT_AZURE, __('Azure Endpoint','auto-alt-text'), [self::$instance, 'autoAltTextAzureEndpointCallback'], 'auto_alt_text_options', 'auto_alt_text_section', ['class' => 'plugin-option type-azure']);
 
     }
 
@@ -141,29 +171,13 @@ class PluginOptions
     {
         $typology = get_option(Constants::AAT_OPTION_FIELD_TYPOLOGY);
         ?>
-        <label>
-            <input type="radio" name="<?php echo Constants::AAT_OPTION_FIELD_TYPOLOGY; ?>"
-                   value="<?php echo Constants::AAT_OPTION_TYPOLOGY_CHOICE_AZURE; ?>" <?php checked($typology, Constants::AAT_OPTION_TYPOLOGY_CHOICE_AZURE); ?> />
-            <?php _e('Azure','auto-alt-text'); ?>
-        </label>
-        <br>
-        <label>
-            <input type="radio" name="<?php echo Constants::AAT_OPTION_FIELD_TYPOLOGY; ?>"
-                   value="<?php echo Constants::AAT_OPTION_TYPOLOGY_CHOICE_OPENAI; ?>" <?php checked($typology, Constants::AAT_OPTION_TYPOLOGY_CHOICE_OPENAI); ?> />
-            <?php _e('Open AI','auto-alt-text'); ?>
-        </label>
-        <br>
-        <label>
-            <input type="radio" name="<?php echo Constants::AAT_OPTION_FIELD_TYPOLOGY; ?>"
-                   value="<?php echo Constants::AAT_OPTION_TYPOLOGY_CHOICE_ARTICLE_TITLE; ?>" <?php checked($typology, Constants::AAT_OPTION_TYPOLOGY_CHOICE_ARTICLE_TITLE); ?> />
-            <?php _e('Title of the article','auto-alt-text'); ?>
-        </label>
-        <br>
-        <label>
-            <input type="radio" name="<?php echo Constants::AAT_OPTION_FIELD_TYPOLOGY; ?>"
-                   value="<?php echo Constants::AAT_OPTION_TYPOLOGY_CHOICE_ATTACHMENT_TITLE; ?>" <?php checked($typology, Constants::AAT_OPTION_TYPOLOGY_CHOICE_ATTACHMENT_TITLE); ?> />
-            <?php _e('Title of the attachment','auto-alt-text'); ?>
-        </label>
+        <select name="<?php echo Constants::AAT_OPTION_FIELD_TYPOLOGY; ?>" id="<?php echo Constants::AAT_OPTION_FIELD_TYPOLOGY; ?>">
+            <option value="<?php echo Constants::AAT_OPTION_TYPOLOGY_CHOICE_AZURE; ?>"<?php echo self::selected($typology, Constants::AAT_OPTION_TYPOLOGY_CHOICE_AZURE); ?>><?php _e('Azure','auto-alt-text'); ?></option>
+            <option value="<?php echo Constants::AAT_OPTION_TYPOLOGY_CHOICE_OPENAI; ?>"<?php echo self::selected($typology, Constants::AAT_OPTION_TYPOLOGY_CHOICE_OPENAI); ?>><?php _e('Open AI','auto-alt-text'); ?></option>
+            <option value="<?php echo Constants::AAT_OPTION_TYPOLOGY_CHOICE_ARTICLE_TITLE; ?>"<?php echo self::selected($typology, Constants::AAT_OPTION_TYPOLOGY_CHOICE_ARTICLE_TITLE); ?>><?php _e('Title of the article','auto-alt-text'); ?></option>
+            <option value="<?php echo Constants::AAT_OPTION_TYPOLOGY_CHOICE_ATTACHMENT_TITLE; ?>"<?php echo self::selected($typology, Constants::AAT_OPTION_TYPOLOGY_CHOICE_ATTACHMENT_TITLE); ?>><?php _e('Title of the attachment','auto-alt-text'); ?></option>
+        </select>
+
         <?php
     }
 
@@ -180,18 +194,18 @@ class PluginOptions
     {
         $modelSaved = get_option(Constants::AAT_OPTION_FIELD_MODEL_OPENAI);
         ?>
-        <label>
-            <select name="<?php echo Constants::AAT_OPTION_FIELD_MODEL_OPENAI; ?>"
-                    id="<?php echo Constants::AAT_OPTION_FIELD_MODEL_OPENAI; ?>">
-                <?php
-                foreach(Constants::AAT_OPENAI_MODELS as $modelName => $a) :
-                ?>
-                    <option value="<?php echo $modelName; ?>" <?php echo self::isModelSelected($modelSaved, $modelName) ? 'selected="selected"' : ''; ?>><?php echo $modelName; ?></option>
-                <?php
-                endforeach;
-                ?>
-            </select>
-        </label>
+            <label>
+                <select name="<?php echo Constants::AAT_OPTION_FIELD_MODEL_OPENAI; ?>"
+                        id="<?php echo Constants::AAT_OPTION_FIELD_MODEL_OPENAI; ?>">
+                    <?php
+                    foreach(Constants::AAT_OPENAI_MODELS as $modelName => $a) :
+                    ?>
+                        <option value="<?php echo $modelName; ?>" <?php echo self::isModelSelected($modelSaved, $modelName) ? 'selected="selected"' : ''; ?>><?php echo $modelName; ?></option>
+                    <?php
+                    endforeach;
+                    ?>
+                </select>
+            </label>
         <?php
     }
 
