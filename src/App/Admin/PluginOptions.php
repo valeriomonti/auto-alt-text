@@ -95,8 +95,12 @@ class PluginOptions
         register_setting('auto_alt_text_options', Constants::AAT_OPTION_FIELD_PROMPT_OPENAI);
         register_setting('auto_alt_text_options', Constants::AAT_OPTION_FIELD_TYPOLOGY);
         register_setting('auto_alt_text_options', Constants::AAT_OPTION_FIELD_MODEL_OPENAI);
-        register_setting('auto_alt_text_options', Constants::AAT_OPTION_FIELD_API_KEY_AZURE);
-        register_setting('auto_alt_text_options', Constants::AAT_OPTION_FIELD_ENDPOINT_AZURE);
+        register_setting('auto_alt_text_options', Constants::AAT_OPTION_FIELD_API_KEY_AZURE_COMPUTER_VISION);
+        register_setting('auto_alt_text_options', Constants::AAT_OPTION_FIELD_ENDPOINT_AZURE_COMPUTER_VISION);
+        register_setting('auto_alt_text_options', Constants::AAT_OPTION_FIELD_API_KEY_AZURE_TRANSLATE_INSTANCE);
+        register_setting('auto_alt_text_options', Constants::AAT_OPTION_FIELD_ENDPOINT_AZURE_TRANSLATE_INSTANCE);
+
+
 
 
         add_settings_section('auto_alt_text_section', __('Plugin options','auto-alt-text'), [self::$instance, 'autoAltTextOptionsSection'], 'auto_alt_text_options');
@@ -108,9 +112,11 @@ class PluginOptions
         add_settings_field(Constants::AAT_OPTION_FIELD_PROMPT_OPENAI, __('Prompt','auto-alt-text'), [self::$instance, 'autoAltTextPromptCallback'], 'auto_alt_text_options', 'auto_alt_text_section', ['class' => 'plugin-option type-openai']);
 
         //Azure Options
-        add_settings_field(Constants::AAT_OPTION_FIELD_API_KEY_AZURE, __('Azure API Key','auto-alt-text'), [self::$instance, 'autoAltTextAzureApiKeyCallback'], 'auto_alt_text_options', 'auto_alt_text_section', ['class' => 'plugin-option type-azure']);
-        add_settings_field(Constants::AAT_OPTION_FIELD_ENDPOINT_AZURE, __('Azure Endpoint','auto-alt-text'), [self::$instance, 'autoAltTextAzureEndpointCallback'], 'auto_alt_text_options', 'auto_alt_text_section', ['class' => 'plugin-option type-azure']);
+        add_settings_field(Constants::AAT_OPTION_FIELD_API_KEY_AZURE_COMPUTER_VISION, __('Azure Computer Vision API Key','auto-alt-text'), [self::$instance, 'autoAltTextAzureApiKeyComputerVisionCallback'], 'auto_alt_text_options', 'auto_alt_text_section', ['class' => 'plugin-option type-azure']);
+        add_settings_field(Constants::AAT_OPTION_FIELD_ENDPOINT_AZURE_COMPUTER_VISION, __('Azure Computer Vision Endpoint','auto-alt-text'), [self::$instance, 'autoAltTextAzureEndpointComputerVisionCallback'], 'auto_alt_text_options', 'auto_alt_text_section', ['class' => 'plugin-option type-azure']);
 
+        add_settings_field(Constants::AAT_OPTION_FIELD_API_KEY_AZURE_TRANSLATE_INSTANCE, __('Azure Translate Instance API Key','auto-alt-text'), [self::$instance, 'autoAltTextAzureApiKeyTranslateInstanceCallback'], 'auto_alt_text_options', 'auto_alt_text_section', ['class' => 'plugin-option type-azure']);
+        add_settings_field(Constants::AAT_OPTION_FIELD_ENDPOINT_AZURE_TRANSLATE_INSTANCE, __('Azure Translate Instance Endpoint','auto-alt-text'), [self::$instance, 'autoAltTextAzureEndpointTranslateInstanceCallback'], 'auto_alt_text_options', 'auto_alt_text_section', ['class' => 'plugin-option type-azure']);
     }
 
     /**
@@ -136,19 +142,38 @@ class PluginOptions
      * Callback per il campo Api Key Azure
      * @return void
      */
-    public static function autoAltTextAzureApiKeyCallback(): void
+    public static function autoAltTextAzureApiKeyComputerVisionCallback(): void
     {
-        $apiKey = get_option(Constants::AAT_OPTION_FIELD_API_KEY_AZURE);
-        echo '<input type="password" name="' . Constants::AAT_OPTION_FIELD_API_KEY_AZURE . '" value="' . $apiKey . '" />';
+        $apiKey = get_option(Constants::AAT_OPTION_FIELD_API_KEY_AZURE_COMPUTER_VISION);
+        echo '<input type="password" name="' . Constants::AAT_OPTION_FIELD_API_KEY_AZURE_COMPUTER_VISION . '" value="' . $apiKey . '" />';
+    }
+
+    /**
+     * Callback per il campo Api Key Azure
+     * @return void
+     */
+    public static function autoAltTextAzureApiKeyTranslateInstanceCallback(): void
+    {
+        $apiKey = get_option(Constants::AAT_OPTION_FIELD_API_KEY_AZURE_TRANSLATE_INSTANCE);
+        echo '<input type="password" name="' . Constants::AAT_OPTION_FIELD_API_KEY_AZURE_TRANSLATE_INSTANCE . '" value="' . $apiKey . '" />';
     }
 
     /**
      * @return void
      */
-    public static function autoAltTextAzureEndpointCallback(): void
+    public static function autoAltTextAzureEndpointComputerVisionCallback(): void
     {
-        $endpoint = get_option(Constants::AAT_OPTION_FIELD_ENDPOINT_AZURE);
-        echo '<input type="text" name="' . Constants::AAT_OPTION_FIELD_ENDPOINT_AZURE . '" value="' . $endpoint . '" />';
+        $endpoint = get_option(Constants::AAT_OPTION_FIELD_ENDPOINT_AZURE_COMPUTER_VISION);
+        echo '<input type="text" name="' . Constants::AAT_OPTION_FIELD_ENDPOINT_AZURE_COMPUTER_VISION . '" value="' . $endpoint . '" />';
+    }
+
+    /**
+     * @return void
+     */
+    public static function autoAltTextAzureEndpointTranslateInstanceCallback(): void
+    {
+        $endpoint = get_option(Constants::AAT_OPTION_FIELD_ENDPOINT_AZURE_TRANSLATE_INSTANCE);
+        echo '<input type="text" name="' . Constants::AAT_OPTION_FIELD_ENDPOINT_AZURE_TRANSLATE_INSTANCE . '" value="' . $endpoint . '" />';
     }
 
     /**
@@ -236,14 +261,33 @@ class PluginOptions
     /**
      * @return string
      */
-    public static function apiKeyAzure(): string
+    public static function apiKeyAzureComputerVision(): string
     {
-        return get_option(Constants::AAT_OPTION_FIELD_API_KEY_AZURE);
+        return get_option(Constants::AAT_OPTION_FIELD_API_KEY_AZURE_COMPUTER_VISION);
     }
 
-    public static function endpointAzure(): string
+    /**
+     * @return string
+     */
+    public static function endpointAzureComputerVision(): string
     {
-        return get_option(Constants::AAT_OPTION_FIELD_ENDPOINT_AZURE);
+        return get_option(Constants::AAT_OPTION_FIELD_ENDPOINT_AZURE_COMPUTER_VISION);
+    }
+
+    /**
+     * @return string
+     */
+    public static function apiKeyAzureTranslateInstance(): string
+    {
+        return get_option(Constants::AAT_OPTION_FIELD_API_KEY_AZURE_TRANSLATE_INSTANCE);
+    }
+
+    /**
+     * @return string
+     */
+    public static function endpointAzureTranslateInstance(): string
+    {
+        return get_option(Constants::AAT_OPTION_FIELD_ENDPOINT_AZURE_TRANSLATE_INSTANCE);
     }
 
     /**

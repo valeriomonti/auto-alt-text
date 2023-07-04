@@ -10,13 +10,14 @@ class Constants
     const AAT_OPTION_FIELD_PROMPT_OPENAI = 'aat_prompt_openai';
     const AAT_OPTION_FIELD_MODEL_OPENAI = 'aat_model_openai';
     const AAT_OPTION_FIELD_API_KEY_OPENAI = 'aat_api_key_openai';
-    const AAT_OPTION_FIELD_API_KEY_AZURE = 'aat_api_key_azure';
+    const AAT_OPTION_FIELD_API_KEY_AZURE_COMPUTER_VISION = 'aat_api_key_azure_computer_vision';
+    const AAT_OPTION_FIELD_API_KEY_AZURE_TRANSLATE_INSTANCE= 'aat_api_key_azure_translate_instance';
     const AAT_OPTION_TYPOLOGY_CHOICE_ARTICLE_TITLE = 'article-title';
     const AAT_OPTION_TYPOLOGY_CHOICE_ATTACHMENT_TITLE = 'attachment-title';
     const AAT_OPTION_TYPOLOGY_CHOICE_OPENAI = 'openai';
     const AAT_OPTION_TYPOLOGY_CHOICE_AZURE = 'azure';
-    const AAT_OPTION_FIELD_ENDPOINT_AZURE = 'endpoint-azure';
-
+    const AAT_OPTION_FIELD_ENDPOINT_AZURE_COMPUTER_VISION = 'aat_endpoint-azure-computer-vision';
+    const AAT_OPTION_FIELD_ENDPOINT_AZURE_TRANSLATE_INSTANCE = 'aat_endpoint-azure-translate-instance';
     const AAT_ENDPOINT_OPENAI_CHAT_COMPLETION = 'chat-completion';
     const AAT_ENDPOINT_OPENAI_TEXT_COMPLETION = 'text-completion';
     const AAT_IMAGE_URL_TAG = '%imageUrl%';
