@@ -29,6 +29,8 @@ class AzureComputerVisionCaptionsResponse implements AIProviderInterface
             throw new AzureComputerVisionException("Error code: " . $bodyResult['error']['code'] . " - " . $bodyResult['error']['message']);
         }
 
-        return $bodyResult['captionResult']['text'];
+        $altText = $bodyResult['captionResult']['text'];
+
+        return (new AzureTranslator())->translate($altText, PluginOptions::languageAzureTranslateInstance());
     }
 }

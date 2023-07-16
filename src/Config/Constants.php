@@ -18,6 +18,8 @@ class Constants
     const AAT_OPTION_TYPOLOGY_CHOICE_AZURE = 'azure';
     const AAT_OPTION_FIELD_ENDPOINT_AZURE_COMPUTER_VISION = 'aat_endpoint-azure-computer-vision';
     const AAT_OPTION_FIELD_ENDPOINT_AZURE_TRANSLATE_INSTANCE = 'aat_endpoint-azure-translate-instance';
+    const AAT_OPTION_FIELD_REGION_AZURE_TRANSLATE_INSTANCE = 'aat-region-azure-translate-instance';
+    const AAT_OPTION_FIELD_LANGUAGE_AZURE_TRANSLATE_INSTANCE = 'aat-language-azure-translate-instance';
     const AAT_ENDPOINT_OPENAI_CHAT_COMPLETION = 'chat-completion';
     const AAT_ENDPOINT_OPENAI_TEXT_COMPLETION = 'text-completion';
     const AAT_IMAGE_URL_TAG = '%imageUrl%';

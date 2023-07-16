@@ -5,6 +5,7 @@ namespace ValerioMonti\AutoAltText\App;
 use OpenAI\Exceptions\ErrorException;
 use ValerioMonti\AutoAltText\App\Admin\PluginOptions;
 use ValerioMonti\AutoAltText\App\AIProviders\Azure\AzureComputerVisionCaptionsResponse;
+use ValerioMonti\AutoAltText\App\AIProviders\Azure\AzureTranslator;
 use ValerioMonti\AutoAltText\App\AIProviders\OpenAI\OpenAIChatCompletionResponse;
 use ValerioMonti\AutoAltText\App\AIProviders\OpenAI\OpenAITextCompletionResponse;
 use ValerioMonti\AutoAltText\App\AltTextGeneratorParentPostTitle;
@@ -36,7 +37,6 @@ class Setup
 
         add_action('add_attachment', [self::$instance, 'addAltTextOnUpload']);
         add_action('plugins_loaded', [self::$instance, 'loadTextDomain']);
-
     }
 
     /**

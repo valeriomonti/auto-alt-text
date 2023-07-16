@@ -3,6 +3,7 @@
 namespace ValerioMonti\AutoAltText\App\Admin;
 
 use OpenAI;
+use ValerioMonti\AutoAltText\App\AIProviders\Azure\AzureTranslator;
 use ValerioMonti\AutoAltText\Config\Constants;
 
 class PluginOptions
@@ -99,9 +100,8 @@ class PluginOptions
         register_setting('auto_alt_text_options', Constants::AAT_OPTION_FIELD_ENDPOINT_AZURE_COMPUTER_VISION);
         register_setting('auto_alt_text_options', Constants::AAT_OPTION_FIELD_API_KEY_AZURE_TRANSLATE_INSTANCE);
         register_setting('auto_alt_text_options', Constants::AAT_OPTION_FIELD_ENDPOINT_AZURE_TRANSLATE_INSTANCE);
-
-
-
+        register_setting('auto_alt_text_options', Constants::AAT_OPTION_FIELD_REGION_AZURE_TRANSLATE_INSTANCE);
+        register_setting('auto_alt_text_options', Constants::AAT_OPTION_FIELD_LANGUAGE_AZURE_TRANSLATE_INSTANCE);
 
         add_settings_section('auto_alt_text_section', __('Plugin options','auto-alt-text'), [self::$instance, 'autoAltTextOptionsSection'], 'auto_alt_text_options');
 
@@ -117,6 +117,8 @@ class PluginOptions
 
         add_settings_field(Constants::AAT_OPTION_FIELD_API_KEY_AZURE_TRANSLATE_INSTANCE, __('Azure Translate Instance API Key','auto-alt-text'), [self::$instance, 'autoAltTextAzureApiKeyTranslateInstanceCallback'], 'auto_alt_text_options', 'auto_alt_text_section', ['class' => 'plugin-option type-azure']);
         add_settings_field(Constants::AAT_OPTION_FIELD_ENDPOINT_AZURE_TRANSLATE_INSTANCE, __('Azure Translate Instance Endpoint','auto-alt-text'), [self::$instance, 'autoAltTextAzureEndpointTranslateInstanceCallback'], 'auto_alt_text_options', 'auto_alt_text_section', ['class' => 'plugin-option type-azure']);
+        add_settings_field(Constants::AAT_OPTION_FIELD_REGION_AZURE_TRANSLATE_INSTANCE, __('Azure Translate Instance Region','auto-alt-text'), [self::$instance, 'autoAltTextAzureRegionTranslateInstanceCallback'], 'auto_alt_text_options', 'auto_alt_text_section', ['class' => 'plugin-option type-azure']);
+        add_settings_field(Constants::AAT_OPTION_FIELD_LANGUAGE_AZURE_TRANSLATE_INSTANCE, __('Azure Translate Instance Language','auto-alt-text'), [self::$instance, 'autoAltTextAzureLanguageTranslateInstanceCallback'], 'auto_alt_text_options', 'auto_alt_text_section', ['class' => 'plugin-option type-azure']);
     }
 
     /**
@@ -174,6 +176,30 @@ class PluginOptions
     {
         $endpoint = get_option(Constants::AAT_OPTION_FIELD_ENDPOINT_AZURE_TRANSLATE_INSTANCE);
         echo '<input type="text" name="' . Constants::AAT_OPTION_FIELD_ENDPOINT_AZURE_TRANSLATE_INSTANCE . '" value="' . $endpoint . '" />';
+    }
+
+    public static function autoAltTextAzureRegionTranslateInstanceCallback(): void
+    {
+        $region = get_option(Constants::AAT_OPTION_FIELD_REGION_AZURE_TRANSLATE_INSTANCE);
+        echo '<input type="text" name="' . Constants::AAT_OPTION_FIELD_REGION_AZURE_TRANSLATE_INSTANCE . '" value="' . $region . '" />';
+    }
+
+    public static function autoAltTextAzureLanguageTranslateInstanceCallback(): void
+    {
+        $currentLanguage = get_option(Constants::AAT_OPTION_FIELD_LANGUAGE_AZURE_TRANSLATE_INSTANCE);
+        $supportedLanguages = (new AzureTranslator())->supportedLanguages();
+        ?>
+        <select name="<?php echo Constants::AAT_OPTION_FIELD_LANGUAGE_AZURE_TRANSLATE_INSTANCE; ?>" id="<?php echo Constants::AAT_OPTION_FIELD_LANGUAGE_AZURE_TRANSLATE_INSTANCE; ?>">
+            <?php
+            foreach($supportedLanguages as $key => $language):
+            ?>
+            <option value="<?php echo $key ?>" <?php echo self::selected($currentLanguage, $key); ?>><?php echo $language['name'] ?></option>
+            <?php
+            endforeach;
+            ?>
+
+        </select>
+        <?php
     }
 
     /**
@@ -288,6 +314,22 @@ class PluginOptions
     public static function endpointAzureTranslateInstance(): string
     {
         return get_option(Constants::AAT_OPTION_FIELD_ENDPOINT_AZURE_TRANSLATE_INSTANCE);
+    }
+
+    /**
+     * @return string
+     */
+    public static function regionAzureTranslateInstance(): string
+    {
+        return get_option(Constants::AAT_OPTION_FIELD_REGION_AZURE_TRANSLATE_INSTANCE);
+    }
+
+    /**
+     * @return string
+     */
+    public static function languageAzureTranslateInstance(): string
+    {
+        return get_option(Constants::AAT_OPTION_FIELD_LANGUAGE_AZURE_TRANSLATE_INSTANCE);
     }
 
     /**
