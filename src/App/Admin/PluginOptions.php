@@ -115,10 +115,11 @@ class PluginOptions
         add_settings_field(Constants::AAT_OPTION_FIELD_API_KEY_AZURE_COMPUTER_VISION, __('Azure Computer Vision API Key','auto-alt-text'), [self::$instance, 'autoAltTextAzureApiKeyComputerVisionCallback'], 'auto_alt_text_options', 'auto_alt_text_section', ['class' => 'plugin-option type-azure']);
         add_settings_field(Constants::AAT_OPTION_FIELD_ENDPOINT_AZURE_COMPUTER_VISION, __('Azure Computer Vision Endpoint','auto-alt-text'), [self::$instance, 'autoAltTextAzureEndpointComputerVisionCallback'], 'auto_alt_text_options', 'auto_alt_text_section', ['class' => 'plugin-option type-azure']);
 
-        add_settings_field(Constants::AAT_OPTION_FIELD_API_KEY_AZURE_TRANSLATE_INSTANCE, __('Azure Translate Instance API Key','auto-alt-text'), [self::$instance, 'autoAltTextAzureApiKeyTranslateInstanceCallback'], 'auto_alt_text_options', 'auto_alt_text_section', ['class' => 'plugin-option type-azure']);
-        add_settings_field(Constants::AAT_OPTION_FIELD_ENDPOINT_AZURE_TRANSLATE_INSTANCE, __('Azure Translate Instance Endpoint','auto-alt-text'), [self::$instance, 'autoAltTextAzureEndpointTranslateInstanceCallback'], 'auto_alt_text_options', 'auto_alt_text_section', ['class' => 'plugin-option type-azure']);
-        add_settings_field(Constants::AAT_OPTION_FIELD_REGION_AZURE_TRANSLATE_INSTANCE, __('Azure Translate Instance Region','auto-alt-text'), [self::$instance, 'autoAltTextAzureRegionTranslateInstanceCallback'], 'auto_alt_text_options', 'auto_alt_text_section', ['class' => 'plugin-option type-azure']);
         add_settings_field(Constants::AAT_OPTION_FIELD_LANGUAGE_AZURE_TRANSLATE_INSTANCE, __('Azure Translate Instance Language','auto-alt-text'), [self::$instance, 'autoAltTextAzureLanguageTranslateInstanceCallback'], 'auto_alt_text_options', 'auto_alt_text_section', ['class' => 'plugin-option type-azure']);
+        add_settings_field(Constants::AAT_OPTION_FIELD_API_KEY_AZURE_TRANSLATE_INSTANCE, __('Azure Translate Instance API Key','auto-alt-text'), [self::$instance, 'autoAltTextAzureApiKeyTranslateInstanceCallback'], 'auto_alt_text_options', 'auto_alt_text_section', ['class' => 'plugin-option type-azure not-default-language']);
+        add_settings_field(Constants::AAT_OPTION_FIELD_ENDPOINT_AZURE_TRANSLATE_INSTANCE, __('Azure Translate Instance Endpoint','auto-alt-text'), [self::$instance, 'autoAltTextAzureEndpointTranslateInstanceCallback'], 'auto_alt_text_options', 'auto_alt_text_section', ['class' => 'plugin-option type-azure not-default-language']);
+        add_settings_field(Constants::AAT_OPTION_FIELD_REGION_AZURE_TRANSLATE_INSTANCE, __('Azure Translate Instance Region','auto-alt-text'), [self::$instance, 'autoAltTextAzureRegionTranslateInstanceCallback'], 'auto_alt_text_options', 'auto_alt_text_section', ['class' => 'plugin-option type-azure not-default-language']);
+
     }
 
     /**
