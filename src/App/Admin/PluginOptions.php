@@ -4,6 +4,7 @@ namespace ValerioMonti\AutoAltText\App\Admin;
 
 use OpenAI;
 use ValerioMonti\AutoAltText\App\AIProviders\Azure\AzureTranslator;
+use ValerioMonti\AutoAltText\App\Utilities\Encryption;
 use ValerioMonti\AutoAltText\Config\Constants;
 
 class PluginOptions
@@ -27,6 +28,22 @@ class PluginOptions
         add_action('admin_enqueue_scripts', [self::$instance, 'enqueueAdminScripts']);
         add_action('admin_menu', [self::$instance, 'addOptionsPageToTheMenu']);
         add_action('admin_init', [self::$instance, 'setupPluginOptions']);
+
+        add_action('pre_update_option_' . Constants::AAT_OPTION_FIELD_API_KEY_AZURE_COMPUTER_VISION, [self::$instance, 'encryptDataOnUpdate'], 10, 3);
+        add_action('pre_update_option_' . Constants::AAT_OPTION_FIELD_API_KEY_AZURE_TRANSLATE_INSTANCE, [self::$instance, 'encryptDataOnUpdate'], 10, 3);
+        add_action('pre_update_option_' . Constants::AAT_OPTION_FIELD_API_KEY_OPENAI, [self::$instance, 'encryptDataOnUpdate'], 10, 3);
+    }
+
+    /**
+     * @param ?string $newValue
+     * @param ?string $oldValue
+     * @return ?string
+     */
+    public function encryptDataOnUpdate(?string $newValue, ?string $oldValue): ?string {
+        if (!empty($newValue)) {
+            $newValue = (new Encryption())->encrypt($newValue);
+        }
+        return $newValue;
     }
 
     /**
@@ -138,7 +155,7 @@ class PluginOptions
     public static function autoAltTextOpenAIApiKeyCallback(): void
     {
         $apiKey = get_option(Constants::AAT_OPTION_FIELD_API_KEY_OPENAI);
-        echo '<input type="password" name="' . Constants::AAT_OPTION_FIELD_API_KEY_OPENAI . '" value="' . $apiKey . '" />';
+        echo '<input type="password" name="' . Constants::AAT_OPTION_FIELD_API_KEY_OPENAI . '" value="' . (new Encryption())->decrypt($apiKey) . '" />';
     }
 
     /**
@@ -148,7 +165,7 @@ class PluginOptions
     public static function autoAltTextAzureApiKeyComputerVisionCallback(): void
     {
         $apiKey = get_option(Constants::AAT_OPTION_FIELD_API_KEY_AZURE_COMPUTER_VISION);
-        echo '<input type="password" name="' . Constants::AAT_OPTION_FIELD_API_KEY_AZURE_COMPUTER_VISION . '" value="' . $apiKey . '" />';
+        echo '<input type="password" name="' . Constants::AAT_OPTION_FIELD_API_KEY_AZURE_COMPUTER_VISION . '" value="' . (new Encryption())->decrypt($apiKey) . '" />';
     }
 
     /**
@@ -158,7 +175,7 @@ class PluginOptions
     public static function autoAltTextAzureApiKeyTranslateInstanceCallback(): void
     {
         $apiKey = get_option(Constants::AAT_OPTION_FIELD_API_KEY_AZURE_TRANSLATE_INSTANCE);
-        echo '<input type="password" name="' . Constants::AAT_OPTION_FIELD_API_KEY_AZURE_TRANSLATE_INSTANCE . '" value="' . $apiKey . '" />';
+        echo '<input type="password" name="' . Constants::AAT_OPTION_FIELD_API_KEY_AZURE_TRANSLATE_INSTANCE . '" value="' . (new Encryption())->decrypt($apiKey) . '" />';
     }
 
     /**
