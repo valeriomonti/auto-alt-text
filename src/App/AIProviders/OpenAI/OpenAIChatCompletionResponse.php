@@ -25,6 +25,6 @@ class OpenAIChatCompletionResponse extends OpenAIResponse
                 ],
             ],
         ]);
-        return trim($result->toArray()['choices'][0]['message']['content'], '"');
+        return trim(preg_replace('/\s\s+\"/', '', $result->toArray()['choices'][0]['message']['content']));
     }
 }

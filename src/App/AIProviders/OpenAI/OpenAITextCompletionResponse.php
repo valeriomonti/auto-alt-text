@@ -21,6 +21,6 @@ class OpenAITextCompletionResponse extends OpenAIResponse
             'temperature' => 1
         ]);
 
-        return trim($result['choices'][0]['text'], '"');
+        return trim(preg_replace('/\s\s+\"/', '', $result['choices'][0]['text']));
     }
 }
