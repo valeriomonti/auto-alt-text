@@ -299,7 +299,8 @@ class PluginOptions
      */
     public static function apiKeyOpenAI(): string
     {
-        return get_option(Constants::AAT_OPTION_FIELD_API_KEY_OPENAI);
+        $apiKey = get_option(Constants::AAT_OPTION_FIELD_API_KEY_OPENAI);
+        return (new Encryption())->decrypt($apiKey);
     }
 
     /**
@@ -307,7 +308,8 @@ class PluginOptions
      */
     public static function apiKeyAzureComputerVision(): string
     {
-        return get_option(Constants::AAT_OPTION_FIELD_API_KEY_AZURE_COMPUTER_VISION);
+        $apiKey = get_option(Constants::AAT_OPTION_FIELD_API_KEY_AZURE_COMPUTER_VISION);
+        return (new Encryption())->decrypt($apiKey);
     }
 
     /**
@@ -323,7 +325,8 @@ class PluginOptions
      */
     public static function apiKeyAzureTranslateInstance(): string
     {
-        return get_option(Constants::AAT_OPTION_FIELD_API_KEY_AZURE_TRANSLATE_INSTANCE);
+        $apiKey = get_option(Constants::AAT_OPTION_FIELD_API_KEY_AZURE_TRANSLATE_INSTANCE);
+        return (new Encryption())->decrypt($apiKey);
     }
 
     /**
