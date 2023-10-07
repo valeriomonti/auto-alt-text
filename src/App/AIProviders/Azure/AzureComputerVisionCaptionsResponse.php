@@ -7,6 +7,16 @@ use ValerioMonti\AutoAltText\App\Exceptions\AzureComputerVisionException;
 
 class AzureComputerVisionCaptionsResponse implements AIProviderInterface
 {
+    private function __construct()
+    {
+
+    }
+
+    public static function make(): AzureComputerVisionCaptionsResponse
+    {
+        return new self();
+    }
+
     public function response(string $imageUrl): string
     {
         $response = wp_remote_post(

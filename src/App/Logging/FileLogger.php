@@ -6,6 +6,16 @@ use ValerioMonti\AutoAltText\Config\Constants;
 
 class FileLogger implements LoggerInterface
 {
+    private function __construct()
+    {
+
+    }
+
+    public static function make(): FileLogger
+    {
+        return new self();
+    }
+
     public function writeImageLog(int $imageId, string $errorMessage): void
     {
         $errorMessage = "[" . date('Y-m-d h:i:s') . "][ERROR][IMAGE_ID:" . $imageId . "] " . $errorMessage . "\n";

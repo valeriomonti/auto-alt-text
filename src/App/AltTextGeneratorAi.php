@@ -17,9 +17,14 @@ class AltTextGeneratorAi implements AltTextGeneratorInterface
 {
     private AIProviderInterface $AIProvider;
 
-    public function __construct(AIProviderInterface $AIProvider)
+    private function __construct(AIProviderInterface $AIProvider)
     {
         $this->AIProvider = $AIProvider;
+    }
+
+    public static function make(AIProviderInterface $aiProvider): AltTextGeneratorAi
+    {
+        return new self($aiProvider);
     }
 
     public function altText(int $imageId): string

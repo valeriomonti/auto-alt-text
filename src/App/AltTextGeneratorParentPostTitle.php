@@ -5,9 +5,14 @@ use ValerioMonti\AutoAltText\App\AltTextGeneratorInterface;
 
 class AltTextGeneratorParentPostTitle implements AltTextGeneratorInterface
 {
-    public function __construct()
+    private function __construct()
     {
 
+    }
+
+    public static function make(): AltTextGeneratorParentPostTitle
+    {
+        return new self();
     }
 
     public function altText(int $imageId): string

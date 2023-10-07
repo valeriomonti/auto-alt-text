@@ -24,9 +24,6 @@ class Setup
     {
     }
 
-    /**
-     * @return void
-     */
     public static function register(): void
     {
         if (is_null(self::$instance)) {
@@ -35,12 +32,14 @@ class Setup
 
         PluginOptions::register();
 
+        // When attachment is uploaded, create alt text
         add_action('add_attachment', [self::$instance, 'addAltTextOnUpload']);
+        // When plugin is loaded, load text domain
         add_action('plugins_loaded', [self::$instance, 'loadTextDomain']);
     }
 
     /**
-     * @return void
+     * Load text domain
      */
     public static function loadTextDomain(): void
     {
@@ -53,40 +52,41 @@ class Setup
      */
     public static function addAltTextOnUpload($postId): void
     {
-        if (wp_attachment_is_image($postId)) {
-            $altText = '';
-
-            switch (PluginOptions::typology()) {
-                case Constants::AAT_OPTION_TYPOLOGY_CHOICE_AZURE:
-                    try {
-                        $altText = (new AltTextGeneratorAi(new AzureComputerVisionCaptionsResponse()))->altText($postId);
-                    } catch (AzureComputerVisionException $e) {
-                        (new FileLogger())->writeImageLog($postId, "Azure - " . $e->getMessage());
-                    }
-                    break;
-                case Constants::AAT_OPTION_TYPOLOGY_CHOICE_OPENAI:
-                    $model = PluginOptions::model();
-                    try {
-                        if (Constants::AAT_ENDPOINT_OPENAI_TEXT_COMPLETION == Constants::AAT_OPENAI_MODELS[$model]) {
-                            $altText = (new AltTextGeneratorAi(new OpenAITextCompletionResponse()))->altText($postId);
-                        } else {
-                            $altText = (new AltTextGeneratorAi(new OpenAIChatCompletionResponse()))->altText($postId);
-                        }
-                    } catch(ErrorException $e) {
-                        $errorMessage = "OpenAI - " . $e->getErrorType() . " - " . $e->getMessage();
-                        (new FileLogger())->writeImageLog($postId, $errorMessage);
-                    }
-                    break;
-                case Constants::AAT_OPTION_TYPOLOGY_CHOICE_ARTICLE_TITLE:
-                    $altText = (new AltTextGeneratorParentPostTitle())->altText($postId);
-                    break;
-                case Constants::AAT_OPTION_TYPOLOGY_CHOICE_ATTACHMENT_TITLE:
-                    $altText = (new AltTextGeneratorAttachmentTitle())->altText($postId);
-                    break;
-            }
-
-            update_post_meta($postId, '_wp_attachment_image_alt', $altText);
+        if (!wp_attachment_is_image($postId)) {
+            return;
         }
+
+        $altText = '';
+        switch (PluginOptions::typology()) {
+            case Constants::AAT_OPTION_TYPOLOGY_CHOICE_AZURE:
+                try {
+                    $altText = (AltTextGeneratorAi::make(AzureComputerVisionCaptionsResponse::make()))->altText($postId);
+                } catch (AzureComputerVisionException $e) {
+                    (FileLogger::make())->writeImageLog($postId, "Azure - " . $e->getMessage());
+                }
+                break;
+            case Constants::AAT_OPTION_TYPOLOGY_CHOICE_OPENAI:
+                $model = PluginOptions::model();
+                try {
+                    if (Constants::AAT_ENDPOINT_OPENAI_TEXT_COMPLETION == Constants::AAT_OPENAI_MODELS[$model]) {
+                        $altText = (AltTextGeneratorAi::make(OpenAITextCompletionResponse::make()))->altText($postId);
+                    } else {
+                        $altText = (AltTextGeneratorAi::make(OpenAIChatCompletionResponse::make()))->altText($postId);
+                    }
+                } catch(ErrorException $e) {
+                    $errorMessage = "OpenAI - " . $e->getErrorType() . " - " . $e->getMessage();
+                    (FileLogger::make())->writeImageLog($postId, $errorMessage);
+                }
+                break;
+            case Constants::AAT_OPTION_TYPOLOGY_CHOICE_ARTICLE_TITLE:
+                $altText = (AltTextGeneratorParentPostTitle::make())->altText($postId);
+                break;
+            case Constants::AAT_OPTION_TYPOLOGY_CHOICE_ATTACHMENT_TITLE:
+                $altText = (AltTextGeneratorAttachmentTitle::make())->altText($postId);
+                break;
+        }
+
+        update_post_meta($postId, '_wp_attachment_image_alt', $altText);
     }
 
 }

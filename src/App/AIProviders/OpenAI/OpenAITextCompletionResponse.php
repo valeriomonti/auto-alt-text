@@ -7,6 +7,14 @@ use ValerioMonti\AutoAltText\App\Admin\PluginOptions;
 
 class OpenAITextCompletionResponse extends OpenAIResponse
 {
+    private function __construct() {
+
+    }
+
+    public static function make(): OpenAITextCompletionResponse
+    {
+        return new self();
+    }
     public function response(string $imageUrl): string
     {
 
