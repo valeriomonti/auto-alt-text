@@ -73,7 +73,7 @@ class PluginOptions
     }
 
     /**
-     * Crea la pagina delle opzioni e i campi di input
+     * Create option page and his fields
      * @return void
      */
     public static function optionsPageContent()
@@ -104,7 +104,7 @@ class PluginOptions
 
 
     /**
-     * Registra i campi di input e le impostazioni delle opzioni
+     * Register input fields and option settings
      * @return void
      */
     public static function setupPluginOptions(): void
@@ -140,7 +140,7 @@ class PluginOptions
     }
 
     /**
-     * Callback per la sezione delle opzioni
+     * Options section Callback
      * @return void
      */
     public static function autoAltTextOptionsSection(): void
@@ -149,7 +149,7 @@ class PluginOptions
     }
 
     /**
-     * Callback per il campo Api Key OPen AI
+     * Callback for the Api Key OPenAI field
      * @return void
      */
     public static function autoAltTextOpenAIApiKeyCallback(): void
@@ -159,7 +159,7 @@ class PluginOptions
     }
 
     /**
-     * Callback per il campo Api Key Azure
+     * Callback for the Computer vision Api Key Azure field
      * @return void
      */
     public static function autoAltTextAzureApiKeyComputerVisionCallback(): void
@@ -169,7 +169,7 @@ class PluginOptions
     }
 
     /**
-     * Callback per il campo Api Key Azure
+     * Callback for the Translate instance Api Key Azure field
      * @return void
      */
     public static function autoAltTextAzureApiKeyTranslateInstanceCallback(): void
