@@ -64,7 +64,7 @@ final class Encryption
     }
 
     /**
-     * @return string
+     * Get key from WordPress Authentication Unique Keys and Salts
      */
     private function getKey(): string
     {
@@ -77,7 +77,7 @@ final class Encryption
     }
 
     /**
-     * @return string
+     * Get salt from WordPress Authentication Unique Keys and Salts
      */
     private function getSalt(): string
     {

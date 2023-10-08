@@ -41,6 +41,6 @@ class AzureComputerVisionCaptionsResponse implements AIProviderInterface
 
         $altText = $bodyResult['captionResult']['text'];
 
-        return (new AzureTranslator())->translate($altText, PluginOptions::languageAzureTranslateInstance());
+        return (AzureTranslator::make())->translate($altText, PluginOptions::languageAzureTranslateInstance());
     }
 }

@@ -205,7 +205,7 @@ class PluginOptions
     public static function autoAltTextAzureLanguageTranslateInstanceCallback(): void
     {
         $currentLanguage = get_option(Constants::AAT_OPTION_FIELD_LANGUAGE_AZURE_TRANSLATE_INSTANCE);
-        $supportedLanguages = (new AzureTranslator())->supportedLanguages();
+        $supportedLanguages = (AzureTranslator::make())->supportedLanguages();
         ?>
         <select name="<?php echo Constants::AAT_OPTION_FIELD_LANGUAGE_AZURE_TRANSLATE_INSTANCE; ?>" id="<?php echo Constants::AAT_OPTION_FIELD_LANGUAGE_AZURE_TRANSLATE_INSTANCE; ?>">
             <?php

@@ -6,6 +6,15 @@ use ValerioMonti\AutoAltText\App\AIProviders\AITranslatorInterface;
 
 class AzureTranslator implements AITranslatorInterface
 {
+    private function __construct()
+    {
+
+    }
+
+    public static function make(): AzureTranslator
+    {
+        return new self();
+    }
     public function translate(string $text, string $language): string
     {
         $route = "translate?api-version=3.0&from=en&to=" . $language;
