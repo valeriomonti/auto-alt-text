@@ -9,7 +9,7 @@ const filterFields = (typology, language) => {
     optionFields.forEach((pluginOption) => {
         if ( pluginOption.classList.contains( 'type-' + typology) ) {
             if ( typology !== 'azure' || language !== 'en' || !pluginOption.classList.contains('not-default-language') ) {
-                pluginOption.style.display = 'table-row';
+                pluginOption.style.display = 'block';
             } else {
                 pluginOption.style.display = 'none';
             }

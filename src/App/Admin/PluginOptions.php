@@ -84,7 +84,100 @@ class PluginOptions
             <form method="post" action="options.php">
                 <?php
                 settings_fields('auto_alt_text_options');
-                do_settings_sections('auto_alt_text_options');
+
+                echo '<div>';
+                echo '<h3>' . __('Typology','auto-alt-text') . '</h3>';
+                $typology = get_option(Constants::AAT_OPTION_FIELD_TYPOLOGY);
+                ?>
+                <select name="<?php echo Constants::AAT_OPTION_FIELD_TYPOLOGY; ?>" id="<?php echo Constants::AAT_OPTION_FIELD_TYPOLOGY; ?>">
+                    <option value="<?php echo Constants::AAT_OPTION_TYPOLOGY_CHOICE_AZURE; ?>"<?php echo self::selected($typology, Constants::AAT_OPTION_TYPOLOGY_CHOICE_AZURE); ?>><?php _e('Azure','auto-alt-text'); ?></option>
+                    <option value="<?php echo Constants::AAT_OPTION_TYPOLOGY_CHOICE_OPENAI; ?>"<?php echo self::selected($typology, Constants::AAT_OPTION_TYPOLOGY_CHOICE_OPENAI); ?>><?php _e('Open AI','auto-alt-text'); ?></option>
+                    <option value="<?php echo Constants::AAT_OPTION_TYPOLOGY_CHOICE_ARTICLE_TITLE; ?>"<?php echo self::selected($typology, Constants::AAT_OPTION_TYPOLOGY_CHOICE_ARTICLE_TITLE); ?>><?php _e('Title of the article','auto-alt-text'); ?></option>
+                    <option value="<?php echo Constants::AAT_OPTION_TYPOLOGY_CHOICE_ATTACHMENT_TITLE; ?>"<?php echo self::selected($typology, Constants::AAT_OPTION_TYPOLOGY_CHOICE_ATTACHMENT_TITLE); ?>><?php _e('Title of the attachment','auto-alt-text'); ?></option>
+                </select>
+                <?php
+                echo '</div>';
+
+
+                echo '<div class="plugin-option type-openai">';
+                echo '<h3>' . __('OpenAI API Key','auto-alt-text') . '</h3>';
+                $apiKey = get_option(Constants::AAT_OPTION_FIELD_API_KEY_OPENAI);
+                echo '<input type="password" name="' . Constants::AAT_OPTION_FIELD_API_KEY_OPENAI . '" value="' . (new Encryption())->decrypt($apiKey) . '" />';
+                echo '</div>';
+
+                echo '<div class="plugin-option type-openai">';
+                echo '<h3>' . __('Prompt','auto-alt-text') . '</h3>';
+                $defaultPrompt = sprintf(__("Act like an SEO expert and write an English alt text for this image %s, using a maximum of 15 words. Just return the text without any additional comments.", "auto-alt-text"), Constants::AAT_IMAGE_URL_TAG);
+                $prompt = get_option(Constants::AAT_OPTION_FIELD_PROMPT_OPENAI) ?: $defaultPrompt;
+                echo '<textarea name="' . Constants::AAT_OPTION_FIELD_PROMPT_OPENAI . '" rows="5" cols="50">' . $prompt . '</textarea>';
+                echo '</div>';
+
+                echo '<div class="plugin-option type-openai">';
+                echo '<h3>' . __('OpenAi Model','auto-alt-text') . '</h3>';
+                $modelSaved = get_option(Constants::AAT_OPTION_FIELD_MODEL_OPENAI);
+                ?>
+                <label>
+                    <select name="<?php echo Constants::AAT_OPTION_FIELD_MODEL_OPENAI; ?>"
+                            id="<?php echo Constants::AAT_OPTION_FIELD_MODEL_OPENAI; ?>">
+                        <?php
+                        foreach(Constants::AAT_OPENAI_MODELS as $modelName => $a) :
+                            ?>
+                            <option value="<?php echo $modelName; ?>" <?php echo self::isModelSelected($modelSaved, $modelName) ? 'selected="selected"' : ''; ?>><?php echo $modelName; ?></option>
+                        <?php
+                        endforeach;
+                        ?>
+                    </select>
+                </label>
+                <?php
+                echo '</div>';
+
+                echo '<div class="plugin-option type-azure">';
+                echo '<h3>' . __('Azure Computer Vision API Key','auto-alt-text') . '</h3>';
+                $apiKey = get_option(Constants::AAT_OPTION_FIELD_API_KEY_AZURE_COMPUTER_VISION);
+                echo '<input type="password" name="' . Constants::AAT_OPTION_FIELD_API_KEY_AZURE_COMPUTER_VISION . '" value="' . (new Encryption())->decrypt($apiKey) . '" />';
+                echo '</div>';
+
+                echo '<div class="plugin-option type-azure">';
+                echo '<h3>' . __('Azure Computer Vision Endpoint','auto-alt-text') . '</h3>';
+                $endpoint = get_option(Constants::AAT_OPTION_FIELD_ENDPOINT_AZURE_COMPUTER_VISION);
+                echo '<input type="text" name="' . Constants::AAT_OPTION_FIELD_ENDPOINT_AZURE_COMPUTER_VISION . '" value="' . $endpoint . '" />';
+                echo '</div>';
+
+                echo '<div class="plugin-option type-azure">';
+                echo '<h3>' . __('Azure Translate Instance Language','auto-alt-text') . '</h3>';
+                $currentLanguage = get_option(Constants::AAT_OPTION_FIELD_LANGUAGE_AZURE_TRANSLATE_INSTANCE);
+                $supportedLanguages = (AzureTranslator::make())->supportedLanguages();
+                ?>
+                <select name="<?php echo Constants::AAT_OPTION_FIELD_LANGUAGE_AZURE_TRANSLATE_INSTANCE; ?>" id="<?php echo Constants::AAT_OPTION_FIELD_LANGUAGE_AZURE_TRANSLATE_INSTANCE; ?>">
+                    <?php
+                    foreach($supportedLanguages as $key => $language):
+                        ?>
+                        <option value="<?php echo $key ?>" <?php echo self::selected($currentLanguage, $key); ?>><?php echo $language['name'] ?></option>
+                    <?php
+                    endforeach;
+                    ?>
+                </select>
+                <?php
+                echo '</div>';
+
+                echo '<div class="plugin-option type-azure not-default-language">';
+                echo '<h3>' . __('Azure Translate Instance API Key','auto-alt-text') . '</h3>';
+                $apiKey = get_option(Constants::AAT_OPTION_FIELD_API_KEY_AZURE_TRANSLATE_INSTANCE);
+                echo '<input type="password" name="' . Constants::AAT_OPTION_FIELD_API_KEY_AZURE_TRANSLATE_INSTANCE . '" value="' . (new Encryption())->decrypt($apiKey) . '" />';
+                echo '</div>';
+
+                echo '<div class="plugin-option type-azure not-default-language">';
+                echo '<h3>' . __('Azure Translate Instance Endpoint','auto-alt-text') . '</h3>';
+                $endpoint = get_option(Constants::AAT_OPTION_FIELD_ENDPOINT_AZURE_TRANSLATE_INSTANCE);
+                echo '<input type="text" name="' . Constants::AAT_OPTION_FIELD_ENDPOINT_AZURE_TRANSLATE_INSTANCE . '" value="' . $endpoint . '" />';
+                echo '</div>';
+
+                echo '<div class="plugin-option type-azure not-default-language">';
+                echo '<h3>' . __('Azure Translate Instance Region','auto-alt-text') . '</h3>';
+                $region = get_option(Constants::AAT_OPTION_FIELD_REGION_AZURE_TRANSLATE_INSTANCE);
+                echo '<input type="text" name="' . Constants::AAT_OPTION_FIELD_REGION_AZURE_TRANSLATE_INSTANCE . '" value="' . $region . '" />';
+                echo '</div>';
+
                 submit_button();
                 ?>
             </form>
@@ -119,135 +212,6 @@ class PluginOptions
         register_setting('auto_alt_text_options', Constants::AAT_OPTION_FIELD_ENDPOINT_AZURE_TRANSLATE_INSTANCE);
         register_setting('auto_alt_text_options', Constants::AAT_OPTION_FIELD_REGION_AZURE_TRANSLATE_INSTANCE);
         register_setting('auto_alt_text_options', Constants::AAT_OPTION_FIELD_LANGUAGE_AZURE_TRANSLATE_INSTANCE);
-
-        add_settings_section('auto_alt_text_section', __('Plugin options','auto-alt-text'), [self::$instance, 'autoAltTextOptionsSection'], 'auto_alt_text_options');
-
-        // Open AI options
-        add_settings_field(Constants::AAT_OPTION_FIELD_TYPOLOGY, __('Typology','auto-alt-text'), [self::$instance, 'autoAltTextTypologyCallback'], 'auto_alt_text_options', 'auto_alt_text_section');
-        add_settings_field(Constants::AAT_OPTION_FIELD_MODEL_OPENAI, __('Model','auto-alt-text'), [self::$instance, 'autoAltTextAiModelCallback'], 'auto_alt_text_options', 'auto_alt_text_section', ['class' => 'plugin-option type-openai']);
-        add_settings_field(Constants::AAT_OPTION_FIELD_API_KEY_OPENAI, __('OpenAI API Key','auto-alt-text'), [self::$instance, 'autoAltTextOpenAIApiKeyCallback'], 'auto_alt_text_options', 'auto_alt_text_section', ['class' => 'plugin-option type-openai']);
-        add_settings_field(Constants::AAT_OPTION_FIELD_PROMPT_OPENAI, __('Prompt','auto-alt-text'), [self::$instance, 'autoAltTextPromptCallback'], 'auto_alt_text_options', 'auto_alt_text_section', ['class' => 'plugin-option type-openai']);
-
-        //Azure Options
-        add_settings_field(Constants::AAT_OPTION_FIELD_API_KEY_AZURE_COMPUTER_VISION, __('Azure Computer Vision API Key','auto-alt-text'), [self::$instance, 'autoAltTextAzureApiKeyComputerVisionCallback'], 'auto_alt_text_options', 'auto_alt_text_section', ['class' => 'plugin-option type-azure']);
-        add_settings_field(Constants::AAT_OPTION_FIELD_ENDPOINT_AZURE_COMPUTER_VISION, __('Azure Computer Vision Endpoint','auto-alt-text'), [self::$instance, 'autoAltTextAzureEndpointComputerVisionCallback'], 'auto_alt_text_options', 'auto_alt_text_section', ['class' => 'plugin-option type-azure']);
-
-        add_settings_field(Constants::AAT_OPTION_FIELD_LANGUAGE_AZURE_TRANSLATE_INSTANCE, __('Azure Translate Instance Language','auto-alt-text'), [self::$instance, 'autoAltTextAzureLanguageTranslateInstanceCallback'], 'auto_alt_text_options', 'auto_alt_text_section', ['class' => 'plugin-option type-azure']);
-        add_settings_field(Constants::AAT_OPTION_FIELD_API_KEY_AZURE_TRANSLATE_INSTANCE, __('Azure Translate Instance API Key','auto-alt-text'), [self::$instance, 'autoAltTextAzureApiKeyTranslateInstanceCallback'], 'auto_alt_text_options', 'auto_alt_text_section', ['class' => 'plugin-option type-azure not-default-language']);
-        add_settings_field(Constants::AAT_OPTION_FIELD_ENDPOINT_AZURE_TRANSLATE_INSTANCE, __('Azure Translate Instance Endpoint','auto-alt-text'), [self::$instance, 'autoAltTextAzureEndpointTranslateInstanceCallback'], 'auto_alt_text_options', 'auto_alt_text_section', ['class' => 'plugin-option type-azure not-default-language']);
-        add_settings_field(Constants::AAT_OPTION_FIELD_REGION_AZURE_TRANSLATE_INSTANCE, __('Azure Translate Instance Region','auto-alt-text'), [self::$instance, 'autoAltTextAzureRegionTranslateInstanceCallback'], 'auto_alt_text_options', 'auto_alt_text_section', ['class' => 'plugin-option type-azure not-default-language']);
-
-    }
-
-    /**
-     * Options section Callback
-     * @return void
-     */
-    public static function autoAltTextOptionsSection(): void
-    {
-        _e('Customize options','auto-alt-text');
-    }
-
-    /**
-     * Callback for the Api Key OPenAI field
-     * @return void
-     */
-    public static function autoAltTextOpenAIApiKeyCallback(): void
-    {
-        $apiKey = get_option(Constants::AAT_OPTION_FIELD_API_KEY_OPENAI);
-        echo '<input type="password" name="' . Constants::AAT_OPTION_FIELD_API_KEY_OPENAI . '" value="' . (new Encryption())->decrypt($apiKey) . '" />';
-    }
-
-    /**
-     * Callback for the Computer vision Api Key Azure field
-     * @return void
-     */
-    public static function autoAltTextAzureApiKeyComputerVisionCallback(): void
-    {
-        $apiKey = get_option(Constants::AAT_OPTION_FIELD_API_KEY_AZURE_COMPUTER_VISION);
-        echo '<input type="password" name="' . Constants::AAT_OPTION_FIELD_API_KEY_AZURE_COMPUTER_VISION . '" value="' . (new Encryption())->decrypt($apiKey) . '" />';
-    }
-
-    /**
-     * Callback for the Translate instance Api Key Azure field
-     * @return void
-     */
-    public static function autoAltTextAzureApiKeyTranslateInstanceCallback(): void
-    {
-        $apiKey = get_option(Constants::AAT_OPTION_FIELD_API_KEY_AZURE_TRANSLATE_INSTANCE);
-        echo '<input type="password" name="' . Constants::AAT_OPTION_FIELD_API_KEY_AZURE_TRANSLATE_INSTANCE . '" value="' . (new Encryption())->decrypt($apiKey) . '" />';
-    }
-
-    /**
-     * @return void
-     */
-    public static function autoAltTextAzureEndpointComputerVisionCallback(): void
-    {
-        $endpoint = get_option(Constants::AAT_OPTION_FIELD_ENDPOINT_AZURE_COMPUTER_VISION);
-        echo '<input type="text" name="' . Constants::AAT_OPTION_FIELD_ENDPOINT_AZURE_COMPUTER_VISION . '" value="' . $endpoint . '" />';
-    }
-
-    /**
-     * @return void
-     */
-    public static function autoAltTextAzureEndpointTranslateInstanceCallback(): void
-    {
-        $endpoint = get_option(Constants::AAT_OPTION_FIELD_ENDPOINT_AZURE_TRANSLATE_INSTANCE);
-        echo '<input type="text" name="' . Constants::AAT_OPTION_FIELD_ENDPOINT_AZURE_TRANSLATE_INSTANCE . '" value="' . $endpoint . '" />';
-    }
-
-    public static function autoAltTextAzureRegionTranslateInstanceCallback(): void
-    {
-        $region = get_option(Constants::AAT_OPTION_FIELD_REGION_AZURE_TRANSLATE_INSTANCE);
-        echo '<input type="text" name="' . Constants::AAT_OPTION_FIELD_REGION_AZURE_TRANSLATE_INSTANCE . '" value="' . $region . '" />';
-    }
-
-    public static function autoAltTextAzureLanguageTranslateInstanceCallback(): void
-    {
-        $currentLanguage = get_option(Constants::AAT_OPTION_FIELD_LANGUAGE_AZURE_TRANSLATE_INSTANCE);
-        $supportedLanguages = (AzureTranslator::make())->supportedLanguages();
-        ?>
-        <select name="<?php echo Constants::AAT_OPTION_FIELD_LANGUAGE_AZURE_TRANSLATE_INSTANCE; ?>" id="<?php echo Constants::AAT_OPTION_FIELD_LANGUAGE_AZURE_TRANSLATE_INSTANCE; ?>">
-            <?php
-            foreach($supportedLanguages as $key => $language):
-            ?>
-            <option value="<?php echo $key ?>" <?php echo self::selected($currentLanguage, $key); ?>><?php echo $language['name'] ?></option>
-            <?php
-            endforeach;
-            ?>
-
-        </select>
-        <?php
-    }
-
-    /**
-     * Callback per il campo Prompt
-     * @return void
-     */
-    public static function autoAltTextPromptCallback(): void
-    {
-        $defaultPrompt = sprintf(__("Act like an SEO expert and write an English alt text for this image %s, using a maximum of 15 words. Just return the text without any additional comments.", "auto-alt-text"), Constants::AAT_IMAGE_URL_TAG);
-        $prompt = get_option(Constants::AAT_OPTION_FIELD_PROMPT_OPENAI) ?: $defaultPrompt;
-
-        echo '<textarea name="' . Constants::AAT_OPTION_FIELD_PROMPT_OPENAI . '" rows="5" cols="50">' . $prompt . '</textarea>';
-    }
-
-    /**
-     * Callback per il campo Tipologia
-     * @return void
-     */
-    public static function autoAltTextTypologyCallback(): void
-    {
-        $typology = get_option(Constants::AAT_OPTION_FIELD_TYPOLOGY);
-        ?>
-        <select name="<?php echo Constants::AAT_OPTION_FIELD_TYPOLOGY; ?>" id="<?php echo Constants::AAT_OPTION_FIELD_TYPOLOGY; ?>">
-            <option value="<?php echo Constants::AAT_OPTION_TYPOLOGY_CHOICE_AZURE; ?>"<?php echo self::selected($typology, Constants::AAT_OPTION_TYPOLOGY_CHOICE_AZURE); ?>><?php _e('Azure','auto-alt-text'); ?></option>
-            <option value="<?php echo Constants::AAT_OPTION_TYPOLOGY_CHOICE_OPENAI; ?>"<?php echo self::selected($typology, Constants::AAT_OPTION_TYPOLOGY_CHOICE_OPENAI); ?>><?php _e('Open AI','auto-alt-text'); ?></option>
-            <option value="<?php echo Constants::AAT_OPTION_TYPOLOGY_CHOICE_ARTICLE_TITLE; ?>"<?php echo self::selected($typology, Constants::AAT_OPTION_TYPOLOGY_CHOICE_ARTICLE_TITLE); ?>><?php _e('Title of the article','auto-alt-text'); ?></option>
-            <option value="<?php echo Constants::AAT_OPTION_TYPOLOGY_CHOICE_ATTACHMENT_TITLE; ?>"<?php echo self::selected($typology, Constants::AAT_OPTION_TYPOLOGY_CHOICE_ATTACHMENT_TITLE); ?>><?php _e('Title of the attachment','auto-alt-text'); ?></option>
-        </select>
-
-        <?php
     }
 
     public static function isModelSelected($modelSaved, $currentModel): bool
@@ -258,26 +222,7 @@ class PluginOptions
 
         return $modelSaved == $currentModel;
     }
-
-    public static function autoAltTextAiModelCallback(): void
-    {
-        $modelSaved = get_option(Constants::AAT_OPTION_FIELD_MODEL_OPENAI);
-        ?>
-            <label>
-                <select name="<?php echo Constants::AAT_OPTION_FIELD_MODEL_OPENAI; ?>"
-                        id="<?php echo Constants::AAT_OPTION_FIELD_MODEL_OPENAI; ?>">
-                    <?php
-                    foreach(Constants::AAT_OPENAI_MODELS as $modelName => $a) :
-                    ?>
-                        <option value="<?php echo $modelName; ?>" <?php echo self::isModelSelected($modelSaved, $modelName) ? 'selected="selected"' : ''; ?>><?php echo $modelName; ?></option>
-                    <?php
-                    endforeach;
-                    ?>
-                </select>
-            </label>
-        <?php
-    }
-
+    
     /**
      * @return string
      */
