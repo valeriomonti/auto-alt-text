@@ -13,7 +13,6 @@ const filterFields = (typology, language) => {
             } else {
                 pluginOption.style.display = 'none';
             }
-            //pluginOption.style.display = 'table-row';
         } else {
             pluginOption.style.display = 'none';
         }

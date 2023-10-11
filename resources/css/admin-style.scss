@@ -1,3 +1,27 @@
-.plugin-option {
+.aat-options {
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+  border: 1px solid #ddd;
+  padding: 20px;
+  margin-top: 20px;
+
+  & > div {
+    border-bottom: 1px solid #ededed;
+    padding: 20px;
+  }
+  label {
+    display: block;
+    font-weight: 600;
+    font-size: 16px;
+    margin-bottom: 5px;
+  }
+  p.description {
+    margin-top: 0;
+    margin-bottom: 10px;
+  }
+
+  .plugin-option {
     display: none;
+  }
 }
