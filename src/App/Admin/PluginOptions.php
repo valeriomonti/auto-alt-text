@@ -86,8 +86,8 @@ class PluginOptions
                 settings_fields('auto_alt_text_options');
 
                 echo '<div>';
-                echo '<label for="' . Constants::AAT_OPTION_FIELD_TYPOLOGY . '">' . __('Typology','auto-alt-text') . '</label>';
-                echo '<p class="description">Come vuoi generare l\'alt text delle immagini?</p>';
+                echo '<label for="' . Constants::AAT_OPTION_FIELD_TYPOLOGY . '">' . __('Generation method','auto-alt-text') . '</label>';
+                echo '<p class="description">Quale metodo vuoi utilizzare l\'alt text delle immagini?</p>';
                 $typology = get_option(Constants::AAT_OPTION_FIELD_TYPOLOGY);
                 ?>
                 <select name="<?php echo Constants::AAT_OPTION_FIELD_TYPOLOGY; ?>" id="<?php echo Constants::AAT_OPTION_FIELD_TYPOLOGY; ?>">
