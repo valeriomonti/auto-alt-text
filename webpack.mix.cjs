@@ -1,4 +1,14 @@
 let mix = require('laravel-mix');
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+
+mix.webpackConfig({
+    plugins: [
+        new CleanWebpackPlugin({
+            cleanOnceBeforeBuildPatterns: ['**/*'],
+            verbose: true,
+        }),
+    ],
+});
 
 mix
     .postCss('resources/css/admin.css', 'css', [
