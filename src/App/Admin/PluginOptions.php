@@ -55,7 +55,7 @@ class PluginOptions
             $entryPoints = AUTO_ALT_TEXT_ABSPATH .'/dist/mix-manifest.json';
             $json = json_decode(file_get_contents($entryPoints), JSON_OBJECT_AS_ARRAY);
             $adminJs = $json['/js/admin.js'];
-            $adminCss = $json['/css/admin-style.css'];
+            $adminCss = $json['/css/admin.css'];
 
             wp_enqueue_script(Constants::AAT_PLUGIN_OPTIONS_PAGE_SLUG, AUTO_ALT_TEXT_URL . 'dist' . $adminJs, [], false, true);
             wp_enqueue_style(Constants::AAT_PLUGIN_OPTIONS_PAGE_SLUG, AUTO_ALT_TEXT_URL . 'dist' . $adminCss, [], false);

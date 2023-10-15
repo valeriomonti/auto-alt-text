@@ -1,10 +1,11 @@
 let mix = require('laravel-mix');
 
 mix
-    .sass('resources/css/admin-style.scss', 'css')
+    .postCss('resources/css/admin.css', 'css', [
+        require('postcss-nested')()
+    ])
     .js('resources/js/admin.js', 'dist/js')
-    .setPublicPath('dist')
-
+    .setPublicPath('dist');
 
 if (mix.inProduction()) {
     mix.version();
