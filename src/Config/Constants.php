@@ -38,4 +38,6 @@ class Constants
         "text-babbage-001" => self::AAT_ENDPOINT_OPENAI_TEXT_COMPLETION,
         "text-ada-001" => self::AAT_ENDPOINT_OPENAI_TEXT_COMPLETION
     ];
+
+    const AAT_OPENAI_MAX_TOKENS = 70;
 }
