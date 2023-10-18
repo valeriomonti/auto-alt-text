@@ -27,7 +27,7 @@ class OpenAITextCompletionResponse extends OpenAIResponse
             'model' => $model,
             'prompt' => $prompt,
             'max_tokens' => Constants::AAT_OPENAI_MAX_TOKENS,
-            'temperature' => 1
+            'temperature' => Constants::AAT_OPENAI_TEXT_COMPLETION_TEMPERATURE,
         ]);
 
         return $this->cleanString($result['choices'][0]['text']);

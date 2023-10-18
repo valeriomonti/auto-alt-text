@@ -40,4 +40,5 @@ class Constants
     ];
 
     const AAT_OPENAI_MAX_TOKENS = 70;
+    const AAT_OPENAI_TEXT_COMPLETION_TEMPERATURE = 0.6;
 }
