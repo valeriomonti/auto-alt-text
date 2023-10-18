@@ -9,6 +9,10 @@ use OpenAI\Exceptions\ErrorException;
 
 class OpenAIChatCompletionResponse extends OpenAIResponse
 {
+    public static function make(): OpenAIChatCompletionResponse
+    {
+        return new self();
+    }
     public function response(string $imageUrl): string
     {
         $model = PluginOptions::model();
