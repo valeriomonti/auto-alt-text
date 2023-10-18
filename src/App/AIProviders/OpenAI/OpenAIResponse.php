@@ -18,4 +18,19 @@ abstract class OpenAIResponse implements AIProviderInterface
         $prompt = PluginOptions::prompt() ?: Constants::AAT_OPENAI_DEFAULT_PROMPT;
         return str_replace(Constants::AAT_IMAGE_URL_TAG, $imageUrl, $prompt);
     }
+
+    /**
+     * @param string $text
+     * @return string
+     */
+    protected function cleanString(string $text): string
+    {
+        $patterns = array(
+            '/\"/',        // Double quotes
+            '/\s\s+/',     // Double or more consecutive white spaces
+            '/&quot;/'     // HTML sequence for double quotes
+        );
+
+        return trim(preg_replace($patterns, '', $text));
+    }
 }

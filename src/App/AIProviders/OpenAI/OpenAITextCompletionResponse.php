@@ -30,12 +30,6 @@ class OpenAITextCompletionResponse extends OpenAIResponse
             'temperature' => 1
         ]);
 
-        $patterns = array(
-            '/\"/',        // Double quotes
-            '/\s\s+/',     // Double or more consecutive white spaces
-            '/&quot;/'     // HTML sequence for double quotes
-        );
-
-        return trim(preg_replace($patterns, '', $result['choices'][0]['text']));
+        return $this->cleanString($result['choices'][0]['text']);
     }
 }
