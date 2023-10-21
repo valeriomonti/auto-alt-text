@@ -13,6 +13,7 @@ class OpenAIChatCompletionResponse extends OpenAIResponse
     {
         return new self();
     }
+
     public function response(string $imageUrl): string
     {
         $model = PluginOptions::model();

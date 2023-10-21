@@ -84,6 +84,8 @@ class Setup
             case Constants::AAT_OPTION_TYPOLOGY_CHOICE_ATTACHMENT_TITLE:
                 $altText = (AltTextGeneratorAttachmentTitle::make())->altText($postId);
                 break;
+            default:
+                return;
         }
 
         update_post_meta($postId, '_wp_attachment_image_alt', $altText);

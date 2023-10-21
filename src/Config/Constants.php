@@ -16,6 +16,7 @@ class Constants
     const AAT_OPTION_TYPOLOGY_CHOICE_ATTACHMENT_TITLE = 'attachment-title';
     const AAT_OPTION_TYPOLOGY_CHOICE_OPENAI = 'openai';
     const AAT_OPTION_TYPOLOGY_CHOICE_AZURE = 'azure';
+    const AAT_OPTION_TYPOLOGY_DEACTIVATED = 'deactivated';
     const AAT_OPTION_FIELD_ENDPOINT_AZURE_COMPUTER_VISION = 'aat_endpoint-azure-computer-vision';
     const AAT_OPTION_FIELD_ENDPOINT_AZURE_TRANSLATE_INSTANCE = 'aat_endpoint-azure-translate-instance';
     const AAT_OPTION_FIELD_REGION_AZURE_TRANSLATE_INSTANCE = 'aat-region-azure-translate-instance';

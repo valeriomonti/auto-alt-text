@@ -81,16 +81,30 @@ class PluginOptions
         ?>
         <div class="wrap">
             <h1>Auto Alt Text Options</h1>
+
             <form method="post" action="options.php" class="aat-options">
+                <div>
+                    <p>
+                        Questo plugin ti permette di generare in modo automatico un Alt Text per le immagini che caricherai nella media library del sito.<br>
+                        Sono disponibili i seguenti metodi per generare l'alt text:
+                    </p>
+                    <ul>
+                        <li><strong>Azure's APIs</strong>: l'immagine verrà analizzata dai servizi di AI forniti da Azure e verrà generato un alt text nella lingua che preferisci;</li>
+                        <li><strong>OperAi's APIs</strong>: in base al prompt che imposterai verrà creato un alt text basato sul nome del file immagine che caricherai nella media library (al momento le API di Open ai non consentono di analizzare il contenuto dell'immagine);</li>
+                        <li><strong>Title of the article</strong>: se l'immagine è caricata in un articolo, il titolo dell'articolo verrà utilizzato come alt text</li>
+                        <li><strong>Title of the attachment</strong>: verrà copiato nell'alt text il titolo dell'attachment</li>
+                    </ul>
+                </div>
                 <?php
                 settings_fields('auto_alt_text_options');
 
                 echo '<div>';
                 echo '<label for="' . Constants::AAT_OPTION_FIELD_TYPOLOGY . '">' . __('Generation method','auto-alt-text') . '</label>';
-                echo '<p class="description">Quale metodo vuoi utilizzare l\'alt text delle immagini?</p>';
+                echo '<p class="description">Quale metodo vuoi utilizzare per generare l\'alt text delle immagini?</p>';
                 $typology = get_option(Constants::AAT_OPTION_FIELD_TYPOLOGY);
                 ?>
                 <select name="<?php echo Constants::AAT_OPTION_FIELD_TYPOLOGY; ?>" id="<?php echo Constants::AAT_OPTION_FIELD_TYPOLOGY; ?>">
+                    <option value="<?php echo Constants::AAT_OPTION_TYPOLOGY_DEACTIVATED; ?>"<?php echo self::selected($typology, Constants::AAT_OPTION_TYPOLOGY_DEACTIVATED); ?>><?php _e('Deactivated','auto-alt-text'); ?></option>
                     <option value="<?php echo Constants::AAT_OPTION_TYPOLOGY_CHOICE_AZURE; ?>"<?php echo self::selected($typology, Constants::AAT_OPTION_TYPOLOGY_CHOICE_AZURE); ?>><?php _e('Azure\'s APIs','auto-alt-text'); ?></option>
                     <option value="<?php echo Constants::AAT_OPTION_TYPOLOGY_CHOICE_OPENAI; ?>"<?php echo self::selected($typology, Constants::AAT_OPTION_TYPOLOGY_CHOICE_OPENAI); ?>><?php _e('Open AI\' APIs','auto-alt-text'); ?></option>
                     <option value="<?php echo Constants::AAT_OPTION_TYPOLOGY_CHOICE_ARTICLE_TITLE; ?>"<?php echo self::selected($typology, Constants::AAT_OPTION_TYPOLOGY_CHOICE_ARTICLE_TITLE); ?>><?php _e('Title of the article (not AI)','auto-alt-text'); ?></option>
@@ -98,6 +112,9 @@ class PluginOptions
                 </select>
                 <?php
                 echo '</div>';
+
+                echo '<div class="plugin-option type-openai"><strong>Attenzione</strong>: al momento le api di OpenAi non offrono la possibilità di descrivere un\'immagine con la computer vision.
+                        Per il momento quindi, compilando i seguenti campi potrai generare un alt text basato solamente sul nome del file immagine.<br>Se desideri una descrizione accurata utilizza le api di Azure</div>';
 
                 echo '<div class="plugin-option type-openai">';
                 echo '<label for="' . Constants::AAT_OPTION_FIELD_API_KEY_OPENAI . '">' . __('OpenAI API Key','auto-alt-text') . '</label>';
@@ -108,15 +125,15 @@ class PluginOptions
 
                 echo '<div class="plugin-option type-openai">';
                 echo '<label for="' . Constants::AAT_OPTION_FIELD_PROMPT_OPENAI . '">' . __('Prompt','auto-alt-text') . '</label>';
-                echo '<p class="description">Inserisci un propt specifico e dettagliato in base alle tue esigenze</p>';
+                echo '<p class="description">Inserisci un prompt specifico e dettagliato in base alle tue esigenze</p>';
                 $defaultPrompt = sprintf(__("Act like an SEO expert and write an English alt text for this image %s, using a maximum of 15 words. Just return the text without any additional comments.", "auto-alt-text"), Constants::AAT_IMAGE_URL_TAG);
                 $prompt = get_option(Constants::AAT_OPTION_FIELD_PROMPT_OPENAI) ?: $defaultPrompt;
                 echo '<textarea name="' . Constants::AAT_OPTION_FIELD_PROMPT_OPENAI . '" rows="5" cols="50">' . $prompt . '</textarea>';
                 echo '</div>';
 
                 echo '<div class="plugin-option type-openai">';
-                echo '<p class="description">Scegli il modello di Open Ai che vuoi utilizzare per generare l\'alt tag</p>';
                 echo '<label for="' . Constants::AAT_OPTION_FIELD_MODEL_OPENAI . '">' . __('OpenAi Model','auto-alt-text') . '</label>';
+                echo '<p class="description">Scegli il modello di Open Ai che vuoi utilizzare per generare l\'alt tag</p>';
                 $modelSaved = get_option(Constants::AAT_OPTION_FIELD_MODEL_OPENAI);
                 ?>
 
@@ -134,6 +151,8 @@ class PluginOptions
                 <?php
                 echo '</div>';
 
+                echo '<div class="plugin-option type-azure">Compila i seguenti campi per sfruttare i servizi di computer vision di Azure per generare gli Alt text.</div>';
+
                 echo '<div class="plugin-option type-azure">';
                 echo '<label for="' . Constants::AAT_OPTION_FIELD_API_KEY_AZURE_COMPUTER_VISION . '">' . __('Azure Computer Vision API Key','auto-alt-text') . '</label>';
                 echo '<p class="description">Inserisci la chiave API del servizio Computer Vision del tuo account Azure</p>';
@@ -150,6 +169,7 @@ class PluginOptions
 
                 echo '<div class="plugin-option type-azure">';
                 echo '<label for="' . Constants::AAT_OPTION_FIELD_LANGUAGE_AZURE_TRANSLATE_INSTANCE . '">' . __('Alt Text Language','auto-alt-text') . '</label>';
+                echo '<p class="description">Seleziona la lingua in cui deve essere scritto l\'alt text</p>';
                 $currentLanguage = get_option(Constants::AAT_OPTION_FIELD_LANGUAGE_AZURE_TRANSLATE_INSTANCE);
                 $supportedLanguages = (AzureTranslator::make())->supportedLanguages();
                 ?>
@@ -164,6 +184,8 @@ class PluginOptions
                 </select>
                 <?php
                 echo '</div>';
+
+                echo '<div class="plugin-option type-azure not-default-language"><strong>Attenzione</strong>: la lingua di default è l\'inglese. Hai selezionato una lingua diversa pertanto è necesario inserire le informazioni necessarie per poter tradurre l\'alt text sfruttando il servizio Translation Instance di Azure</div>';
 
                 echo '<div class="plugin-option type-azure not-default-language">';
                 echo '<label for="' . Constants::AAT_OPTION_FIELD_API_KEY_AZURE_TRANSLATE_INSTANCE . '">' . __('Azure Translate Instance API Key','auto-alt-text') . '</label>';
