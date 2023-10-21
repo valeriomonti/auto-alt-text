@@ -6,6 +6,16 @@
   padding: 20px;
   margin-top: 20px;
 
+  &.plugin-description {
+    padding: 20px 40px;
+    ul {
+      margin-top: 0;
+    }
+    p, li {
+      font-size: 16px;
+    }
+  }
+
   & > div {
     border-bottom: 1px solid #ededed;
     padding: 20px;
@@ -33,5 +43,10 @@
 
   .plugin-option {
     display: none;
+  }
+
+  ul {
+    list-style: disc;
+    padding-left: 13px;
   }
 }

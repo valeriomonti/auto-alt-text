@@ -82,19 +82,20 @@ class PluginOptions
         <div class="wrap">
             <h1>Auto Alt Text Options</h1>
 
+            <div class="aat-options plugin-description">
+                <p>
+                    Questo plugin ti permette di generare in modo automatico un Alt Text per le immagini che vengono caricate nella media library del sito.<br>
+                    Sono disponibili i seguenti metodi per generare l'alt text:
+                </p>
+                <ul>
+                    <li><strong>Azure's APIs</strong>: l'immagine verrà analizzata dai servizi di AI forniti da Azure e verrà generato un alt text nella lingua che preferisci;</li>
+                    <li><strong>OperAi's APIs</strong>: in base al prompt che imposterai verrà creato un alt text basato sul nome del file immagine che caricherai nella media library (al momento le API di Open ai non consentono di analizzare il contenuto dell'immagine);</li>
+                    <li><strong>Title of the article</strong>: se l'immagine è caricata in un articolo, il titolo dell'articolo verrà utilizzato come alt text</li>
+                    <li><strong>Title of the attachment</strong>: verrà copiato nell'alt text il titolo dell'attachment</li>
+                </ul>
+                <p>Una volta inseriti tutti i dati necessari per il metodo di generazione scelto, gli alt text verranno creati automaticamente al caricamento di ogni immagine.</p>
+            </div>
             <form method="post" action="options.php" class="aat-options">
-                <div>
-                    <p>
-                        Questo plugin ti permette di generare in modo automatico un Alt Text per le immagini che caricherai nella media library del sito.<br>
-                        Sono disponibili i seguenti metodi per generare l'alt text:
-                    </p>
-                    <ul>
-                        <li><strong>Azure's APIs</strong>: l'immagine verrà analizzata dai servizi di AI forniti da Azure e verrà generato un alt text nella lingua che preferisci;</li>
-                        <li><strong>OperAi's APIs</strong>: in base al prompt che imposterai verrà creato un alt text basato sul nome del file immagine che caricherai nella media library (al momento le API di Open ai non consentono di analizzare il contenuto dell'immagine);</li>
-                        <li><strong>Title of the article</strong>: se l'immagine è caricata in un articolo, il titolo dell'articolo verrà utilizzato come alt text</li>
-                        <li><strong>Title of the attachment</strong>: verrà copiato nell'alt text il titolo dell'attachment</li>
-                    </ul>
-                </div>
                 <?php
                 settings_fields('auto_alt_text_options');
 
@@ -162,7 +163,7 @@ class PluginOptions
 
                 echo '<div class="plugin-option type-azure">';
                 echo '<label for="' . Constants::AAT_OPTION_FIELD_ENDPOINT_AZURE_COMPUTER_VISION . '">' . __('Azure Computer Vision Endpoint','auto-alt-text') . '</label>';
-                echo '<p class="description">Inserisci l\'endpoint del servizio di Computer Vision</p>';
+                echo '<p class="description">Inserisci l\'endpoint del servizio di Computer Vision (es. https://computer-vision-france-central.cognitiveservices.azure.com/)</p>';
                 $endpoint = get_option(Constants::AAT_OPTION_FIELD_ENDPOINT_AZURE_COMPUTER_VISION);
                 echo '<input type="text" name="' . Constants::AAT_OPTION_FIELD_ENDPOINT_AZURE_COMPUTER_VISION . '" value="' . $endpoint . '" />';
                 echo '</div>';
@@ -196,14 +197,14 @@ class PluginOptions
 
                 echo '<div class="plugin-option type-azure not-default-language">';
                 echo '<label for="' . Constants::AAT_OPTION_FIELD_ENDPOINT_AZURE_TRANSLATE_INSTANCE . '">' . __('Azure Translate Instance Endpoint','auto-alt-text') . '</label>';
-                echo '<p class="description">Inserisci l\'endpoint del servizio Translate Instance</p>';
+                echo '<p class="description">Inserisci l\'endpoint del servizio Translate Instance (es. https://api.cognitive.microsofttranslator.com/)</p>';
                 $endpoint = get_option(Constants::AAT_OPTION_FIELD_ENDPOINT_AZURE_TRANSLATE_INSTANCE);
                 echo '<input type="text" name="' . Constants::AAT_OPTION_FIELD_ENDPOINT_AZURE_TRANSLATE_INSTANCE . '" value="' . $endpoint . '" />';
                 echo '</div>';
 
                 echo '<div class="plugin-option type-azure not-default-language">';
                 echo '<label for="' . Constants::AAT_OPTION_FIELD_REGION_AZURE_TRANSLATE_INSTANCE . '">' . __('Azure Translate Instance Region','auto-alt-text') . '</label>';
-                echo '<p class="description">Inserire la regione del servizio Translate Instance di Azure</p>';
+                echo '<p class="description">Inserire la regione del servizio Translate Instance di Azure (es. westeurope)</p>';
                 $region = get_option(Constants::AAT_OPTION_FIELD_REGION_AZURE_TRANSLATE_INSTANCE);
                 echo '<input type="text" name="' . Constants::AAT_OPTION_FIELD_REGION_AZURE_TRANSLATE_INSTANCE . '" value="' . $region . '" />';
                 echo '</div>';
