@@ -234,15 +234,15 @@ class PluginOptions
     public static function setupPluginOptions(): void
     {
         register_setting('auto_alt_text_options', Constants::AAT_OPTION_FIELD_API_KEY_OPENAI);
-        register_setting('auto_alt_text_options', Constants::AAT_OPTION_FIELD_PROMPT_OPENAI);
-        register_setting('auto_alt_text_options', Constants::AAT_OPTION_FIELD_TYPOLOGY);
-        register_setting('auto_alt_text_options', Constants::AAT_OPTION_FIELD_MODEL_OPENAI);
+        register_setting('auto_alt_text_options', Constants::AAT_OPTION_FIELD_PROMPT_OPENAI, [self::class, 'sanitizeTextArea']);
+        register_setting('auto_alt_text_options', Constants::AAT_OPTION_FIELD_TYPOLOGY, [self::class, 'sanitizeText']);
+        register_setting('auto_alt_text_options', Constants::AAT_OPTION_FIELD_MODEL_OPENAI, [self::class, 'sanitizeText']);
         register_setting('auto_alt_text_options', Constants::AAT_OPTION_FIELD_API_KEY_AZURE_COMPUTER_VISION);
-        register_setting('auto_alt_text_options', Constants::AAT_OPTION_FIELD_ENDPOINT_AZURE_COMPUTER_VISION);
+        register_setting('auto_alt_text_options', Constants::AAT_OPTION_FIELD_ENDPOINT_AZURE_COMPUTER_VISION, [self::class, 'sanitizeUrl']);
         register_setting('auto_alt_text_options', Constants::AAT_OPTION_FIELD_API_KEY_AZURE_TRANSLATE_INSTANCE);
-        register_setting('auto_alt_text_options', Constants::AAT_OPTION_FIELD_ENDPOINT_AZURE_TRANSLATE_INSTANCE);
-        register_setting('auto_alt_text_options', Constants::AAT_OPTION_FIELD_REGION_AZURE_TRANSLATE_INSTANCE);
-        register_setting('auto_alt_text_options', Constants::AAT_OPTION_FIELD_LANGUAGE_AZURE_TRANSLATE_INSTANCE);
+        register_setting('auto_alt_text_options', Constants::AAT_OPTION_FIELD_ENDPOINT_AZURE_TRANSLATE_INSTANCE, [self::class, 'sanitizeUrl']);
+        register_setting('auto_alt_text_options', Constants::AAT_OPTION_FIELD_REGION_AZURE_TRANSLATE_INSTANCE, [self::class, 'sanitizeText']);
+        register_setting('auto_alt_text_options', Constants::AAT_OPTION_FIELD_LANGUAGE_AZURE_TRANSLATE_INSTANCE, [self::class, 'sanitizeText']);
     }
 
     public static function isModelSelected($modelSaved, $currentModel): bool
@@ -335,6 +335,21 @@ class PluginOptions
     public static function model(): string
     {
         return get_option(Constants::AAT_OPTION_FIELD_MODEL_OPENAI);
+    }
+
+    public static function sanitizeUrl($input):string
+    {
+        return sanitize_url($input);
+    }
+
+    public static function sanitizeText($input): string
+    {
+        return sanitize_text_field($input);
+    }
+
+    public static function sanitizeTextArea($input): string
+    {
+        return sanitize_textarea_field($input);
     }
 
 }
