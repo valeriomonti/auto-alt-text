@@ -1,0 +1,252 @@
+# Copyright (C) 2023 Valerio Monti
+# This file is distributed under the GPL v3.
+msgid ""
+msgstr ""
+"Project-Id-Version: Auto Alt Text 1.0.0\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/auto-alt-text\n"
+"POT-Creation-Date: 2023-10-23T12:56:25+00:00\n"
+"PO-Revision-Date: 2023-10-23 23:20+0200\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: it_IT\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 3.4\n"
+"X-Domain: auto-alt-text\n"
+
+#. Plugin Name of the plugin
+msgid "Auto Alt Text"
+msgstr "Auto Alt Text"
+
+#. Plugin URI of the plugin
+#. Author URI of the plugin
+msgid "https://www.vmweb.it"
+msgstr "https://www.vmweb.it"
+
+#. Description of the plugin
+msgid ""
+"This WordPress plugin allows you to automatically generate an Alt Text for "
+"images uploaded to the media library using Azure or OpenaAi AI APIs."
+msgstr ""
+"Questo plugin WordPress ti permette di generare automaticamente un Alt Text "
+"per le immagini caricate nella media library utilizzando le API IA di Azure "
+"o OpenAi."
+
+#. Author of the plugin
+msgid "Valerio Monti"
+msgstr "Valerio Monti"
+
+#: src/App/Admin/PluginOptions.php:83
+msgid "Auto Alt Text Options"
+msgstr "Opzioni Auto Alt Text"
+
+#: src/App/Admin/PluginOptions.php:87
+msgid ""
+"This plugin allows you to automatically generate Alt Text for the images "
+"that are uploaded to the site's media library."
+msgstr ""
+"Questo plugin ti permette di generare in modo automatico un Alt Text per le "
+"immagini che vengono caricate nella media library del sito."
+
+#: src/App/Admin/PluginOptions.php:88
+msgid "The following methods are available to generate the alt text:"
+msgstr "Per generare l’alt text sono disponibili i seguenti metodi:"
+
+#: src/App/Admin/PluginOptions.php:91
+msgid ""
+"the image will be analyzed by the AI services provided by Azure and an alt "
+"text will be generated in the language of your choice;"
+msgstr ""
+"l’immagine verrà analizzata dai servizi di AI forniti da Azure e verrà "
+"generato un alt text nella lingua che preferisci;"
+
+#: src/App/Admin/PluginOptions.php:92
+msgid ""
+"based on the prompt you set, an alt text will be created based on the name "
+"of the image file you upload to the media library (currently, OpenAI's APIs "
+"do not allow to analyze the content of the image);"
+msgstr ""
+"in base al prompt che imposterai, verrà creato un alt text basato sul nome "
+"del file immagine che caricherai nella media library (al momento, le API di "
+"OpenAI non consentono di analizzare il contenuto dell’immagine);"
+
+#: src/App/Admin/PluginOptions.php:93
+msgid ""
+"if the image is uploaded within an article, the title of the article will be "
+"used as alt text;"
+msgstr ""
+"se l’immagine è caricata in un articolo, il titolo dell’articolo verrà "
+"utilizzato come alt text;"
+
+#: src/App/Admin/PluginOptions.php:94
+msgid "the title of the attachment will be copied into the alt text;"
+msgstr "il titolo dell’attachment verrà copiato nell’alt text;"
+
+#: src/App/Admin/PluginOptions.php:96
+msgid ""
+"Once all the necessary data for the chosen generation method has been "
+"entered, the alt texts will be created automatically upon uploading each "
+"image."
+msgstr ""
+"Una volta inseriti tutti i dati necessari per il metodo di generazione "
+"scelto, gli alt text verranno creati automaticamente al caricamento di ogni "
+"immagine."
+
+#: src/App/Admin/PluginOptions.php:103
+msgid "Generation method"
+msgstr "Metodo di generazione"
+
+#: src/App/Admin/PluginOptions.php:104
+msgid ""
+"Which method do you want to use to generate the alt text for the images?"
+msgstr "Quale metodo vuoi utilizzare per generare l’alt text delle immagini?"
+
+#: src/App/Admin/PluginOptions.php:108
+msgid "Deactivated"
+msgstr "Disattivato"
+
+#: src/App/Admin/PluginOptions.php:109
+msgid "Azure's APIs"
+msgstr "API di Azure"
+
+#: src/App/Admin/PluginOptions.php:110
+msgid "Open AI' APIs"
+msgstr "API di OpenAI"
+
+#: src/App/Admin/PluginOptions.php:111
+msgid "Title of the article (not AI)"
+msgstr "Titolo dell’articolo (no AI)"
+
+#: src/App/Admin/PluginOptions.php:112
+msgid "Title of the attachment (not AI)"
+msgstr "Titolo dell’attachment (no AI)"
+
+#: src/App/Admin/PluginOptions.php:117 src/App/Admin/PluginOptions.php:188
+msgid "Warning"
+msgstr "Attenzione"
+
+#: src/App/Admin/PluginOptions.php:117
+msgid ""
+"At the moment, OpenAI's APIs do not offer the possibility to describe an "
+"image with computer vision."
+msgstr ""
+"Al momento, le API di OpenAI non offrono la possibilità di descrivere "
+"un’immagine con la computer vision."
+
+#: src/App/Admin/PluginOptions.php:117
+msgid ""
+"Therefore, for the time being, by filling out the following fields you will "
+"be able to generate an alt text based solely on the name of the image file."
+msgstr ""
+"Pertanto, per il momento, compilando i seguenti campi potrai generare un alt "
+"text basato solamente sul nome del file immagine."
+
+#: src/App/Admin/PluginOptions.php:117
+msgid "If you want an accurate description of the image, use Azure's APIs."
+msgstr ""
+"Se desideri una descrizione accurata dell’immagine, utilizza le API di Azure."
+
+#: src/App/Admin/PluginOptions.php:120
+msgid "OpenAI API Key"
+msgstr "Chiave API di OpenAI"
+
+#: src/App/Admin/PluginOptions.php:121
+msgid "Enter your API Key"
+msgstr "Inserisci la tua chiave API"
+
+#: src/App/Admin/PluginOptions.php:127
+msgid "Prompt"
+msgstr "Prompt"
+
+#: src/App/Admin/PluginOptions.php:128
+msgid "Enter a specific and detailed prompt according to your needs."
+msgstr "Inserisci un prompt specifico e dettagliato in base alle tue esigenze."
+
+#: src/App/Admin/PluginOptions.php:129
+msgid ""
+"Act like an SEO expert and write an English alt text for this image %s, "
+"using a maximum of 15 words. Just return the text without any additional "
+"comments."
+msgstr ""
+"Comportati come un esperto di SEO e scrivi un alt text in inglese per questa "
+"immagine %s, usando al massimo 15 parole. Restituisci solo il testo senza "
+"alcun commento aggiuntivo."
+
+#: src/App/Admin/PluginOptions.php:135
+msgid "OpenAi Model"
+msgstr "Modello OpenAI"
+
+#: src/App/Admin/PluginOptions.php:136
+msgid "Choose the OpenAI model you want to use to generate the alt text."
+msgstr ""
+"Scegli il modello di OpenAI che vuoi utilizzare per generare l’alt text."
+
+#: src/App/Admin/PluginOptions.php:154
+msgid ""
+"Fill out the following fields to leverage Azure's computer vision services "
+"to generate the Alt texts."
+msgstr ""
+"Compila i seguenti campi per sfruttare i servizi di computer vision di Azure "
+"per generare gli Alt text."
+
+#: src/App/Admin/PluginOptions.php:157
+msgid "Azure Computer Vision API Key"
+msgstr "Chiave API Computer Vision di Azure"
+
+#: src/App/Admin/PluginOptions.php:158
+msgid ""
+"Enter the API key for the Computer Vision service of your Azure account."
+msgstr ""
+"Inserisci la chiave API del servizio Computer Vision del tuo account Azure."
+
+#: src/App/Admin/PluginOptions.php:164
+msgid "Azure Computer Vision Endpoint"
+msgstr "Endpoint Azure Computer Vision"
+
+#: src/App/Admin/PluginOptions.php:165
+msgid "Enter the endpoint of the Computer Vision service."
+msgstr "Inserisci l’endpoint del servizio di Computer Vision."
+
+#: src/App/Admin/PluginOptions.php:171
+msgid "Alt Text Language"
+msgstr "Lingua Alt Text"
+
+#: src/App/Admin/PluginOptions.php:172
+msgid "Select the language in which the alt text should be written."
+msgstr "Seleziona la lingua in cui deve essere scritto l’alt text."
+
+#: src/App/Admin/PluginOptions.php:188
+msgid ""
+"The default language is English. You have selected a different language, "
+"therefore it is necessary to enter the required information in order to "
+"translate the alt text using the Azure Translation Instance service."
+msgstr ""
+"La lingua predefinita è l’inglese. Hai selezionato una lingua diversa, "
+"pertanto è necessario inserire le informazioni richieste per poter tradurre "
+"l’alt text utilizzando il servizio Translation Instance di Azure."
+
+#: src/App/Admin/PluginOptions.php:191
+msgid "Azure Translate Instance API Key"
+msgstr "Chiave API Translate Instance di Azure"
+
+#: src/App/Admin/PluginOptions.php:192
+msgid "Enter your API key for the Azure Translate Instance service."
+msgstr ""
+"Inserisci la tua chiave API per il servizio Translate Instance di Azure."
+
+#: src/App/Admin/PluginOptions.php:198
+msgid "Azure Translate Instance Endpoint"
+msgstr "Endpoint Translate Instance di Azure"
+
+#: src/App/Admin/PluginOptions.php:199
+msgid "Enter the endpoint of the Translate Instance service"
+msgstr "Inserisci l’endpoint del servizio Translate Instance."
+
+#: src/App/Admin/PluginOptions.php:205
+msgid "Azure Translate Instance Region"
+msgstr "Regione Translate Instance di Azure"
+
+#: src/App/Admin/PluginOptions.php:206
+msgid "Inserire la regione del servizio Translate Instance di Azure"
+msgstr ""

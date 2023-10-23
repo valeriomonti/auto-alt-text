@@ -203,7 +203,7 @@ class PluginOptions
 
                 echo '<div class="plugin-option type-azure not-default-language">';
                 echo '<label for="' . Constants::AAT_OPTION_FIELD_REGION_AZURE_TRANSLATE_INSTANCE . '">' . __('Azure Translate Instance Region','auto-alt-text') . '</label>';
-                echo '<p class="description">' . __("Inserire la regione del servizio Translate Instance di Azure", "auto-alt-text") . ' (es. westeurope)</p>';
+                echo '<p class="description">' . __("Enter the region of the Azure Translate Instance service.", "auto-alt-text") . ' (es. westeurope)</p>';
                 $region = get_option(Constants::AAT_OPTION_FIELD_REGION_AZURE_TRANSLATE_INSTANCE);
                 echo '<input type="text" name="' . Constants::AAT_OPTION_FIELD_REGION_AZURE_TRANSLATE_INSTANCE . '" value="' . $region . '" />';
                 echo '</div>';
