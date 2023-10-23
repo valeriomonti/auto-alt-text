@@ -4,8 +4,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Auto Alt Text 1.0.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/auto-alt-text\n"
-"POT-Creation-Date: 2023-10-23T12:56:25+00:00\n"
-"PO-Revision-Date: 2023-10-23 23:20+0200\n"
+"POT-Creation-Date: 2023-10-23T21:25:21+00:00\n"
+"PO-Revision-Date: 2023-10-23 23:27+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: it_IT\n"
@@ -241,12 +241,12 @@ msgstr "Endpoint Translate Instance di Azure"
 
 #: src/App/Admin/PluginOptions.php:199
 msgid "Enter the endpoint of the Translate Instance service"
-msgstr "Inserisci l’endpoint del servizio Translate Instance."
+msgstr "Inserisci l’endpoint del servizio Translate Instance"
 
 #: src/App/Admin/PluginOptions.php:205
 msgid "Azure Translate Instance Region"
 msgstr "Regione Translate Instance di Azure"
 
 #: src/App/Admin/PluginOptions.php:206
-msgid "Inserire la regione del servizio Translate Instance di Azure"
-msgstr ""
+msgid "Enter the region of the Azure Translate Instance service."
+msgstr "Inserisci la regione del servizio Translate Instance di Azure."
