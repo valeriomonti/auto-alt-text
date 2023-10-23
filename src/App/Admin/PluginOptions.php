@@ -80,20 +80,20 @@ class PluginOptions
     {
         ?>
         <div class="wrap">
-            <h1>Auto Alt Text Options</h1>
+            <h1><?php _e('Auto Alt Text Options','auto-alt-text') ?></h1>
 
             <div class="aat-options plugin-description">
                 <p>
-                    Questo plugin ti permette di generare in modo automatico un Alt Text per le immagini che vengono caricate nella media library del sito.<br>
-                    Sono disponibili i seguenti metodi per generare l'alt text:
+                    <?php _e("This plugin allows you to automatically generate Alt Text for the images that are uploaded to the site's media library.","auto-alt-text"); ?><br>
+                    <?php _e("The following methods are available to generate the alt text:","auto-alt-text"); ?>
                 </p>
                 <ul>
-                    <li><strong>Azure's APIs</strong>: l'immagine verrà analizzata dai servizi di AI forniti da Azure e verrà generato un alt text nella lingua che preferisci;</li>
-                    <li><strong>OperAi's APIs</strong>: in base al prompt che imposterai verrà creato un alt text basato sul nome del file immagine che caricherai nella media library (al momento le API di Open ai non consentono di analizzare il contenuto dell'immagine);</li>
-                    <li><strong>Title of the article</strong>: se l'immagine è caricata in un articolo, il titolo dell'articolo verrà utilizzato come alt text</li>
-                    <li><strong>Title of the attachment</strong>: verrà copiato nell'alt text il titolo dell'attachment</li>
+                    <li><strong>Azure's APIs</strong>: <?php _e("the image will be analyzed by the AI services provided by Azure and an alt text will be generated in the language of your choice;","auto-alt-text"); ?></li>
+                    <li><strong>OperAi's APIs</strong>: <?php _e("based on the prompt you set, an alt text will be created based on the name of the image file you upload to the media library (currently, OpenAI's APIs do not allow to analyze the content of the image);","auto-alt-text"); ?></li>
+                    <li><strong>Title of the article</strong>: <?php _e("if the image is uploaded within an article, the title of the article will be used as alt text;","auto-alt-text"); ?></li>
+                    <li><strong>Title of the attachment</strong>: <?php _e("the title of the attachment will be copied into the alt text;","auto-alt-text"); ?></li>
                 </ul>
-                <p>Una volta inseriti tutti i dati necessari per il metodo di generazione scelto, gli alt text verranno creati automaticamente al caricamento di ogni immagine.</p>
+                <p><?php _e("Once all the necessary data for the chosen generation method has been entered, the alt texts will be created automatically upon uploading each image.", "auto-alt-text"); ?></p>
             </div>
             <form method="post" action="options.php" class="aat-options">
                 <?php
@@ -101,32 +101,31 @@ class PluginOptions
 
                 echo '<div>';
                 echo '<label for="' . Constants::AAT_OPTION_FIELD_TYPOLOGY . '">' . __('Generation method','auto-alt-text') . '</label>';
-                echo '<p class="description">Quale metodo vuoi utilizzare per generare l\'alt text delle immagini?</p>';
+                echo '<p class="description">' . __("Which method do you want to use to generate the alt text for the images?", "auto-alt-text") . '</p>';
                 $typology = get_option(Constants::AAT_OPTION_FIELD_TYPOLOGY);
                 ?>
                 <select name="<?php echo Constants::AAT_OPTION_FIELD_TYPOLOGY; ?>" id="<?php echo Constants::AAT_OPTION_FIELD_TYPOLOGY; ?>">
-                    <option value="<?php echo Constants::AAT_OPTION_TYPOLOGY_DEACTIVATED; ?>"<?php echo self::selected($typology, Constants::AAT_OPTION_TYPOLOGY_DEACTIVATED); ?>><?php _e('Deactivated','auto-alt-text'); ?></option>
-                    <option value="<?php echo Constants::AAT_OPTION_TYPOLOGY_CHOICE_AZURE; ?>"<?php echo self::selected($typology, Constants::AAT_OPTION_TYPOLOGY_CHOICE_AZURE); ?>><?php _e('Azure\'s APIs','auto-alt-text'); ?></option>
-                    <option value="<?php echo Constants::AAT_OPTION_TYPOLOGY_CHOICE_OPENAI; ?>"<?php echo self::selected($typology, Constants::AAT_OPTION_TYPOLOGY_CHOICE_OPENAI); ?>><?php _e('Open AI\' APIs','auto-alt-text'); ?></option>
-                    <option value="<?php echo Constants::AAT_OPTION_TYPOLOGY_CHOICE_ARTICLE_TITLE; ?>"<?php echo self::selected($typology, Constants::AAT_OPTION_TYPOLOGY_CHOICE_ARTICLE_TITLE); ?>><?php _e('Title of the article (not AI)','auto-alt-text'); ?></option>
-                    <option value="<?php echo Constants::AAT_OPTION_TYPOLOGY_CHOICE_ATTACHMENT_TITLE; ?>"<?php echo self::selected($typology, Constants::AAT_OPTION_TYPOLOGY_CHOICE_ATTACHMENT_TITLE); ?>><?php _e('Title of the attachment (not AI)','auto-alt-text'); ?></option>
+                    <option value="<?php echo Constants::AAT_OPTION_TYPOLOGY_DEACTIVATED; ?>"<?php echo self::selected($typology, Constants::AAT_OPTION_TYPOLOGY_DEACTIVATED); ?>><?php _e("Deactivated",'auto-alt-text'); ?></option>
+                    <option value="<?php echo Constants::AAT_OPTION_TYPOLOGY_CHOICE_AZURE; ?>"<?php echo self::selected($typology, Constants::AAT_OPTION_TYPOLOGY_CHOICE_AZURE); ?>><?php _e("Azure's APIs",'auto-alt-text'); ?></option>
+                    <option value="<?php echo Constants::AAT_OPTION_TYPOLOGY_CHOICE_OPENAI; ?>"<?php echo self::selected($typology, Constants::AAT_OPTION_TYPOLOGY_CHOICE_OPENAI); ?>><?php _e("Open AI' APIs",'auto-alt-text'); ?></option>
+                    <option value="<?php echo Constants::AAT_OPTION_TYPOLOGY_CHOICE_ARTICLE_TITLE; ?>"<?php echo self::selected($typology, Constants::AAT_OPTION_TYPOLOGY_CHOICE_ARTICLE_TITLE); ?>><?php _e("Title of the article (not AI)",'auto-alt-text'); ?></option>
+                    <option value="<?php echo Constants::AAT_OPTION_TYPOLOGY_CHOICE_ATTACHMENT_TITLE; ?>"<?php echo self::selected($typology, Constants::AAT_OPTION_TYPOLOGY_CHOICE_ATTACHMENT_TITLE); ?>><?php _e("Title of the attachment (not AI)",'auto-alt-text'); ?></option>
                 </select>
                 <?php
                 echo '</div>';
 
-                echo '<div class="plugin-option type-openai"><strong>Attenzione</strong>: al momento le api di OpenAi non offrono la possibilità di descrivere un\'immagine con la computer vision.
-                        Per il momento quindi, compilando i seguenti campi potrai generare un alt text basato solamente sul nome del file immagine.<br>Se desideri una descrizione accurata utilizza le api di Azure</div>';
+                echo '<div class="plugin-option type-openai"><strong>' .  __('Warning','auto-alt-text') . '</strong>: ' . __("At the moment, OpenAI's APIs do not offer the possibility to describe an image with computer vision.", "auto-alt-text") . ' ' . __("Therefore, for the time being, by filling out the following fields you will be able to generate an alt text based solely on the name of the image file.", "auto-alt-text") . '<br>' . __("If you want an accurate description of the image, use Azure's APIs.", "auto-alt-text") . '</div>';
 
                 echo '<div class="plugin-option type-openai">';
                 echo '<label for="' . Constants::AAT_OPTION_FIELD_API_KEY_OPENAI . '">' . __('OpenAI API Key','auto-alt-text') . '</label>';
-                echo '<p class="description">Inserisci la tua API Key</p>';
+                echo '<p class="description">' . __("Enter your API Key", "auto-alt-text") . '</p>';
                 $apiKey = get_option(Constants::AAT_OPTION_FIELD_API_KEY_OPENAI);
                 echo '<input type="password" name="' . Constants::AAT_OPTION_FIELD_API_KEY_OPENAI . '" value="' . (new Encryption())->decrypt($apiKey) . '" />';
                 echo '</div>';
 
                 echo '<div class="plugin-option type-openai">';
                 echo '<label for="' . Constants::AAT_OPTION_FIELD_PROMPT_OPENAI . '">' . __('Prompt','auto-alt-text') . '</label>';
-                echo '<p class="description">Inserisci un prompt specifico e dettagliato in base alle tue esigenze</p>';
+                echo '<p class="description">' . __("Enter a specific and detailed prompt according to your needs.", "auto-alt-text") . '</p>';
                 $defaultPrompt = sprintf(__("Act like an SEO expert and write an English alt text for this image %s, using a maximum of 15 words. Just return the text without any additional comments.", "auto-alt-text"), Constants::AAT_IMAGE_URL_TAG);
                 $prompt = get_option(Constants::AAT_OPTION_FIELD_PROMPT_OPENAI) ?: $defaultPrompt;
                 echo '<textarea name="' . Constants::AAT_OPTION_FIELD_PROMPT_OPENAI . '" rows="5" cols="50">' . $prompt . '</textarea>';
@@ -134,7 +133,7 @@ class PluginOptions
 
                 echo '<div class="plugin-option type-openai">';
                 echo '<label for="' . Constants::AAT_OPTION_FIELD_MODEL_OPENAI . '">' . __('OpenAi Model','auto-alt-text') . '</label>';
-                echo '<p class="description">Scegli il modello di Open Ai che vuoi utilizzare per generare l\'alt tag</p>';
+                echo '<p class="description">' . __("Choose the OpenAI model you want to use to generate the alt text.", "auto-alt-text") . '</p>';
                 $modelSaved = get_option(Constants::AAT_OPTION_FIELD_MODEL_OPENAI);
                 ?>
 
@@ -152,25 +151,25 @@ class PluginOptions
                 <?php
                 echo '</div>';
 
-                echo '<div class="plugin-option type-azure">Compila i seguenti campi per sfruttare i servizi di computer vision di Azure per generare gli Alt text.</div>';
+                echo '<div class="plugin-option type-azure">' . __("Fill out the following fields to leverage Azure's computer vision services to generate the Alt texts.", "auto-alt-text") . '</div>';
 
                 echo '<div class="plugin-option type-azure">';
                 echo '<label for="' . Constants::AAT_OPTION_FIELD_API_KEY_AZURE_COMPUTER_VISION . '">' . __('Azure Computer Vision API Key','auto-alt-text') . '</label>';
-                echo '<p class="description">Inserisci la chiave API del servizio Computer Vision del tuo account Azure</p>';
+                echo '<p class="description">' . __("Enter the API key for the Computer Vision service of your Azure account.", "auto-alt-text") . '</p>';
                 $apiKey = get_option(Constants::AAT_OPTION_FIELD_API_KEY_AZURE_COMPUTER_VISION);
                 echo '<input type="password" name="' . Constants::AAT_OPTION_FIELD_API_KEY_AZURE_COMPUTER_VISION . '" value="' . (new Encryption())->decrypt($apiKey) . '" />';
                 echo '</div>';
 
                 echo '<div class="plugin-option type-azure">';
                 echo '<label for="' . Constants::AAT_OPTION_FIELD_ENDPOINT_AZURE_COMPUTER_VISION . '">' . __('Azure Computer Vision Endpoint','auto-alt-text') . '</label>';
-                echo '<p class="description">Inserisci l\'endpoint del servizio di Computer Vision (es. https://computer-vision-france-central.cognitiveservices.azure.com/)</p>';
+                echo '<p class="description">' . __("Enter the endpoint of the Computer Vision service.", "auto-alt-text"). ' (es. https://computer-vision-france-central.cognitiveservices.azure.com/)</p>';
                 $endpoint = get_option(Constants::AAT_OPTION_FIELD_ENDPOINT_AZURE_COMPUTER_VISION);
                 echo '<input type="text" name="' . Constants::AAT_OPTION_FIELD_ENDPOINT_AZURE_COMPUTER_VISION . '" value="' . $endpoint . '" />';
                 echo '</div>';
 
                 echo '<div class="plugin-option type-azure">';
                 echo '<label for="' . Constants::AAT_OPTION_FIELD_LANGUAGE_AZURE_TRANSLATE_INSTANCE . '">' . __('Alt Text Language','auto-alt-text') . '</label>';
-                echo '<p class="description">Seleziona la lingua in cui deve essere scritto l\'alt text</p>';
+                echo '<p class="description">' . __("Select the language in which the alt text should be written.", "auto-alt-text") . '</p>';
                 $currentLanguage = get_option(Constants::AAT_OPTION_FIELD_LANGUAGE_AZURE_TRANSLATE_INSTANCE);
                 $supportedLanguages = (AzureTranslator::make())->supportedLanguages();
                 ?>
@@ -186,25 +185,25 @@ class PluginOptions
                 <?php
                 echo '</div>';
 
-                echo '<div class="plugin-option type-azure not-default-language"><strong>Attenzione</strong>: la lingua di default è l\'inglese. Hai selezionato una lingua diversa pertanto è necesario inserire le informazioni necessarie per poter tradurre l\'alt text sfruttando il servizio Translation Instance di Azure</div>';
+                echo '<div class="plugin-option type-azure not-default-language"><strong>' . __("Warning", "auto-alt-text") . '</strong>: ' . __("The default language is English. You have selected a different language, therefore it is necessary to enter the required information in order to translate the alt text using the Azure Translation Instance service.", "auto-alt-text") . '</div>';
 
                 echo '<div class="plugin-option type-azure not-default-language">';
                 echo '<label for="' . Constants::AAT_OPTION_FIELD_API_KEY_AZURE_TRANSLATE_INSTANCE . '">' . __('Azure Translate Instance API Key','auto-alt-text') . '</label>';
-                echo '<p class="description">Inserisci la tua chiave API per il servizio Translate Instance di Azure</p>';
+                echo '<p class="description">' . __("Enter your API key for the Azure Translate Instance service.", "auto-alt-text") . '</p>';
                 $apiKey = get_option(Constants::AAT_OPTION_FIELD_API_KEY_AZURE_TRANSLATE_INSTANCE);
                 echo '<input type="password" name="' . Constants::AAT_OPTION_FIELD_API_KEY_AZURE_TRANSLATE_INSTANCE . '" value="' . (new Encryption())->decrypt($apiKey) . '" />';
                 echo '</div>';
 
                 echo '<div class="plugin-option type-azure not-default-language">';
                 echo '<label for="' . Constants::AAT_OPTION_FIELD_ENDPOINT_AZURE_TRANSLATE_INSTANCE . '">' . __('Azure Translate Instance Endpoint','auto-alt-text') . '</label>';
-                echo '<p class="description">Inserisci l\'endpoint del servizio Translate Instance (es. https://api.cognitive.microsofttranslator.com/)</p>';
+                echo '<p class="description">' . __("Enter the endpoint of the Translate Instance service", "auto-alt-text") . ' (es. https://api.cognitive.microsofttranslator.com/)</p>';
                 $endpoint = get_option(Constants::AAT_OPTION_FIELD_ENDPOINT_AZURE_TRANSLATE_INSTANCE);
                 echo '<input type="text" name="' . Constants::AAT_OPTION_FIELD_ENDPOINT_AZURE_TRANSLATE_INSTANCE . '" value="' . $endpoint . '" />';
                 echo '</div>';
 
                 echo '<div class="plugin-option type-azure not-default-language">';
                 echo '<label for="' . Constants::AAT_OPTION_FIELD_REGION_AZURE_TRANSLATE_INSTANCE . '">' . __('Azure Translate Instance Region','auto-alt-text') . '</label>';
-                echo '<p class="description">Inserire la regione del servizio Translate Instance di Azure (es. westeurope)</p>';
+                echo '<p class="description">' . __("Inserire la regione del servizio Translate Instance di Azure", "auto-alt-text") . ' (es. westeurope)</p>';
                 $region = get_option(Constants::AAT_OPTION_FIELD_REGION_AZURE_TRANSLATE_INSTANCE);
                 echo '<input type="text" name="' . Constants::AAT_OPTION_FIELD_REGION_AZURE_TRANSLATE_INSTANCE . '" value="' . $region . '" />';
                 echo '</div>';
