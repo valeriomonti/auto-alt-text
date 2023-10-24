@@ -88,10 +88,10 @@ class PluginOptions
                     <?php _e("The following methods are available to generate the alt text:","auto-alt-text"); ?>
                 </p>
                 <ul>
-                    <li><strong>Azure's APIs</strong>: <?php _e("the image will be analyzed by the AI services provided by Azure and an alt text will be generated in the language of your choice;","auto-alt-text"); ?></li>
-                    <li><strong>OperAi's APIs</strong>: <?php _e("based on the prompt you set, an alt text will be created based on the name of the image file you upload to the media library (currently, OpenAI's APIs do not allow to analyze the content of the image);","auto-alt-text"); ?></li>
-                    <li><strong>Title of the article</strong>: <?php _e("if the image is uploaded within an article, the title of the article will be used as alt text;","auto-alt-text"); ?></li>
-                    <li><strong>Title of the attachment</strong>: <?php _e("the title of the attachment will be copied into the alt text;","auto-alt-text"); ?></li>
+                    <li><strong><?php _e("Azure's APIs",'auto-alt-text'); ?></strong>: <?php _e("the image will be analyzed by the AI services provided by Azure and an alt text will be generated in the language of your choice;","auto-alt-text"); ?></li>
+                    <li><strong><?php _e("Open AI' APIs",'auto-alt-text'); ?></strong>: <?php _e("based on the prompt you set, an alt text will be created based on the name of the image file you upload to the media library (currently, OpenAI's APIs do not allow to analyze the content of the image);","auto-alt-text"); ?></li>
+                    <li><strong><?php _e("Title of the article (not AI)",'auto-alt-text'); ?></strong>: <?php _e("if the image is uploaded within an article, the title of the article will be used as alt text;","auto-alt-text"); ?></li>
+                    <li><strong><?php _e("Title of the attachment (not AI)",'auto-alt-text'); ?></strong>: <?php _e("the title of the attachment will be copied into the alt text;","auto-alt-text"); ?></li>
                 </ul>
                 <p><?php _e("Once all the necessary data for the chosen generation method has been entered, the alt texts will be created automatically upon uploading each image.", "auto-alt-text"); ?></p>
             </div>
