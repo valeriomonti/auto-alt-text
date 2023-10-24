@@ -76,7 +76,7 @@ class PluginOptions
      * Create option page and his fields
      * @return void
      */
-    public static function optionsPageContent()
+    public static function optionsPageContent(): void
     {
         ?>
         <div class="wrap">
