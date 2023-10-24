@@ -43,7 +43,7 @@ class Setup
      */
     public static function loadTextDomain(): void
     {
-        load_plugin_textdomain( 'auto-alt-text', false, AUTO_ALT_TEXT_LANGUAGES_RELATIVE_PATH );
+        load_plugin_textdomain('auto-alt-text', false, AUTO_ALT_TEXT_LANGUAGES_RELATIVE_PATH);
     }
 
     /**
@@ -73,13 +73,19 @@ class Setup
                     } else {
                         $altText = (AltTextGeneratorAi::make(OpenAIChatCompletionResponse::make()))->altText($postId);
                     }
-                } catch(ErrorException $e) {
+                } catch (ErrorException $e) {
                     $errorMessage = "OpenAI - " . $e->getErrorType() . " - " . $e->getMessage();
                     (FileLogger::make())->writeImageLog($postId, $errorMessage);
                 }
                 break;
             case Constants::AAT_OPTION_TYPOLOGY_CHOICE_ARTICLE_TITLE:
-                $altText = (AltTextGeneratorParentPostTitle::make())->altText($postId);
+                $parentId = wp_get_post_parent_id($postId);
+                if ($parentId) {
+                    $altText = (AltTextGeneratorParentPostTitle::make())->altText($postId);
+                } else {
+                    //If media has not a parent use the Attachment Title method as fallback
+                    $altText = (AltTextGeneratorAttachmentTitle::make())->altText($postId);
+                }
                 break;
             case Constants::AAT_OPTION_TYPOLOGY_CHOICE_ATTACHMENT_TITLE:
                 $altText = (AltTextGeneratorAttachmentTitle::make())->altText($postId);
