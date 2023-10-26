@@ -8,12 +8,14 @@ use ValerioMonti\AutoAltText\App\AIProviders\Azure\AzureComputerVisionCaptionsRe
 use ValerioMonti\AutoAltText\App\AIProviders\Azure\AzureTranslator;
 use ValerioMonti\AutoAltText\App\AIProviders\OpenAI\OpenAIChatCompletionResponse;
 use ValerioMonti\AutoAltText\App\AIProviders\OpenAI\OpenAITextCompletionResponse;
-use ValerioMonti\AutoAltText\App\AltTextGeneratorParentPostTitle;
 use ValerioMonti\AutoAltText\App\AltTextGeneratorAi;
+use ValerioMonti\AutoAltText\App\AltTextGeneratorParentPostTitle;
 use ValerioMonti\AutoAltText\App\AltTextGeneratorAttachmentTitle;
 use ValerioMonti\AutoAltText\App\Exceptions\AzureComputerVisionException;
+use ValerioMonti\AutoAltText\App\Exceptions\OpenAIException;
 use ValerioMonti\AutoAltText\App\Logging\FileLogger;
 use ValerioMonti\AutoAltText\Config\Constants;
+use WpOrg\Requests\Exception;
 
 
 class Setup
@@ -73,8 +75,8 @@ class Setup
                     } else {
                         $altText = (AltTextGeneratorAi::make(OpenAIChatCompletionResponse::make()))->altText($postId);
                     }
-                } catch (ErrorException $e) {
-                    $errorMessage = "OpenAI - " . $e->getErrorType() . " - " . $e->getMessage();
+                } catch (OpenAIException $e) {
+                    $errorMessage = "OpenAI - " . $e->getMessage();
                     (FileLogger::make())->writeImageLog($postId, $errorMessage);
                 }
                 break;

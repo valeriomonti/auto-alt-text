@@ -18,18 +18,18 @@ class OpenAITextCompletionResponse extends OpenAIResponse
     }
     public function response(string $imageUrl): string
     {
-        $model = PluginOptions::model();
-        $apiKey = PluginOptions::apiKeyOpenAI();
         $prompt = parent::prompt($imageUrl);
-        $client = OpenAI::client($apiKey);
+        $model = PluginOptions::model();
 
-        $result = $client->completions()->create([
+        $requestBody = [
             'model' => $model,
             'prompt' => $prompt,
             'max_tokens' => Constants::AAT_OPENAI_MAX_TOKENS,
             'temperature' => Constants::AAT_OPENAI_TEXT_COMPLETION_TEMPERATURE,
-        ]);
+        ];
 
-        return $this->cleanString($result['choices'][0]['text']);
+        $decodedBody = parent::decodedResponseBody($requestBody, Constants::AAT_OPENAI_TEXT_COMPLETION_ENDPOINT);
+
+        return $this->cleanString($decodedBody['choices'][0]['text']);
     }
 }

@@ -6,6 +6,7 @@ use ValerioMonti\AutoAltText\App\Admin\PluginOptions;
 use ValerioMonti\AutoAltText\App\Setup;
 use OpenAI\Client;
 use OpenAI\Exceptions\ErrorException;
+use ValerioMonti\AutoAltText\Config\Constants;
 
 class OpenAIChatCompletionResponse extends OpenAIResponse
 {
@@ -17,11 +18,9 @@ class OpenAIChatCompletionResponse extends OpenAIResponse
     public function response(string $imageUrl): string
     {
         $model = PluginOptions::model();
-        $apiKey = PluginOptions::apiKeyOpenAI();
         $prompt = parent::prompt($imageUrl);
-        $client = OpenAI::client($apiKey);
 
-        $result = $client->chat()->create([
+        $requestBody = [
             'model' => $model,
             'messages' => [
                 [
@@ -29,8 +28,12 @@ class OpenAIChatCompletionResponse extends OpenAIResponse
                     'content' => $prompt
                 ],
             ],
-        ]);
+            'max_tokens' => Constants::AAT_OPENAI_MAX_TOKENS,
+            'temperature' => Constants::AAT_OPENAI_TEXT_COMPLETION_TEMPERATURE,
+        ];
 
-        return $this->cleanString($result->toArray()['choices'][0]['message']['content']);
+        $decodedBody = parent::decodedResponseBody($requestBody, Constants::AAT_OPENAI_CHAT_COMPLETION_ENDPOINT);
+        var_dump($decodedBody); die;
+        return $this->cleanString($decodedBody['choices'][0]['message']['content']);
     }
 }

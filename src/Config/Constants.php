@@ -42,4 +42,7 @@ class Constants
 
     const AAT_OPENAI_MAX_TOKENS = 70;
     const AAT_OPENAI_TEXT_COMPLETION_TEMPERATURE = 0.6;
+
+    const AAT_OPENAI_CHAT_COMPLETION_ENDPOINT = 'https://api.openai.com/v1/chat/completions';
+    const AAT_OPENAI_TEXT_COMPLETION_ENDPOINT = 'https://api.openai.com/v1/completions';
 }

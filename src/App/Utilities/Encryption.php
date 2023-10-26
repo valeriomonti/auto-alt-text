@@ -18,7 +18,7 @@ final class Encryption
      * @param string $value
      * @return string|bool
      */
-    public function encrypt(string $value): string|bool
+    public function encrypt(string $value): string
     {
         if (!extension_loaded('openssl')) {
             return $value;
@@ -29,7 +29,7 @@ final class Encryption
         $iv = openssl_random_pseudo_bytes($ivLength);
         $raw_value = openssl_encrypt($value . $this->salt, $method, $this->key, 0, $iv);
         if (!$raw_value) {
-            return false;
+            throw new \RuntimeException('Encryption failed.');
         }
 
         return base64_encode($iv . $raw_value);
@@ -39,7 +39,7 @@ final class Encryption
      * @param string $rawValue
      * @return string|bool
      */
-    public function decrypt(string $rawValue): string|bool
+    public function decrypt(string $rawValue): string
     {
         /** @noinspection DuplicatedCode */
         if (!extension_loaded('openssl')) {
@@ -57,7 +57,7 @@ final class Encryption
         $value = openssl_decrypt($rawValue, $method, $this->key, 0, $iv);
 
         if (!$value || !str_ends_with($value, $this->salt)) {
-            return false;
+            throw new \RuntimeException('Encryption failed.');
         }
 
         return substr($value, 0, -strlen($this->salt));

@@ -10,7 +10,7 @@
  * Text Domain:     auto-alt-text
  * Domain Path:     /languages
  * License:         GPL v3
- * Requires PHP:    8.0
+ * Requires PHP:    7.4
  * Requires WP:     5.5.0
  * Namespace:       AutoAltText
  */
