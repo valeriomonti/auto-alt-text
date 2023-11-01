@@ -79,13 +79,13 @@ final class Encryption
     /**
      * Get salt from WordPress Authentication Unique Keys and Salts
      */
-    private function getSalt(): string
+    public function getSalt(): string
     {
         if (defined('LOGGED_IN_SALT') && '' !== LOGGED_IN_SALT) {
             return LOGGED_IN_SALT;
         }
 
         // If this is reached, you're either not on a live site or have a serious security issue.
-        return 'warning-not-logged-in-key-constant-defined';
+        return 'warning-not-logged-in-salt-constant-defined';
     }
 }

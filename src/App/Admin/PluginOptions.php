@@ -69,14 +69,33 @@ class PluginOptions
      */
     public static function addOptionsPageToTheMenu(): void
     {
-        add_options_page('Auto Alt Text Options', 'Auto Alt Text Options', 'manage_options', 'auto-alt-text-options', [self::$instance, 'optionsPageContent']);
+        add_menu_page('Auto Alt Text Options', 'Auto Alt Text', 'manage_options', Constants::AAT_PLUGIN_OPTIONS_PAGE_SLUG, [self::$instance, 'optionsMainPage'], null, 99);
+        add_submenu_page(Constants::AAT_PLUGIN_OPTIONS_PAGE_SLUG, 'Error Log', 'Error log', 'manage_options', 'auto-alt-text-log', [self::$instance, 'logOptionsPage']);
+    }
+
+    public static function logOptionsPage(): void
+    {
+        $hash = get_option(Constants::AAT_LOG_ASH);
+        if ($hash) {
+            $uploadDir = wp_upload_dir();
+            $logDir = trailingslashit($uploadDir['basedir']) . Constants::AAT_PLUGIN_SLUG;
+            $logFile = trailingslashit($logDir) . date('Y-m-d') . '-' . $hash . '.log';
+            if (file_exists($logFile)) {
+                $logContent = file_get_contents($logFile);
+                echo '<textarea style="width:98%; height: 600px" readonly>' . esc_html( $logContent ) . '</textarea>';
+            } else {
+                _e('Log file does not exist', 'auto-alt-text');
+            }
+        } else {
+            _e('Log file hash not found', 'auto-alt-text');
+        }
     }
 
     /**
      * Create option page and his fields
      * @return void
      */
-    public static function optionsPageContent(): void
+    public static function optionsMainPage(): void
     {
         ?>
         <div class="wrap">

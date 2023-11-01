@@ -45,4 +45,6 @@ class Constants
 
     const AAT_OPENAI_CHAT_COMPLETION_ENDPOINT = 'https://api.openai.com/v1/chat/completions';
     const AAT_OPENAI_TEXT_COMPLETION_ENDPOINT = 'https://api.openai.com/v1/completions';
+
+    const AAT_LOG_ASH = 'aat_log_ash';
 }
