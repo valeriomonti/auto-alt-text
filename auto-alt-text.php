@@ -17,6 +17,7 @@
 
 
 use ValerioMonti\AutoAltText\App\Setup;
+use ValerioMonti\AutoAltText\Config\Constants;
 
 defined('ABSPATH') or die('Direct access not allowed');
 define('AUTO_ALT_TEXT_ABSPATH', dirname(__FILE__));

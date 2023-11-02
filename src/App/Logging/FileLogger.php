@@ -9,7 +9,6 @@ class FileLogger implements LoggerInterface
 {
     private function __construct()
     {
-
     }
 
     public static function make(): FileLogger

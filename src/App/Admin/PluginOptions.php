@@ -113,6 +113,7 @@ class PluginOptions
                     <li><strong><?php _e("Title of the attachment (not AI)",'auto-alt-text'); ?></strong>: <?php _e("the title of the attachment will be copied into the alt text;","auto-alt-text"); ?></li>
                 </ul>
                 <p><?php _e("Once all the necessary data for the chosen generation method has been entered, the alt texts will be created automatically upon uploading each image.", "auto-alt-text"); ?></p>
+                <p style="color:red"><?php _e("Pay attention please: If the alt text for an image is not generated, check the logs on the designated page.", 'auto-alt-text'); ?></p>
             </div>
             <form method="post" action="options.php" class="aat-options">
                 <?php

@@ -14,6 +14,7 @@ use ValerioMonti\AutoAltText\App\AltTextGeneratorAttachmentTitle;
 use ValerioMonti\AutoAltText\App\Exceptions\AzureComputerVisionException;
 use ValerioMonti\AutoAltText\App\Exceptions\OpenAIException;
 use ValerioMonti\AutoAltText\App\Logging\FileLogger;
+use ValerioMonti\AutoAltText\App\Logging\LogCleaner;
 use ValerioMonti\AutoAltText\Config\Constants;
 use WpOrg\Requests\Exception;
 
@@ -33,6 +34,7 @@ class Setup
         }
 
         PluginOptions::register();
+        LogCleaner::register();
 
         // When attachment is uploaded, create alt text
         add_action('add_attachment', [self::$instance, 'addAltTextOnUpload']);

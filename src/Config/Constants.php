@@ -47,4 +47,6 @@ class Constants
     const AAT_OPENAI_TEXT_COMPLETION_ENDPOINT = 'https://api.openai.com/v1/completions';
 
     const AAT_LOG_ASH = 'aat_log_ash';
+    const AAT_LOG_RETENTION_DAYS = 7;
+    const AAT_LOGS_CLEANUP_EVENT = 'aat_logs_cleanup_event';
 }
