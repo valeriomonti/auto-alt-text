@@ -49,4 +49,10 @@
     list-style: disc;
     padding-left: 13px;
   }
+
+  #error-log {
+    width:98%;
+    height: 600px;
+    margin-bottom: 30px;
+  }
 }
