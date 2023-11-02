@@ -4,6 +4,7 @@ namespace ValerioMonti\AutoAltText\App\Admin;
 
 use OpenAI;
 use ValerioMonti\AutoAltText\App\AIProviders\Azure\AzureTranslator;
+use ValerioMonti\AutoAltText\App\Logging\FileLogger;
 use ValerioMonti\AutoAltText\App\Utilities\Encryption;
 use ValerioMonti\AutoAltText\Config\Constants;
 
@@ -51,7 +52,9 @@ class PluginOptions
      */
     public static function enqueueAdminScripts(): void
     {
-        if ( array_key_exists('page',  $_GET) && Constants::AAT_PLUGIN_OPTIONS_PAGE_SLUG == $_GET["page"]) {
+        $screen = get_current_screen();
+
+        if ( $screen->id === 'toplevel_page_' . Constants::AAT_PLUGIN_OPTIONS_PAGE_SLUG || strpos( $screen->id, Constants::AAT_PLUGIN_SLUG . '_' ) !== false ) {
             $entryPoints = AUTO_ALT_TEXT_ABSPATH .'/dist/mix-manifest.json';
             $json = json_decode(file_get_contents($entryPoints), JSON_OBJECT_AS_ARRAY);
             $adminJs = $json['/js/admin.js'];
@@ -75,20 +78,32 @@ class PluginOptions
 
     public static function logOptionsPage(): void
     {
-        $hash = get_option(Constants::AAT_LOG_ASH);
-        if ($hash) {
-            $uploadDir = wp_upload_dir();
-            $logDir = trailingslashit($uploadDir['basedir']) . Constants::AAT_PLUGIN_SLUG;
-            $logFile = trailingslashit($logDir) . date('Y-m-d') . '-' . $hash . '.log';
-            if (file_exists($logFile)) {
-                $logContent = file_get_contents($logFile);
-                echo '<textarea style="width:98%; height: 600px" readonly>' . esc_html( $logContent ) . '</textarea>';
-            } else {
-                _e('Log file does not exist', 'auto-alt-text');
-            }
-        } else {
-            _e('Log file hash not found', 'auto-alt-text');
-        }
+        $uploadDir = wp_upload_dir();
+        $logDir = trailingslashit($uploadDir['basedir']) . Constants::AAT_PLUGIN_SLUG;
+        ?>
+        <div class="wrap">
+            <h1><?php _e('Auto Alt Text Error Log','auto-alt-text') ?></h1>
+            <div class="aat-options plugin-description">
+                <p><?php _e("On this page, you can view the error log from the last day. The logs from previous days are saved in the folder", "auto-alt-text"); ?> <strong><?php echo $logDir; ?></strong></p>
+                <?php
+                $hash = get_option(Constants::AAT_LOG_ASH);
+                $logFile = trailingslashit($logDir) . date('Y-m-d') . '-' . $hash . '.log';
+
+                if (!file_exists($logFile)) {
+                    $logFile = FileLogger::make()->findLatestLogFile($logDir);
+                }
+
+                if ($logFile && file_exists($logFile)) {
+                    $logContent = file_get_contents($logFile);
+                    echo '<textarea id="error-log" name="error-log" readonly>' . esc_html( $logContent ) . '</textarea>';
+                } else {
+                    _e('Log file does not exist', 'auto-alt-text');
+                }
+
+                ?>
+            </div>
+        </div>
+        <?php
     }
 
     /**

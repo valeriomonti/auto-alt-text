@@ -37,4 +37,20 @@ class FileLogger implements LoggerInterface
         $logFile = trailingslashit($logDir) . date('Y-m-d') . '-' . $hash . '.log';
         error_log($errorMessage, 3, $logFile);
     }
+
+    public function findLatestLogFile($logDir) {
+        $latest_time = 0;
+        $latest_file = null;
+
+        $files = glob(trailingslashit($logDir) . '*.log');
+        foreach ($files as $file) {
+            $file_time = filemtime($file);
+            if ($file_time > $latest_time) {
+                $latest_time = $file_time;
+                $latest_file = $file;
+            }
+        }
+
+        return $latest_file;
+    }
 }
