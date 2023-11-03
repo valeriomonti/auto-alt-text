@@ -65,7 +65,7 @@ class PluginOptions
 
             if ($isMainOptionsPage) {
                 $adminJs = $json['/js/admin.js'];
-                wp_enqueue_script(Constants::AAT_PLUGIN_OPTIONS_PAGE_SLUG, AUTO_ALT_TEXT_URL . 'dist' . $adminJs, [], false, true);
+                wp_enqueue_script(Constants::AAT_PLUGIN_OPTIONS_PAGE_SLUG, AUTO_ALT_TEXT_URL . 'dist' . $adminJs, [], false);
             }
 
         }
