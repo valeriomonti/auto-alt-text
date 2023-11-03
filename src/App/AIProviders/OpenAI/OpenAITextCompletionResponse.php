@@ -4,6 +4,7 @@ namespace ValerioMonti\AutoAltText\App\AIProviders\OpenAI;
 use OpenAI;
 use OpenAI\Client;
 use ValerioMonti\AutoAltText\App\Admin\PluginOptions;
+use ValerioMonti\AutoAltText\App\Exceptions\OpenAIException;
 use ValerioMonti\AutoAltText\Config\Constants;
 
 class OpenAITextCompletionResponse extends OpenAIResponse
@@ -16,6 +17,10 @@ class OpenAITextCompletionResponse extends OpenAIResponse
     {
         return new self();
     }
+
+    /**
+     * @throws OpenAIException
+     */
     public function response(string $imageUrl): string
     {
         $prompt = parent::prompt($imageUrl);
