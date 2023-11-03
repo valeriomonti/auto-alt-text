@@ -19,7 +19,10 @@
 use ValerioMonti\AutoAltText\App\Setup;
 use ValerioMonti\AutoAltText\Config\Constants;
 
-defined('ABSPATH') or die('Direct access not allowed');
+if ( ! defined( 'ABSPATH' ) ) {
+    exit; // Exit if accessed directly.
+}
+
 define('AUTO_ALT_TEXT_ABSPATH', dirname(__FILE__));
 define('AUTO_ALT_TEXT_URL', plugin_dir_url(__FILE__));
 define('AUTO_ALT_TEXT_LANGUAGES_RELATIVE_PATH', dirname( plugin_basename( __FILE__ ) ) . '/languages/');
