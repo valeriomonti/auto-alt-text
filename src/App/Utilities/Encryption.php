@@ -20,6 +20,10 @@ final class Encryption
      */
     public function encrypt(string $value): string
     {
+        if (empty($value)) {
+            return '';
+        }
+
         if (!extension_loaded('openssl')) {
             return $value;
         }
@@ -41,6 +45,10 @@ final class Encryption
      */
     public function decrypt(string $rawValue): string
     {
+        if (empty($rawValue)) {
+            return '';
+        }
+
         /** @noinspection DuplicatedCode */
         if (!extension_loaded('openssl')) {
             return $rawValue;
