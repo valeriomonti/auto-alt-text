@@ -56,7 +56,7 @@ final class Encryption
 
         $value = openssl_decrypt($rawValue, $method, $this->key, 0, $iv);
 
-        if (!$value || !str_ends_with($value, $this->salt)) {
+        if (!$value || substr($value, -strlen($this->salt)) !== $this->salt) {
             throw new \RuntimeException('Encryption failed.');
         }
 
