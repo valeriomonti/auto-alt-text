@@ -3,6 +3,7 @@ namespace ValerioMonti\AutoAltText\App\AIProviders\OpenAI;
 
 use OpenAI;
 use ValerioMonti\AutoAltText\App\Admin\PluginOptions;
+use ValerioMonti\AutoAltText\App\Exceptions\OpenAIException;
 use ValerioMonti\AutoAltText\App\Setup;
 use OpenAI\Client;
 use OpenAI\Exceptions\ErrorException;
@@ -15,6 +16,9 @@ class OpenAIChatCompletionResponse extends OpenAIResponse
         return new self();
     }
 
+    /**
+     * @throws OpenAIException
+     */
     public function response(string $imageUrl): string
     {
         $model = PluginOptions::model();
@@ -33,7 +37,7 @@ class OpenAIChatCompletionResponse extends OpenAIResponse
         ];
 
         $decodedBody = parent::decodedResponseBody($requestBody, Constants::AAT_OPENAI_CHAT_COMPLETION_ENDPOINT);
-        var_dump($decodedBody); die;
+
         return $this->cleanString($decodedBody['choices'][0]['message']['content']);
     }
 }
