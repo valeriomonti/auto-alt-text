@@ -26,7 +26,7 @@ class PluginOptions
             self::$instance = new self();
         }
 
-        add_action('admin_enqueue_scripts', [self::$instance, 'enqueueAdminScripts'],1);
+        add_action('admin_enqueue_scripts', [self::$instance, 'enqueueAdminScripts'], 1);
         add_action('admin_menu', [self::$instance, 'addOptionsPageToTheMenu']);
         add_action('admin_init', [self::$instance, 'setupPluginOptions']);
 
@@ -40,7 +40,8 @@ class PluginOptions
      * @param ?string $oldValue
      * @return ?string
      */
-    public function encryptDataOnUpdate(?string $newValue, ?string $oldValue): ?string {
+    public function encryptDataOnUpdate(?string $newValue, ?string $oldValue): ?string
+    {
         if (!empty($newValue)) {
             $newValue = (new Encryption())->encrypt($newValue);
         }
@@ -55,14 +56,14 @@ class PluginOptions
         $screen = get_current_screen();
         $isMainOptionsPage = $screen->id === 'toplevel_page_' . Constants::AAT_PLUGIN_OPTIONS_PAGE_SLUG;
 
-        if ( $isMainOptionsPage || strpos( $screen->id, Constants::AAT_PLUGIN_SLUG . '_' ) !== false ) {
-            $entryPoints = AUTO_ALT_TEXT_ABSPATH .'/dist/mix-manifest.json';
+        if ($isMainOptionsPage || strpos($screen->id, Constants::AAT_PLUGIN_SLUG . '_') !== false) {
+            $entryPoints = AUTO_ALT_TEXT_ABSPATH . '/dist/mix-manifest.json';
             $json = json_decode(file_get_contents($entryPoints), JSON_OBJECT_AS_ARRAY);
             $adminCss = $json['/css/admin.css'];
 
             wp_enqueue_style(Constants::AAT_PLUGIN_OPTIONS_PAGE_SLUG, AUTO_ALT_TEXT_URL . 'dist' . $adminCss, [], false);
 
-            if ( $isMainOptionsPage ) {
+            if ($isMainOptionsPage) {
                 $adminJs = $json['/js/admin.js'];
                 wp_enqueue_script(Constants::AAT_PLUGIN_OPTIONS_PAGE_SLUG, AUTO_ALT_TEXT_URL . 'dist' . $adminJs, [], false, true);
             }
@@ -88,7 +89,8 @@ class PluginOptions
         <div class="wrap">
             <h1><?php _e('Auto Alt Text Error Log', Constants::AAT_TEXT_DOMAIN) ?></h1>
             <div class="aat-options plugin-description">
-                <p><?php _e("On this page, you can view the error log from the last day. The logs from previous days are saved in the folder", Constants::AAT_TEXT_DOMAIN); ?> <strong><?php echo $logDir; ?></strong></p>
+                <p><?php _e("On this page, you can view the error log from the last day. The logs from previous days are saved in the folder", Constants::AAT_TEXT_DOMAIN); ?>
+                    <strong><?php echo $logDir; ?></strong></p>
                 <?php
                 $hash = get_option(Constants::AAT_LOG_ASH);
                 $logFile = trailingslashit($logDir) . date('Y-m-d') . '-' . $hash . '.log';
@@ -99,7 +101,7 @@ class PluginOptions
 
                 if ($logFile && file_exists($logFile)) {
                     $logContent = file_get_contents($logFile);
-                    echo '<textarea id="error-log" name="error-log" readonly>' . esc_html( $logContent ) . '</textarea>';
+                    echo '<textarea id="error-log" name="error-log" readonly>' . esc_html($logContent) . '</textarea>';
                 } else {
                     _e('Log file does not exist', Constants::AAT_TEXT_DOMAIN);
                 }
@@ -122,17 +124,26 @@ class PluginOptions
 
             <div class="aat-options plugin-description">
                 <p>
-                    <?php _e("This plugin allows you to automatically generate Alt Text for the images that are uploaded to the site's media library.",Constants::AAT_TEXT_DOMAIN); ?><br>
-                    <?php _e("The following methods are available to generate the alt text:",Constants::AAT_TEXT_DOMAIN); ?>
+                    <?php _e("This plugin allows you to automatically generate Alt Text for the images that are uploaded to the site's media library.", Constants::AAT_TEXT_DOMAIN); ?>
+                    <br>
+                    <?php _e("The following methods are available to generate the alt text:", Constants::AAT_TEXT_DOMAIN); ?>
                 </p>
                 <ul>
-                    <li><strong><?php _e("Azure's APIs", Constants::AAT_TEXT_DOMAIN); ?></strong>: <?php _e("the image will be analyzed by the AI services provided by Azure and an alt text will be generated in the language of your choice;",Constants::AAT_TEXT_DOMAIN); ?></li>
-                    <li><strong><?php _e("Open AI' APIs", Constants::AAT_TEXT_DOMAIN); ?></strong>: <?php _e("based on the prompt you set, an alt text will be created based on the name of the image file you upload to the media library (currently, OpenAI's APIs do not allow to analyze the content of the image);",Constants::AAT_TEXT_DOMAIN); ?></li>
-                    <li><strong><?php _e("Title of the article (not AI)", Constants::AAT_TEXT_DOMAIN); ?></strong>: <?php _e("if the image is uploaded within an article, the title of the article will be used as alt text;",Constants::AAT_TEXT_DOMAIN); ?></li>
-                    <li><strong><?php _e("Title of the attachment (not AI)", Constants::AAT_TEXT_DOMAIN); ?></strong>: <?php _e("the title of the attachment will be copied into the alt text;",Constants::AAT_TEXT_DOMAIN); ?></li>
+                    <li>
+                        <strong><?php _e("Azure's APIs", Constants::AAT_TEXT_DOMAIN); ?></strong>: <?php _e("the image will be analyzed by the AI services provided by Azure and an alt text will be generated in the language of your choice;", Constants::AAT_TEXT_DOMAIN); ?>
+                    </li>
+                    <li>
+                        <strong><?php _e("Open AI' APIs", Constants::AAT_TEXT_DOMAIN); ?></strong>: <?php _e("based on the prompt you set, an alt text will be created based on the name of the image file you upload to the media library (currently, OpenAI's APIs do not allow to analyze the content of the image);", Constants::AAT_TEXT_DOMAIN); ?>
+                    </li>
+                    <li>
+                        <strong><?php _e("Title of the article (not AI)", Constants::AAT_TEXT_DOMAIN); ?></strong>: <?php _e("if the image is uploaded within an article, the title of the article will be used as alt text;", Constants::AAT_TEXT_DOMAIN); ?>
+                    </li>
+                    <li>
+                        <strong><?php _e("Title of the attachment (not AI)", Constants::AAT_TEXT_DOMAIN); ?></strong>: <?php _e("the title of the attachment will be copied into the alt text;", Constants::AAT_TEXT_DOMAIN); ?>
+                    </li>
                 </ul>
                 <p><?php _e("Once all the necessary data for the chosen generation method has been entered, the alt texts will be created automatically upon uploading each image.", Constants::AAT_TEXT_DOMAIN); ?></p>
-                <p style="color:red"><?php _e("Pay attention please: If the alt text for an image is not generated, check the logs on the designated page.",  Constants::AAT_TEXT_DOMAIN); ?></p>
+                <p style="color:red"><?php _e("Pay attention please: If the alt text for an image is not generated, check the logs on the designated page.", Constants::AAT_TEXT_DOMAIN); ?></p>
             </div>
             <form method="post" action="options.php" class="aat-options">
                 <?php
@@ -143,7 +154,8 @@ class PluginOptions
                 echo '<p class="description">' . __("Which method do you want to use to generate the alt text for the images?", Constants::AAT_TEXT_DOMAIN) . '</p>';
                 $typology = get_option(Constants::AAT_OPTION_FIELD_TYPOLOGY);
                 ?>
-                <select name="<?php echo Constants::AAT_OPTION_FIELD_TYPOLOGY; ?>" id="<?php echo Constants::AAT_OPTION_FIELD_TYPOLOGY; ?>">
+                <select name="<?php echo Constants::AAT_OPTION_FIELD_TYPOLOGY; ?>"
+                        id="<?php echo Constants::AAT_OPTION_FIELD_TYPOLOGY; ?>">
                     <option value="<?php echo Constants::AAT_OPTION_TYPOLOGY_DEACTIVATED; ?>"<?php echo self::selected($typology, Constants::AAT_OPTION_TYPOLOGY_DEACTIVATED); ?>><?php _e("Deactivated", Constants::AAT_TEXT_DOMAIN); ?></option>
                     <option value="<?php echo Constants::AAT_OPTION_TYPOLOGY_CHOICE_AZURE; ?>"<?php echo self::selected($typology, Constants::AAT_OPTION_TYPOLOGY_CHOICE_AZURE); ?>><?php _e("Azure's APIs", Constants::AAT_TEXT_DOMAIN); ?></option>
                     <option value="<?php echo Constants::AAT_OPTION_TYPOLOGY_CHOICE_OPENAI; ?>"<?php echo self::selected($typology, Constants::AAT_OPTION_TYPOLOGY_CHOICE_OPENAI); ?>><?php _e("Open AI' APIs", Constants::AAT_TEXT_DOMAIN); ?></option>
@@ -153,7 +165,7 @@ class PluginOptions
                 <?php
                 echo '</div>';
 
-                echo '<div class="plugin-option type-openai"><strong>' .  __('Warning', Constants::AAT_TEXT_DOMAIN) . '</strong>: ' . __("At the moment, OpenAI's APIs do not offer the possibility to describe an image with computer vision.", Constants::AAT_TEXT_DOMAIN) . ' ' . __("Therefore, for the time being, by filling out the following fields you will be able to generate an alt text based solely on the name of the image file.", Constants::AAT_TEXT_DOMAIN) . '<br>' . __("If you want an accurate description of the image, use Azure's APIs.", Constants::AAT_TEXT_DOMAIN) . '</div>';
+                echo '<div class="plugin-option type-openai"><strong>' . __('Warning', Constants::AAT_TEXT_DOMAIN) . '</strong>: ' . __("At the moment, OpenAI's APIs do not offer the possibility to describe an image with computer vision.", Constants::AAT_TEXT_DOMAIN) . ' ' . __("Therefore, for the time being, by filling out the following fields you will be able to generate an alt text based solely on the name of the image file.", Constants::AAT_TEXT_DOMAIN) . '<br>' . __("If you want an accurate description of the image, use Azure's APIs.", Constants::AAT_TEXT_DOMAIN) . '</div>';
 
                 echo '<div class="plugin-option type-openai">';
                 echo '<label for="' . Constants::AAT_OPTION_FIELD_API_KEY_OPENAI . '">' . __('OpenAI API Key', Constants::AAT_TEXT_DOMAIN) . '</label>';
@@ -179,7 +191,7 @@ class PluginOptions
                 <select name="<?php echo Constants::AAT_OPTION_FIELD_MODEL_OPENAI; ?>"
                         id="<?php echo Constants::AAT_OPTION_FIELD_MODEL_OPENAI; ?>">
                     <?php
-                    foreach(Constants::AAT_OPENAI_MODELS as $modelName => $a) :
+                    foreach (Constants::AAT_OPENAI_MODELS as $modelName => $a) :
                         ?>
                         <option value="<?php echo $modelName; ?>" <?php echo self::isModelSelected($modelSaved, $modelName) ? 'selected="selected"' : ''; ?>><?php echo $modelName; ?></option>
                     <?php
@@ -201,7 +213,7 @@ class PluginOptions
 
                 echo '<div class="plugin-option type-azure">';
                 echo '<label for="' . Constants::AAT_OPTION_FIELD_ENDPOINT_AZURE_COMPUTER_VISION . '">' . __('Azure Computer Vision Endpoint', Constants::AAT_TEXT_DOMAIN) . '</label>';
-                echo '<p class="description">' . __("Enter the endpoint of the Computer Vision service.", Constants::AAT_TEXT_DOMAIN). ' (es. https://computer-vision-france-central.cognitiveservices.azure.com/)</p>';
+                echo '<p class="description">' . __("Enter the endpoint of the Computer Vision service.", Constants::AAT_TEXT_DOMAIN) . ' (es. https://computer-vision-france-central.cognitiveservices.azure.com/)</p>';
                 $endpoint = get_option(Constants::AAT_OPTION_FIELD_ENDPOINT_AZURE_COMPUTER_VISION);
                 echo '<input type="text" name="' . Constants::AAT_OPTION_FIELD_ENDPOINT_AZURE_COMPUTER_VISION . '" value="' . $endpoint . '" />';
                 echo '</div>';
@@ -212,9 +224,10 @@ class PluginOptions
                 $currentLanguage = get_option(Constants::AAT_OPTION_FIELD_LANGUAGE_AZURE_TRANSLATE_INSTANCE);
                 $supportedLanguages = (AzureTranslator::make())->supportedLanguages();
                 ?>
-                <select name="<?php echo Constants::AAT_OPTION_FIELD_LANGUAGE_AZURE_TRANSLATE_INSTANCE; ?>" id="<?php echo Constants::AAT_OPTION_FIELD_LANGUAGE_AZURE_TRANSLATE_INSTANCE; ?>">
+                <select name="<?php echo Constants::AAT_OPTION_FIELD_LANGUAGE_AZURE_TRANSLATE_INSTANCE; ?>"
+                        id="<?php echo Constants::AAT_OPTION_FIELD_LANGUAGE_AZURE_TRANSLATE_INSTANCE; ?>">
                     <?php
-                    foreach($supportedLanguages as $key => $language):
+                    foreach ($supportedLanguages as $key => $language):
                         ?>
                         <option value="<?php echo $key ?>" <?php echo self::selected($currentLanguage, $key); ?>><?php echo $language['name'] ?></option>
                     <?php
@@ -259,7 +272,7 @@ class PluginOptions
      * @param string $inputValue
      * @return string
      */
-    public static function selected(string $selectedValue, string $inputValue) : string
+    public static function selected(string $selectedValue, string $inputValue): string
     {
         return $selectedValue == $inputValue ? ' selected' : '';
     }
@@ -375,7 +388,7 @@ class PluginOptions
         return get_option(Constants::AAT_OPTION_FIELD_MODEL_OPENAI);
     }
 
-    public static function sanitizeUrl($input):string
+    public static function sanitizeUrl($input): string
     {
         return sanitize_url($input);
     }
