@@ -26,13 +26,14 @@ class LogCleaner
         add_action(Constants::AAT_LOGS_CLEANUP_EVENT, [self::$instance, 'cleanupOldLogs']);
     }
 
-    public static function cleanupOldLogs() {
+    public static function cleanupOldLogs(): void
+    {
         $logDir = trailingslashit(wp_upload_dir()['basedir']) . Constants::AAT_PLUGIN_SLUG;
 
         if (is_dir($logDir)) {
             $files = glob(trailingslashit($logDir) . '*.log');
-            $now   = time();
-            $days  = Constants::AAT_LOG_RETENTION_DAYS;
+            $now = time();
+            $days = Constants::AAT_LOG_RETENTION_DAYS;
 
             foreach ($files as $file) {
                 if (is_file($file)) {

@@ -1,4 +1,5 @@
 <?php
+
 namespace ValerioMonti\AutoAltText\App\Logging;
 
 use Exception;
@@ -38,7 +39,8 @@ class FileLogger implements LoggerInterface
         error_log($errorMessage, 3, $logFile);
     }
 
-    public function findLatestLogFile($logDir) {
+    public function findLatestLogFile(string $logDir): string
+    {
         $latest_time = 0;
         $latest_file = null;
 
