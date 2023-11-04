@@ -11,7 +11,6 @@ class AzureComputerVisionCaptionsResponse implements AIProviderInterface
 {
     private function __construct()
     {
-
     }
 
     public static function make(): AzureComputerVisionCaptionsResponse
@@ -20,6 +19,8 @@ class AzureComputerVisionCaptionsResponse implements AIProviderInterface
     }
 
     /**
+     * Make a request to Azure Computer Vision APIs to retrieve the contents of the uploaded image
+     * If necessary, translate the description into the requested language
      * @param string $imageUrl
      * @return string
      * @throws AzureComputerVisionException

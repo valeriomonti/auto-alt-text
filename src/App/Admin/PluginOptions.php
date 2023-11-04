@@ -19,6 +19,7 @@ class PluginOptions
     }
 
     /**
+     * Manage the necessary hooks to implement plugin options and their pages
      * @return void
      */
     public static function register(): void
@@ -31,12 +32,14 @@ class PluginOptions
         add_action('admin_menu', [self::$instance, 'addOptionsPageToTheMenu']);
         add_action('admin_init', [self::$instance, 'setupPluginOptions']);
 
+        // Encrypt API Keys on update
         add_action('pre_update_option_' . Constants::AAT_OPTION_FIELD_API_KEY_AZURE_COMPUTER_VISION, [self::$instance, 'encryptDataOnUpdate'], 10, 3);
         add_action('pre_update_option_' . Constants::AAT_OPTION_FIELD_API_KEY_AZURE_TRANSLATE_INSTANCE, [self::$instance, 'encryptDataOnUpdate'], 10, 3);
         add_action('pre_update_option_' . Constants::AAT_OPTION_FIELD_API_KEY_OPENAI, [self::$instance, 'encryptDataOnUpdate'], 10, 3);
     }
 
     /**
+     * Encrypt data
      * @param ?string $newValue
      * @param ?string $oldValue
      * @return ?string
@@ -73,7 +76,7 @@ class PluginOptions
     }
 
     /**
-     * Aggiunge il link al menu delle opzioni nel pannello di amministrazione di WordPress
+     * Create options pages
      * @return void
      */
     public static function addOptionsPageToTheMenu(): void
@@ -82,6 +85,10 @@ class PluginOptions
         add_submenu_page(Constants::AAT_PLUGIN_OPTIONS_PAGE_SLUG, 'Error Log', 'Error log', 'manage_options', 'auto-alt-text-log', [self::$instance, 'logOptionsPage']);
     }
 
+    /**
+     * Implement the page showing error log
+     * @return void
+     */
     public static function logOptionsPage(): void
     {
         $uploadDir = wp_upload_dir();
@@ -114,7 +121,7 @@ class PluginOptions
     }
 
     /**
-     * Create option page and his fields
+     * Implement the main option page
      * @return void
      */
     public static function optionsMainPage(): void
@@ -274,6 +281,7 @@ class PluginOptions
     }
 
     /**
+     * If option is selected return the selected attribute
      * @param string $selectedValue
      * @param string $inputValue
      * @return string
@@ -302,7 +310,13 @@ class PluginOptions
         register_setting('auto_alt_text_options', Constants::AAT_OPTION_FIELD_LANGUAGE_AZURE_TRANSLATE_INSTANCE, [self::class, 'sanitizeText']);
     }
 
-    public static function isModelSelected($modelSaved, $currentModel): bool
+    /**
+     * Check if a model is selected
+     * @param string $modelSaved
+     * @param string $currentModel
+     * @return bool
+     */
+    public static function isModelSelected(string $modelSaved, string $currentModel): bool
     {
         if (empty($modelSaved)) {
             return Constants::AAT_OPENAI_DEFAULT_MODEL == $currentModel;

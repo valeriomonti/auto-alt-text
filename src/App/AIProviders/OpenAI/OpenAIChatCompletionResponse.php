@@ -16,6 +16,9 @@ class OpenAIChatCompletionResponse extends OpenAIResponse
     }
 
     /**
+     *  Make a request to OpenAI Chat APIs to retrieve a description for the image file name passed
+     * @param string $imageUrl
+     * @return string
      * @throws OpenAIException
      */
     public function response(string $imageUrl): string

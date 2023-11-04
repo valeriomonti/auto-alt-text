@@ -23,13 +23,19 @@ class Setup
     {
     }
 
+    /**
+     * Register plugin functionalities
+     * @return void
+     */
     public static function register(): void
     {
         if (is_null(self::$instance)) {
             self::$instance = new self();
         }
 
+        //Register plugin options pages
         PluginOptions::register();
+        //Enable automatic clean for the plugin error log
         LogCleaner::register();
 
         // When attachment is uploaded, create alt text
@@ -40,6 +46,7 @@ class Setup
 
     /**
      * Load text domain
+     * @return void
      */
     public static function loadTextDomain(): void
     {
@@ -47,18 +54,21 @@ class Setup
     }
 
     /**
-     * @param $postId
+     *
+     * @param int $postId
      * @return void
      */
-    public static function addAltTextOnUpload($postId): void
+    public static function addAltTextOnUpload(int $postId): void
     {
         if (!wp_attachment_is_image($postId)) {
             return;
         }
 
         $altText = '';
+
         switch (PluginOptions::typology()) {
             case Constants::AAT_OPTION_TYPOLOGY_CHOICE_AZURE:
+                // If Azure is selected as alt text generating typology
                 try {
                     $altText = (AltTextGeneratorAi::make(AzureComputerVisionCaptionsResponse::make()))->altText($postId);
                 } catch (AzureException $e) {
@@ -66,6 +76,7 @@ class Setup
                 }
                 break;
             case Constants::AAT_OPTION_TYPOLOGY_CHOICE_OPENAI:
+                // If OpenAI is selected as alt text generating typology
                 $model = PluginOptions::model();
                 try {
                     if (Constants::AAT_ENDPOINT_OPENAI_TEXT_COMPLETION == Constants::AAT_OPENAI_MODELS[$model]) {
@@ -79,6 +90,7 @@ class Setup
                 }
                 break;
             case Constants::AAT_OPTION_TYPOLOGY_CHOICE_ARTICLE_TITLE:
+                // If Article title is selected as alt text generating typology
                 $parentId = wp_get_post_parent_id($postId);
                 if ($parentId) {
                     $altText = (AltTextGeneratorParentPostTitle::make())->altText($postId);
@@ -88,6 +100,7 @@ class Setup
                 }
                 break;
             case Constants::AAT_OPTION_TYPOLOGY_CHOICE_ATTACHMENT_TITLE:
+                // If Attachment title is selected as alt text generating typology
                 $altText = (AltTextGeneratorAttachmentTitle::make())->altText($postId);
                 break;
             default:

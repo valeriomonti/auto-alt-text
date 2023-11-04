@@ -15,7 +15,6 @@
  * Namespace:       AutoAltText
  */
 
-
 use ValerioMonti\AutoAltText\App\Setup;
 use ValerioMonti\AutoAltText\Config\Constants;
 

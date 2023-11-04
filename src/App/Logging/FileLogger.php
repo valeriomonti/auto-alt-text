@@ -17,6 +17,12 @@ class FileLogger implements LoggerInterface
         return new self();
     }
 
+    /**
+     * If not exists create the daily error log file and append in it a new line about the current error
+     * @param int $imageId
+     * @param string $errorMessage
+     * @return void
+     */
     public function writeImageLog(int $imageId, string $errorMessage): void
     {
         $salt = (new Encryption())->getSalt();
@@ -39,6 +45,11 @@ class FileLogger implements LoggerInterface
         error_log($errorMessage, 3, $logFile);
     }
 
+    /**
+     * Find the last created log file in the log directory
+     * @param string $logDir
+     * @return string
+     */
     public function findLatestLogFile(string $logDir): string
     {
         $latest_time = 0;

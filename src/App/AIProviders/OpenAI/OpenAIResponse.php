@@ -10,6 +10,13 @@ abstract class OpenAIResponse implements AIProviderInterface
 {
     abstract public function response(string $imageUrl): string;
 
+    /**
+     * Send the request to the OpenAI APIs and return the decoded response
+     * @param array $requestBody
+     * @param string $endpoint
+     * @return array
+     * @throws OpenAIException
+     */
     protected function decodedResponseBody(array $requestBody, string $endpoint): array
     {
 
@@ -46,6 +53,7 @@ abstract class OpenAIResponse implements AIProviderInterface
     }
 
     /**
+     * Compute the prompt based on the template saved in the options and the imageUrl passed
      * @param string $imageUrl
      * @return string
      */

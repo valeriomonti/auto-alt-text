@@ -2,10 +2,11 @@
 
 namespace ValerioMonti\AutoAltText\App\Utilities;
 
+use RuntimeException;
+
 final class Encryption
 {
     private string $key;
-
     private string $salt;
 
     public function __construct()
@@ -33,7 +34,7 @@ final class Encryption
         $iv = openssl_random_pseudo_bytes($ivLength);
         $raw_value = openssl_encrypt($value . $this->salt, $method, $this->key, 0, $iv);
         if (!$raw_value) {
-            throw new \RuntimeException('Encryption failed.');
+            throw new RuntimeException('Encryption failed.');
         }
 
         return base64_encode($iv . $raw_value);
@@ -65,7 +66,7 @@ final class Encryption
         $value = openssl_decrypt($rawValue, $method, $this->key, 0, $iv);
 
         if (!$value || substr($value, -strlen($this->salt)) !== $this->salt) {
-            throw new \RuntimeException('Encryption failed.');
+            throw new RuntimeException('Encryption failed.');
         }
 
         return substr($value, 0, -strlen($this->salt));

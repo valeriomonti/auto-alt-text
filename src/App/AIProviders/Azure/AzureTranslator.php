@@ -9,7 +9,6 @@ class AzureTranslator implements AITranslatorInterface
 {
     private function __construct()
     {
-
     }
 
     public static function make(): AzureTranslator
@@ -18,6 +17,7 @@ class AzureTranslator implements AITranslatorInterface
     }
 
     /**
+     * Translate a string sending a request to the Azure translation Api
      * @param string $text
      * @param string $language
      * @return string
@@ -54,6 +54,7 @@ class AzureTranslator implements AITranslatorInterface
     }
 
     /**
+     * Get the list of supported languages from Azure Api
      * @return array
      * @throws AzureTranslateInstanceException
      */

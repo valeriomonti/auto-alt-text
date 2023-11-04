@@ -10,9 +10,12 @@ class LogCleaner
 
     private function __construct()
     {
-
     }
 
+    /**
+     * Schedule the error log cleanup
+     * @return void
+     */
     public static function register(): void
     {
         if (is_null(self::$instance)) {
@@ -26,6 +29,10 @@ class LogCleaner
         add_action(Constants::AAT_LOGS_CLEANUP_EVENT, [self::$instance, 'cleanupOldLogs']);
     }
 
+    /**
+     * Remove old log files
+     * @return void
+     */
     public static function cleanupOldLogs(): void
     {
         $logDir = trailingslashit(wp_upload_dir()['basedir']) . Constants::AAT_PLUGIN_SLUG;
