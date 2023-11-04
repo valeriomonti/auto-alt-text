@@ -53,6 +53,10 @@ class AzureTranslator implements AITranslatorInterface
         return $bodyResult[0]['translations'][0]['text'];
     }
 
+    /**
+     * @return array
+     * @throws AzureTranslateInstanceException
+     */
     public function supportedLanguages(): array
     {
         $route = 'languages?api-version=3.0';
@@ -78,15 +82,5 @@ class AzureTranslator implements AITranslatorInterface
         }
 
         return $bodyResult['translation'];
-
-//        if (is_wp_error($response)) {
-//            // Gestisci l'errore di richiesta
-//        } else {
-//            $languages = json_decode(wp_remote_retrieve_body($response), true);
-//            // Elabora la risposta per ottenere la lista delle lingue
-//            return $languages['translation'];
-//        }
-
-        //return [];
     }
 }

@@ -4,6 +4,7 @@ namespace ValerioMonti\AutoAltText\App\Admin;
 
 use OpenAI;
 use ValerioMonti\AutoAltText\App\AIProviders\Azure\AzureTranslator;
+use ValerioMonti\AutoAltText\App\Exceptions\Azure\AzureTranslateInstanceException;
 use ValerioMonti\AutoAltText\App\Logging\FileLogger;
 use ValerioMonti\AutoAltText\App\Utilities\Encryption;
 use ValerioMonti\AutoAltText\Config\Constants;
@@ -222,7 +223,12 @@ class PluginOptions
                 echo '<label for="' . Constants::AAT_OPTION_FIELD_LANGUAGE_AZURE_TRANSLATE_INSTANCE . '">' . __('Alt Text Language', Constants::AAT_TEXT_DOMAIN) . '</label>';
                 echo '<p class="description">' . __("Select the language in which the alt text should be written.", Constants::AAT_TEXT_DOMAIN) . '</p>';
                 $currentLanguage = get_option(Constants::AAT_OPTION_FIELD_LANGUAGE_AZURE_TRANSLATE_INSTANCE);
-                $supportedLanguages = (AzureTranslator::make())->supportedLanguages();
+
+                try {
+                    $supportedLanguages = (AzureTranslator::make())->supportedLanguages();
+                } catch (AzureTranslateInstanceException $e) {
+                    $supportedLanguages = [];
+                }
                 ?>
                 <select name="<?php echo Constants::AAT_OPTION_FIELD_LANGUAGE_AZURE_TRANSLATE_INSTANCE; ?>"
                         id="<?php echo Constants::AAT_OPTION_FIELD_LANGUAGE_AZURE_TRANSLATE_INSTANCE; ?>">
