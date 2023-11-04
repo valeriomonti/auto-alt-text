@@ -6,6 +6,7 @@ use ValerioMonti\AutoAltText\App\Admin\PluginOptions;
 use ValerioMonti\AutoAltText\App\AIProviders\AIProviderInterface;
 use ValerioMonti\AutoAltText\App\Exceptions\Azure\AzureComputerVisionException;
 use ValerioMonti\AutoAltText\App\Exceptions\Azure\AzureTranslateInstanceException;
+use ValerioMonti\AutoAltText\Config\Constants;
 
 class AzureComputerVisionCaptionsResponse implements AIProviderInterface
 {
@@ -49,7 +50,12 @@ class AzureComputerVisionCaptionsResponse implements AIProviderInterface
         }
 
         $altText = $bodyResult['captionResult']['text'];
-
-        return (AzureTranslator::make())->translate($altText, PluginOptions::languageAzureTranslateInstance());
+        $selectedLanguage = PluginOptions::languageAzureTranslateInstance();
+        
+        // If the default language (en) is selected it is not necessary a translation
+        if ($selectedLanguage == Constants::AAT_AZURE_DEFAULT_LANGUAGE) {
+            return $altText;
+        }
+        return (AzureTranslator::make())->translate($altText, $selectedLanguage);
     }
 }
