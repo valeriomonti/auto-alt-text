@@ -3,7 +3,7 @@ namespace ValerioMonti\AutoAltText\App\AIProviders\OpenAI;
 
 use ValerioMonti\AutoAltText\App\Admin\PluginOptions;
 use ValerioMonti\AutoAltText\App\AIProviders\AIProviderInterface;
-use ValerioMonti\AutoAltText\App\Exceptions\OpenAIException;
+use ValerioMonti\AutoAltText\App\Exceptions\OpenAI\OpenAIException;
 use ValerioMonti\AutoAltText\Config\Constants;
 
 abstract class OpenAIResponse implements AIProviderInterface

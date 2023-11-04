@@ -4,7 +4,7 @@ namespace ValerioMonti\AutoAltText\App\AIProviders\OpenAI;
 use OpenAI;
 use OpenAI\Client;
 use ValerioMonti\AutoAltText\App\Admin\PluginOptions;
-use ValerioMonti\AutoAltText\App\Exceptions\OpenAIException;
+use ValerioMonti\AutoAltText\App\Exceptions\OpenAI\OpenAIException;
 use ValerioMonti\AutoAltText\Config\Constants;
 
 class OpenAITextCompletionResponse extends OpenAIResponse

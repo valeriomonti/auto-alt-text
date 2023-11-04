@@ -2,11 +2,10 @@
 namespace ValerioMonti\AutoAltText\App\AIProviders\OpenAI;
 
 use OpenAI;
-use ValerioMonti\AutoAltText\App\Admin\PluginOptions;
-use ValerioMonti\AutoAltText\App\Exceptions\OpenAIException;
-use ValerioMonti\AutoAltText\App\Setup;
 use OpenAI\Client;
 use OpenAI\Exceptions\ErrorException;
+use ValerioMonti\AutoAltText\App\Admin\PluginOptions;
+use ValerioMonti\AutoAltText\App\Exceptions\OpenAI\OpenAIException;
 use ValerioMonti\AutoAltText\Config\Constants;
 
 class OpenAIChatCompletionResponse extends OpenAIResponse

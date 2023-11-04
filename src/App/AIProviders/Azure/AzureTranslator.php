@@ -3,6 +3,7 @@ namespace ValerioMonti\AutoAltText\App\AIProviders\Azure;
 
 use ValerioMonti\AutoAltText\App\Admin\PluginOptions;
 use ValerioMonti\AutoAltText\App\AIProviders\AITranslatorInterface;
+use ValerioMonti\AutoAltText\App\Exceptions\Azure\AzureTranslateInstanceException;
 
 class AzureTranslator implements AITranslatorInterface
 {
@@ -15,6 +16,13 @@ class AzureTranslator implements AITranslatorInterface
     {
         return new self();
     }
+
+    /**
+     * @param string $text
+     * @param string $language
+     * @return string
+     * @throws AzureTranslateInstanceException
+     */
     public function translate(string $text, string $language): string
     {
         $route = "translate?api-version=3.0&from=en&to=" . $language;
@@ -35,13 +43,14 @@ class AzureTranslator implements AITranslatorInterface
                 'method' => 'POST',
             ]
         );
-        if (is_wp_error($response)) {
-            // Gestisci l'errore di richiesta
-        } else {
-            $translatedText = json_decode(wp_remote_retrieve_body($response), true)[0]['translations'][0]['text'];
+
+        $bodyResult = json_decode(wp_remote_retrieve_body($response), true);
+
+        if (array_key_exists('error', $bodyResult)) {
+            throw new AzureTranslateInstanceException("Error code: " . $bodyResult['error']['code'] . " - " . $bodyResult['error']['message']);
         }
 
-        return $translatedText;
+        return $bodyResult[0]['translations'][0]['text'];
     }
 
     public function supportedLanguages(): array
@@ -62,14 +71,22 @@ class AzureTranslator implements AITranslatorInterface
             )
         );
 
-        if (is_wp_error($response)) {
-            // Gestisci l'errore di richiesta
-        } else {
-            $languages = json_decode(wp_remote_retrieve_body($response), true);
-            // Elabora la risposta per ottenere la lista delle lingue
-            return $languages['translation'];
+        $bodyResult = json_decode(wp_remote_retrieve_body($response), true);
+
+        if (array_key_exists('error', $bodyResult)) {
+            throw new AzureTranslateInstanceException("Error code: " . $bodyResult['error']['code'] . " - " . $bodyResult['error']['message']);
         }
 
-        return [];
+        return $bodyResult['translation'];
+
+//        if (is_wp_error($response)) {
+//            // Gestisci l'errore di richiesta
+//        } else {
+//            $languages = json_decode(wp_remote_retrieve_body($response), true);
+//            // Elabora la risposta per ottenere la lista delle lingue
+//            return $languages['translation'];
+//        }
+
+        //return [];
     }
 }

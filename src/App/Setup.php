@@ -5,14 +5,10 @@ namespace ValerioMonti\AutoAltText\App;
 use OpenAI\Exceptions\ErrorException;
 use ValerioMonti\AutoAltText\App\Admin\PluginOptions;
 use ValerioMonti\AutoAltText\App\AIProviders\Azure\AzureComputerVisionCaptionsResponse;
-use ValerioMonti\AutoAltText\App\AIProviders\Azure\AzureTranslator;
 use ValerioMonti\AutoAltText\App\AIProviders\OpenAI\OpenAIChatCompletionResponse;
 use ValerioMonti\AutoAltText\App\AIProviders\OpenAI\OpenAITextCompletionResponse;
-use ValerioMonti\AutoAltText\App\AltTextGeneratorAi;
-use ValerioMonti\AutoAltText\App\AltTextGeneratorParentPostTitle;
-use ValerioMonti\AutoAltText\App\AltTextGeneratorAttachmentTitle;
-use ValerioMonti\AutoAltText\App\Exceptions\AzureComputerVisionException;
-use ValerioMonti\AutoAltText\App\Exceptions\OpenAIException;
+use ValerioMonti\AutoAltText\App\Exceptions\Azure\AzureException;
+use ValerioMonti\AutoAltText\App\Exceptions\OpenAI\OpenAIException;
 use ValerioMonti\AutoAltText\App\Logging\FileLogger;
 use ValerioMonti\AutoAltText\App\Logging\LogCleaner;
 use ValerioMonti\AutoAltText\Config\Constants;
@@ -65,7 +61,7 @@ class Setup
             case Constants::AAT_OPTION_TYPOLOGY_CHOICE_AZURE:
                 try {
                     $altText = (AltTextGeneratorAi::make(AzureComputerVisionCaptionsResponse::make()))->altText($postId);
-                } catch (AzureComputerVisionException $e) {
+                } catch (AzureException $e) {
                     (FileLogger::make())->writeImageLog($postId, "Azure - " . $e->getMessage());
                 }
                 break;
