@@ -5,7 +5,6 @@ namespace ValerioMonti\AutoAltText\Config;
 class Constants
 {
     const AAT_PLUGIN_SLUG = 'auto-alt-text';
-    const AAT_TEXT_DOMAIN = 'auto-alt-text';
     const AAT_AZURE_DEFAULT_LANGUAGE = 'en';
     const AAT_PLUGIN_OPTIONS_PAGE_SLUG= 'auto-alt-text-options';
     const AAT_OPTION_FIELD_TYPOLOGY = 'aat_typology';
