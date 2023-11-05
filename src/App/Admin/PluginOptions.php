@@ -97,7 +97,7 @@ class PluginOptions
         <div class="wrap">
             <h1><?php _e('Auto Alt Text Error Log', 'auto-alt-text') ?></h1>
             <div class="aat-options plugin-description">
-                <p><?php _e("On this page, you can view the error log from the last day. The logs from previous days are saved in the folder", 'auto-alt-text'); ?>
+                <p><?php _e("On this page you can view the last daily error log generated. The logs from previous days are saved in the folder", 'auto-alt-text'); ?>
                     <strong><?php echo $logDir; ?></strong></p>
                 <?php
                 $hash = get_option(Constants::AAT_LOG_ASH);
