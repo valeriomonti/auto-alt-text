@@ -11,6 +11,7 @@ use ValerioMonti\AutoAltText\App\Exceptions\Azure\AzureException;
 use ValerioMonti\AutoAltText\App\Exceptions\OpenAI\OpenAIException;
 use ValerioMonti\AutoAltText\App\Logging\FileLogger;
 use ValerioMonti\AutoAltText\App\Logging\LogCleaner;
+use ValerioMonti\AutoAltText\App\Utilities\Encryption;
 use ValerioMonti\AutoAltText\Config\Constants;
 use WpOrg\Requests\Exception;
 
@@ -72,7 +73,7 @@ class Setup
                 try {
                     $altText = (AltTextGeneratorAi::make(AzureComputerVisionCaptionsResponse::make()))->altText($postId);
                 } catch (AzureException $e) {
-                    (FileLogger::make())->writeImageLog($postId, "Azure - " . $e->getMessage());
+                    (FileLogger::make(Encryption::make()))->writeImageLog($postId, "Azure - " . $e->getMessage());
                 }
                 break;
             case Constants::AAT_OPTION_TYPOLOGY_CHOICE_OPENAI:
@@ -86,7 +87,7 @@ class Setup
                     }
                 } catch (OpenAIException $e) {
                     $errorMessage = "OpenAI - " . $e->getMessage();
-                    (FileLogger::make())->writeImageLog($postId, $errorMessage);
+                    (FileLogger::make(Encryption::make()))->writeImageLog($postId, $errorMessage);
                 }
                 break;
             case Constants::AAT_OPTION_TYPOLOGY_CHOICE_ARTICLE_TITLE:

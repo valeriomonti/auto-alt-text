@@ -104,7 +104,7 @@ class PluginOptions
                 $logFile = trailingslashit($logDir) . date('Y-m-d') . '-' . $hash . '.log';
 
                 if (!file_exists($logFile)) {
-                    $logFile = FileLogger::make()->findLatestLogFile($logDir);
+                    $logFile = FileLogger::make(Encryption::make())->findLatestLogFile($logDir);
                 }
 
                 if ($logFile && file_exists($logFile)) {

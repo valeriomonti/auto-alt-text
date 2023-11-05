@@ -8,13 +8,16 @@ use ValerioMonti\AutoAltText\Config\Constants;
 
 class FileLogger implements LoggerInterface
 {
-    private function __construct()
+    private Encryption $encryption;
+
+    private function __construct(Encryption $encryption)
     {
+        $this->encryption = $encryption;
     }
 
-    public static function make(): FileLogger
+    public static function make(Encryption $encryption): FileLogger
     {
-        return new self();
+        return new self($encryption);
     }
 
     /**
@@ -25,7 +28,7 @@ class FileLogger implements LoggerInterface
      */
     public function writeImageLog(int $imageId, string $errorMessage): void
     {
-        $salt = (Encryption::make())->getSalt();
+        $salt = $this->encryption->getSalt();
 
         //generate a hash based on salt and date
         $hash = md5($salt . date('Y-m-d'));
