@@ -6,7 +6,8 @@ class Constants
 {
     const AAT_PLUGIN_SLUG = 'auto-alt-text';
     const AAT_AZURE_DEFAULT_LANGUAGE = 'en';
-    const AAT_PLUGIN_OPTIONS_PAGE_SLUG= 'auto-alt-text-options';
+    const AAT_PLUGIN_OPTIONS_PAGE_SLUG = 'auto-alt-text-options';
+    const AAT_PLUGIN_OPTION_LOG_PAGE_SLUG = 'auto-alt-text-log';
     const AAT_OPTION_FIELD_TYPOLOGY = 'aat_typology';
     const AAT_OPTION_FIELD_PROMPT_OPENAI = 'aat_prompt_openai';
     const AAT_OPTION_FIELD_MODEL_OPENAI = 'aat_model_openai';

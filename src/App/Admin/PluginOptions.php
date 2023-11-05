@@ -82,7 +82,7 @@ class PluginOptions
     public static function addOptionsPageToTheMenu(): void
     {
         add_menu_page('Auto Alt Text Options', 'Auto Alt Text', 'manage_options', Constants::AAT_PLUGIN_OPTIONS_PAGE_SLUG, [self::$instance, 'optionsMainPage'], null, 99);
-        add_submenu_page(Constants::AAT_PLUGIN_OPTIONS_PAGE_SLUG, 'Error Log', 'Error log', 'manage_options', 'auto-alt-text-log', [self::$instance, 'logOptionsPage']);
+        add_submenu_page(Constants::AAT_PLUGIN_OPTIONS_PAGE_SLUG, 'Error Log', 'Error log', 'manage_options', Constants::AAT_PLUGIN_OPTION_LOG_PAGE_SLUG, [self::$instance, 'logOptionsPage']);
     }
 
     /**
@@ -151,7 +151,7 @@ class PluginOptions
                     </li>
                 </ul>
                 <p><?php _e("Once all the necessary data for the chosen generation method has been entered, the alt texts will be created automatically upon uploading each image.", 'auto-alt-text'); ?></p>
-                <p style="color:red"><?php _e("Pay attention please: If the alt text for an image is not generated, check the logs on the designated page.", 'auto-alt-text'); ?></p>
+                <p><strong><?php _e('Pay attention please:', 'auto-alt-text') ?></strong> <?php _e("if the alt text for an image is not generated, check the logs on the", 'auto-alt-text'); ?> <a href="<?php menu_page_url(Constants::AAT_PLUGIN_OPTION_LOG_PAGE_SLUG, true) ?>"><?php _e('designated page.', 'auto-alt-text') ?></a></p>
             </div>
             <form method="post" action="options.php" class="aat-options">
                 <?php
