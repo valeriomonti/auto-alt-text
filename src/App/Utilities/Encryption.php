@@ -16,6 +16,14 @@ final class Encryption
     }
 
     /**
+     * @return Encryption
+     */
+    public static function make(): Encryption
+    {
+        return new self();
+    }
+
+    /**
      * @param string $value
      * @return string|bool
      */

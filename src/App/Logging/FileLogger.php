@@ -25,7 +25,7 @@ class FileLogger implements LoggerInterface
      */
     public function writeImageLog(int $imageId, string $errorMessage): void
     {
-        $salt = (new Encryption())->getSalt();
+        $salt = (Encryption::make())->getSalt();
 
         //generate a hash based on salt and date
         $hash = md5($salt . date('Y-m-d'));

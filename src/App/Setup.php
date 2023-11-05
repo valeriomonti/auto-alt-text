@@ -109,5 +109,4 @@ class Setup
 
         update_post_meta($postId, '_wp_attachment_image_alt', $altText);
     }
-
 }

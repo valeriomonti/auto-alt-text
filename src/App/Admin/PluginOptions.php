@@ -47,7 +47,7 @@ class PluginOptions
     public function encryptDataOnUpdate(?string $newValue, ?string $oldValue): ?string
     {
         if (!empty($newValue)) {
-            $newValue = (new Encryption())->encrypt($newValue);
+            $newValue = (Encryption::make())->encrypt($newValue);
         }
         return $newValue;
     }
@@ -179,7 +179,7 @@ class PluginOptions
                 echo '<label for="' . Constants::AAT_OPTION_FIELD_API_KEY_OPENAI . '">' . __('OpenAI API Key', Constants::AAT_TEXT_DOMAIN) . '</label>';
                 echo '<p class="description">' . __("Enter your API Key", Constants::AAT_TEXT_DOMAIN) . '</p>';
                 $apiKey = get_option(Constants::AAT_OPTION_FIELD_API_KEY_OPENAI);
-                echo '<input type="password" name="' . Constants::AAT_OPTION_FIELD_API_KEY_OPENAI . '" value="' . (new Encryption())->decrypt($apiKey) . '" />';
+                echo '<input type="password" name="' . Constants::AAT_OPTION_FIELD_API_KEY_OPENAI . '" value="' . (Encryption::make())->decrypt($apiKey) . '" />';
                 echo '</div>';
 
                 echo '<div class="plugin-option type-openai">';
@@ -216,7 +216,7 @@ class PluginOptions
                 echo '<label for="' . Constants::AAT_OPTION_FIELD_API_KEY_AZURE_COMPUTER_VISION . '">' . __('Azure Computer Vision API Key', Constants::AAT_TEXT_DOMAIN) . '</label>';
                 echo '<p class="description">' . __("Enter the API key for the Computer Vision service of your Azure account.", Constants::AAT_TEXT_DOMAIN) . '</p>';
                 $apiKey = get_option(Constants::AAT_OPTION_FIELD_API_KEY_AZURE_COMPUTER_VISION);
-                echo '<input type="password" name="' . Constants::AAT_OPTION_FIELD_API_KEY_AZURE_COMPUTER_VISION . '" value="' . (new Encryption())->decrypt($apiKey) . '" />';
+                echo '<input type="password" name="' . Constants::AAT_OPTION_FIELD_API_KEY_AZURE_COMPUTER_VISION . '" value="' . (Encryption::make())->decrypt($apiKey) . '" />';
                 echo '</div>';
 
                 echo '<div class="plugin-option type-azure">';
@@ -256,7 +256,7 @@ class PluginOptions
                 echo '<label for="' . Constants::AAT_OPTION_FIELD_API_KEY_AZURE_TRANSLATE_INSTANCE . '">' . __('Azure Translate Instance API Key', Constants::AAT_TEXT_DOMAIN) . '</label>';
                 echo '<p class="description">' . __("Enter your API key for the Azure Translate Instance service.", Constants::AAT_TEXT_DOMAIN) . '</p>';
                 $apiKey = get_option(Constants::AAT_OPTION_FIELD_API_KEY_AZURE_TRANSLATE_INSTANCE);
-                echo '<input type="password" name="' . Constants::AAT_OPTION_FIELD_API_KEY_AZURE_TRANSLATE_INSTANCE . '" value="' . (new Encryption())->decrypt($apiKey) . '" />';
+                echo '<input type="password" name="' . Constants::AAT_OPTION_FIELD_API_KEY_AZURE_TRANSLATE_INSTANCE . '" value="' . (Encryption::make())->decrypt($apiKey) . '" />';
                 echo '</div>';
 
                 echo '<div class="plugin-option type-azure not-default-language">';
@@ -347,7 +347,7 @@ class PluginOptions
     public static function apiKeyOpenAI(): string
     {
         $apiKey = get_option(Constants::AAT_OPTION_FIELD_API_KEY_OPENAI);
-        return (new Encryption())->decrypt($apiKey);
+        return (Encryption::make())->decrypt($apiKey);
     }
 
     /**
@@ -356,7 +356,7 @@ class PluginOptions
     public static function apiKeyAzureComputerVision(): string
     {
         $apiKey = get_option(Constants::AAT_OPTION_FIELD_API_KEY_AZURE_COMPUTER_VISION);
-        return (new Encryption())->decrypt($apiKey);
+        return (Encryption::make())->decrypt($apiKey);
     }
 
     /**
@@ -373,7 +373,7 @@ class PluginOptions
     public static function apiKeyAzureTranslateInstance(): string
     {
         $apiKey = get_option(Constants::AAT_OPTION_FIELD_API_KEY_AZURE_TRANSLATE_INSTANCE);
-        return (new Encryption())->decrypt($apiKey);
+        return (Encryption::make())->decrypt($apiKey);
     }
 
     /**
