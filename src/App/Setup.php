@@ -7,6 +7,7 @@ use ValerioMonti\AutoAltText\App\Admin\PluginOptions;
 use ValerioMonti\AutoAltText\App\AIProviders\Azure\AzureComputerVisionCaptionsResponse;
 use ValerioMonti\AutoAltText\App\AIProviders\OpenAI\OpenAIChatCompletionResponse;
 use ValerioMonti\AutoAltText\App\AIProviders\OpenAI\OpenAITextCompletionResponse;
+use ValerioMonti\AutoAltText\App\AIProviders\OpenAI\OpenAIVision;
 use ValerioMonti\AutoAltText\App\Exceptions\Azure\AzureException;
 use ValerioMonti\AutoAltText\App\Exceptions\OpenAI\OpenAIException;
 use ValerioMonti\AutoAltText\App\Logging\FileLogger;
@@ -78,16 +79,18 @@ class Setup
                 break;
             case Constants::AAT_OPTION_TYPOLOGY_CHOICE_OPENAI:
                 // If OpenAI is selected as alt text generating typology
-                $model = PluginOptions::model();
                 try {
-                    if (Constants::AAT_ENDPOINT_OPENAI_TEXT_COMPLETION == Constants::AAT_OPENAI_MODELS[$model]) {
-                        $altText = (AltTextGeneratorAi::make(OpenAITextCompletionResponse::make()))->altText($postId);
-                    } else {
-                        $altText = (AltTextGeneratorAi::make(OpenAIChatCompletionResponse::make()))->altText($postId);
-                    }
+                    $altText = (AltTextGeneratorAi::make(OpenAIVision::make()))->altText($postId);
                 } catch (OpenAIException $e) {
-                    $errorMessage = "OpenAI - " . $e->getMessage();
+                    //If vision model fails, try with a fallback model
+                    $errorMessage = "OpenAI - " . Constants::AAT_OPENAI_VISION_MODEL . ' - ' . $e->getMessage();
                     (FileLogger::make(Encryption::make()))->writeImageLog($postId, $errorMessage);
+                    try {
+                        $altText = (AltTextGeneratorAi::make(OpenAIChatCompletionResponse::make()))->altText($postId);
+                    } catch (OpenAIException $e) {
+                        $errorMessage = "OpenAI - " . $e->getMessage();
+                        (FileLogger::make(Encryption::make()))->writeImageLog($postId, $errorMessage);
+                    }
                 }
                 break;
             case Constants::AAT_OPTION_TYPOLOGY_CHOICE_ARTICLE_TITLE:

@@ -19,7 +19,7 @@ class OpenAITextCompletionResponse extends OpenAIResponse
     }
 
     /**
-     *  Make a request to OpenAI Text Completion APIs to retrieve a description for the image file name passed
+     *  Make a request to OpenAI Text Completion APIs to retrieve a description for the image passed
      * @param string $imageUrl
      * @return string
      * @throws OpenAIException

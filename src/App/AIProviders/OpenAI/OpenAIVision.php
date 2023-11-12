@@ -1,4 +1,5 @@
 <?php
+
 namespace ValerioMonti\AutoAltText\App\AIProviders\OpenAI;
 
 use OpenAI;
@@ -8,30 +9,40 @@ use ValerioMonti\AutoAltText\App\Admin\PluginOptions;
 use ValerioMonti\AutoAltText\App\Exceptions\OpenAI\OpenAIException;
 use ValerioMonti\AutoAltText\Config\Constants;
 
-class OpenAIChatCompletionResponse extends OpenAIResponse
+class OpenAIVision extends OpenAIResponse
 {
-    public static function make(): OpenAIChatCompletionResponse
+    public static function make(): OpenAIVision
     {
         return new self();
     }
 
     /**
-     *  Make a request to OpenAI Chat APIs to retrieve a description for the image file name passed
+     *  Make a request to OpenAI Chat APIs to retrieve a description for the image passed
      * @param string $imageUrl
      * @return string
      * @throws OpenAIException
      */
     public function response(string $imageUrl): string
     {
-        $model = PluginOptions::model();
-        $prompt = parent::fallbackPrompt($imageUrl);
+        $prompt = parent::prompt($imageUrl);
 
         $requestBody = [
-            'model' => $model,
+            'model' => Constants::AAT_OPENAI_VISION_MODEL,
             'messages' => [
                 [
                     'role' => 'user',
-                    'content' => $prompt
+                    'content' => [
+                        [
+                            "type" => "text",
+                            "text" => $prompt
+                        ],
+                        [
+                            "type" => "image_url",
+                            "image_url" => [
+                                "url" => "https://upload.wikimedia.org/wikipedia/commons/thumb/d/dd/Gfp-wisconsin-madison-the-nature-boardwalk.jpg/2560px-Gfp-wisconsin-madison-the-nature-boardwalk.jpg"
+                            ]
+                        ]
+                    ]
                 ],
             ],
             'max_tokens' => Constants::AAT_OPENAI_MAX_TOKENS,

@@ -10,7 +10,8 @@ class Constants
     const AAT_PLUGIN_OPTION_LOG_PAGE_SLUG = 'auto-alt-text-log';
     const AAT_OPTION_FIELD_TYPOLOGY = 'aat_typology';
     const AAT_OPTION_FIELD_PROMPT_OPENAI = 'aat_prompt_openai';
-    const AAT_OPTION_FIELD_MODEL_OPENAI = 'aat_model_openai';
+    const AAT_OPTION_FIELD_FALLBACK_PROMPT_OPENAI = 'aat_fallback_prompt_openai';
+    const AAT_OPTION_FIELD_FALLBACK_MODEL_OPENAI = 'aat_model_openai';
     const AAT_OPTION_FIELD_API_KEY_OPENAI = 'aat_api_key_openai';
     const AAT_OPTION_FIELD_API_KEY_AZURE_COMPUTER_VISION = 'aat_api_key_azure_computer_vision';
     const AAT_OPTION_FIELD_API_KEY_AZURE_TRANSLATE_INSTANCE= 'aat_api_key_azure_translate_instance';
@@ -23,24 +24,16 @@ class Constants
     const AAT_OPTION_FIELD_ENDPOINT_AZURE_TRANSLATE_INSTANCE = 'aat_endpoint-azure-translate-instance';
     const AAT_OPTION_FIELD_REGION_AZURE_TRANSLATE_INSTANCE = 'aat-region-azure-translate-instance';
     const AAT_OPTION_FIELD_LANGUAGE_AZURE_TRANSLATE_INSTANCE = 'aat-language-azure-translate-instance';
-    const AAT_ENDPOINT_OPENAI_CHAT_COMPLETION = 'chat-completion';
-    const AAT_ENDPOINT_OPENAI_TEXT_COMPLETION = 'text-completion';
     const AAT_IMAGE_URL_TAG = '%imageUrl%';
-    const AAT_OPENAI_DEFAULT_PROMPT = "Agisci come un esperto SEO e scrivi un alt text in italiano lungo al massimo 15 parole per questa immagine: " . self::AAT_IMAGE_URL_TAG . ". Limitati semplicemente a ritornare il testo senza virgolette.";
-    const AAT_OPENAI_DEFAULT_MODEL = "text-davinci-003";
+    const AAT_OPENAI_DEFAULT_PROMPT = "Act like an SEO expert and write an English alt text of up to 125 characters for this image.";
+    const AAT_OPENAI_DEFAULT_FALLBACK_PROMPT = "Act like an SEO expert and write an English alt text for an image whit this url %imageUrl%, using a maximum of 125 characters. Just return the text without any additional comments.";
+    const AAT_OPENAI_DEFAULT_MODEL = "gpt-3.5-turbo";
     const AAT_OPENAI_MODELS = [
-        "gpt-4" => self::AAT_ENDPOINT_OPENAI_CHAT_COMPLETION,
-        "gpt-4-0314" => self::AAT_ENDPOINT_OPENAI_CHAT_COMPLETION,
-        "gpt-4-32k" => self::AAT_ENDPOINT_OPENAI_CHAT_COMPLETION,
-        "gpt-4-32k-0314" => self::AAT_ENDPOINT_OPENAI_CHAT_COMPLETION,
-        "gpt-3.5-turbo" => self::AAT_ENDPOINT_OPENAI_CHAT_COMPLETION,
-        "gpt-3.5-turbo-0301" => self::AAT_ENDPOINT_OPENAI_CHAT_COMPLETION,
-        "text-davinci-003" => self::AAT_ENDPOINT_OPENAI_TEXT_COMPLETION,
-        "text-davinci-002" => self::AAT_ENDPOINT_OPENAI_TEXT_COMPLETION,
-        "text-curie-001" => self::AAT_ENDPOINT_OPENAI_TEXT_COMPLETION,
-        "text-babbage-001" => self::AAT_ENDPOINT_OPENAI_TEXT_COMPLETION,
-        "text-ada-001" => self::AAT_ENDPOINT_OPENAI_TEXT_COMPLETION
+        "gpt-4",
+        "gpt-3.5-turbo",
     ];
+
+    const AAT_OPENAI_VISION_MODEL = 'gpt-4-vision-preview';
 
     const AAT_OPENAI_MAX_TOKENS = 70;
     const AAT_OPENAI_TEXT_COMPLETION_TEMPERATURE = 0.6;

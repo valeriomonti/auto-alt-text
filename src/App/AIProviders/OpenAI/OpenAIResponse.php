@@ -53,13 +53,23 @@ abstract class OpenAIResponse implements AIProviderInterface
     }
 
     /**
-     * Compute the prompt based on the template saved in the options and the imageUrl passed
+     * Return the main OpenAI prompt
      * @param string $imageUrl
      * @return string
      */
     protected function prompt(string $imageUrl): string
     {
-        $prompt = PluginOptions::prompt() ?: Constants::AAT_OPENAI_DEFAULT_PROMPT;
+        return PluginOptions::prompt() ?: Constants::AAT_OPENAI_DEFAULT_PROMPT;
+    }
+
+    /**
+     * Compute the fallback prompt based on the template saved in the options and the imageUrl passed
+     * @param string $imageUrl
+     * @return string
+     */
+    protected function fallbackPrompt(string $imageUrl): string
+    {
+        $prompt = PluginOptions::fallbackPrompt() ?: Constants::AAT_OPENAI_DEFAULT_FALLBACK_PROMPT;
         return str_replace(Constants::AAT_IMAGE_URL_TAG, $imageUrl, $prompt);
     }
 

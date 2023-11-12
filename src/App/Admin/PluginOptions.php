@@ -173,7 +173,7 @@ class PluginOptions
                 <?php
                 echo '</div>';
 
-                echo '<div class="plugin-option type-openai"><strong>' . __('Warning', 'auto-alt-text') . '</strong>: ' . __("At the moment, OpenAI's APIs do not offer the possibility to describe an image with computer vision.", 'auto-alt-text') . ' ' . __("Therefore, for the time being, by filling out the following fields you will be able to generate an alt text based solely on the name of the image file.", 'auto-alt-text') . '<br>' . __("If you want an accurate description of the image, use Azure's APIs.", 'auto-alt-text') . '</div>';
+                echo '<div class="plugin-option type-openai"><strong>' . __('Warning', 'auto-alt-text') . '</strong>: ' . __('This plugin leverages the new "gpt-4-vision-preview" model from OpenAI to identify the content of the image. As the name suggests, this model is still in a preview stage and OpenAI states: "This is a preview model version and not suited yet for production traffic." Therefore, it is necessary to select a fallback model in case gpt-4-preview fails. The fallback models are not able to read the content of the image but will rely exclusively on the name of the image file, guessing its content. In case of errors, it is still possible to find the specific reason stated on the error log page.', 'auto-alt-text') . '</div>';
 
                 echo '<div class="plugin-option type-openai">';
                 echo '<label for="' . Constants::AAT_OPTION_FIELD_API_KEY_OPENAI . '">' . __('OpenAI API Key', 'auto-alt-text') . '</label>';
@@ -191,15 +191,15 @@ class PluginOptions
                 echo '</div>';
 
                 echo '<div class="plugin-option type-openai">';
-                echo '<label for="' . Constants::AAT_OPTION_FIELD_MODEL_OPENAI . '">' . __('OpenAi Model', 'auto-alt-text') . '</label>';
-                echo '<p class="description">' . __("Choose the OpenAI model you want to use to generate the alt text.", 'auto-alt-text') . '</p>';
-                $modelSaved = get_option(Constants::AAT_OPTION_FIELD_MODEL_OPENAI);
+                echo '<label for="' . Constants::AAT_OPTION_FIELD_FALLBACK_MODEL_OPENAI . '">' . __('Fallback OpenAi Model', 'auto-alt-text') . '</label>';
+                echo '<p class="description">' . __("Choose the alternative OpenAI model you want to use to generate the alt text when the gpt-4-vision-preview model fails.", 'auto-alt-text') . '</p>';
+                $modelSaved = get_option(Constants::AAT_OPTION_FIELD_FALLBACK_MODEL_OPENAI);
                 ?>
 
-                <select name="<?php echo Constants::AAT_OPTION_FIELD_MODEL_OPENAI; ?>"
-                        id="<?php echo Constants::AAT_OPTION_FIELD_MODEL_OPENAI; ?>">
+                <select name="<?php echo Constants::AAT_OPTION_FIELD_FALLBACK_MODEL_OPENAI; ?>"
+                        id="<?php echo Constants::AAT_OPTION_FIELD_FALLBACK_MODEL_OPENAI; ?>">
                     <?php
-                    foreach (Constants::AAT_OPENAI_MODELS as $modelName => $a) :
+                    foreach (Constants::AAT_OPENAI_MODELS as $modelName) :
                         ?>
                         <option value="<?php echo $modelName; ?>" <?php echo self::isModelSelected($modelSaved, $modelName) ? 'selected="selected"' : ''; ?>><?php echo $modelName; ?></option>
                     <?php
@@ -208,6 +208,14 @@ class PluginOptions
                 </select>
 
                 <?php
+                echo '</div>';
+
+                echo '<div class="plugin-option type-openai">';
+                echo '<label for="' . Constants::AAT_OPTION_FIELD_FALLBACK_PROMPT_OPENAI . '">' . __('Fallback Prompt', 'auto-alt-text') . '</label>';
+                echo '<p class="description">' . __("Enter a specific and detailed prompt according to your needs.", 'auto-alt-text') . '</p>';
+                $defaultPrompt = sprintf(__("Act like an SEO expert and write an English alt text for this image %s, using a maximum of 125 characters. Just return the text without any additional comments.", 'auto-alt-text'), Constants::AAT_IMAGE_URL_TAG);
+                $fallbackPrompt = get_option(Constants::AAT_OPTION_FIELD_FALLBACK_PROMPT_OPENAI) ?: $defaultPrompt;
+                echo '<textarea name="' . Constants::AAT_OPTION_FIELD_FALLBACK_PROMPT_OPENAI . '" rows="5" cols="50">' . $fallbackPrompt . '</textarea>';
                 echo '</div>';
 
                 echo '<div class="plugin-option type-azure">' . __("Fill out the following fields to leverage Azure's computer vision services to generate the Alt texts.", 'auto-alt-text') . '</div>';
@@ -301,7 +309,8 @@ class PluginOptions
         register_setting('auto_alt_text_options', Constants::AAT_OPTION_FIELD_API_KEY_OPENAI);
         register_setting('auto_alt_text_options', Constants::AAT_OPTION_FIELD_PROMPT_OPENAI, [self::class, 'sanitizeTextArea']);
         register_setting('auto_alt_text_options', Constants::AAT_OPTION_FIELD_TYPOLOGY, [self::class, 'sanitizeText']);
-        register_setting('auto_alt_text_options', Constants::AAT_OPTION_FIELD_MODEL_OPENAI, [self::class, 'sanitizeText']);
+        register_setting('auto_alt_text_options', Constants::AAT_OPTION_FIELD_FALLBACK_MODEL_OPENAI, [self::class, 'sanitizeText']);
+        register_setting('auto_alt_text_options', Constants::AAT_OPTION_FIELD_FALLBACK_PROMPT_OPENAI, [self::class, 'sanitizeTextArea']);
         register_setting('auto_alt_text_options', Constants::AAT_OPTION_FIELD_API_KEY_AZURE_COMPUTER_VISION);
         register_setting('auto_alt_text_options', Constants::AAT_OPTION_FIELD_ENDPOINT_AZURE_COMPUTER_VISION, [self::class, 'sanitizeUrl']);
         register_setting('auto_alt_text_options', Constants::AAT_OPTION_FIELD_API_KEY_AZURE_TRANSLATE_INSTANCE);
@@ -405,7 +414,15 @@ class PluginOptions
      */
     public static function model(): string
     {
-        return get_option(Constants::AAT_OPTION_FIELD_MODEL_OPENAI);
+        return get_option(Constants::AAT_OPTION_FIELD_FALLBACK_MODEL_OPENAI);
+    }
+
+    /**
+     * @return string
+     */
+    public static function fallbackPrompt(): string
+    {
+        return get_option(Constants::AAT_OPTION_FIELD_FALLBACK_PROMPT_OPENAI);
     }
 
     public static function sanitizeUrl($input): string
