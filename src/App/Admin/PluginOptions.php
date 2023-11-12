@@ -141,7 +141,7 @@ class PluginOptions
                         <strong><?php _e("Azure's APIs", 'auto-alt-text'); ?></strong>: <?php _e("the image will be analyzed by the AI services provided by Azure and an alt text will be generated in the language of your choice;", 'auto-alt-text'); ?>
                     </li>
                     <li>
-                        <strong><?php _e("Open AI' APIs", 'auto-alt-text'); ?></strong>: <?php _e("based on the prompt you set, an alt text will be created based on the name of the image file you upload to the media library (currently, OpenAI's APIs do not allow to analyze the content of the image);", 'auto-alt-text'); ?>
+                        <strong><?php _e("Open AI' APIs", 'auto-alt-text'); ?></strong>: <?php _e("the image will be analyzed by the AI services provided by OpenAI and an alt text will be generated based on the prompt you set;", 'auto-alt-text'); ?>
                     </li>
                     <li>
                         <strong><?php _e("Title of the article (not AI)", 'auto-alt-text'); ?></strong>: <?php _e("if the image is uploaded within an article, the title of the article will be used as alt text;", 'auto-alt-text'); ?>
@@ -173,7 +173,13 @@ class PluginOptions
                 <?php
                 echo '</div>';
 
-                echo '<div class="plugin-option type-openai"><strong>' . __('Warning', 'auto-alt-text') . '</strong>: ' . __('This plugin leverages the new "gpt-4-vision-preview" model from OpenAI to identify the content of the image. As the name suggests, this model is still in a preview stage and OpenAI states: "This is a preview model version and not suited yet for production traffic." Therefore, it is necessary to select a fallback model in case gpt-4-preview fails. The fallback models are not able to read the content of the image but will rely exclusively on the name of the image file, guessing its content. In case of errors, it is still possible to find the specific reason stated on the error log page.', 'auto-alt-text') . '</div>';
+                echo '<div class="plugin-option type-openai"><strong>' . __('Notice', 'auto-alt-text') . '</strong>: ' .
+                    __('This plugin leverages the new "gpt-4-vision-preview" model from OpenAI to identify the content of the image.', 'auto-alt-text') . ' ' .
+                    __('As the name suggests, this model is still in a preview stage and OpenAI states:', 'auto-alt-text') . ' "<em>This is a preview model version and not suited yet for production traffic</em>".<br>' .
+                    __('Therefore, it is necessary to select a fallback model in case gpt-4-preview fails.', 'auto-alt-text') . '<br>' .
+                    __('The fallback models are not able to read the content of the image but will rely exclusively on the name of the image file, guessing its content.', 'auto-alt-text') . '<br>' .
+                    __('In case of errors, it is still possible to find the specific reason stated on the', 'auto-alt-text') . ' <a href="' . menu_page_url(Constants::AAT_PLUGIN_OPTION_LOG_PAGE_SLUG, false) . '">' . __('error log page', 'auto-alt-text') . '</a>.' .
+                    '</div>';
 
                 echo '<div class="plugin-option type-openai">';
                 echo '<label for="' . Constants::AAT_OPTION_FIELD_API_KEY_OPENAI . '">' . __('OpenAI API Key', 'auto-alt-text') . '</label>';
@@ -185,7 +191,7 @@ class PluginOptions
                 echo '<div class="plugin-option type-openai">';
                 echo '<label for="' . Constants::AAT_OPTION_FIELD_PROMPT_OPENAI . '">' . __('Prompt', 'auto-alt-text') . '</label>';
                 echo '<p class="description">' . __("Enter a specific and detailed prompt according to your needs.", 'auto-alt-text') . '</p>';
-                $defaultPrompt = sprintf(__("Act like an SEO expert and write an English alt text for this image %s, using a maximum of 15 words. Just return the text without any additional comments.", 'auto-alt-text'), Constants::AAT_IMAGE_URL_TAG);
+                $defaultPrompt = sprintf(__("Act like an SEO expert and write an alt text of up to 125 characters for this image.", 'auto-alt-text'), Constants::AAT_IMAGE_URL_TAG);
                 $prompt = get_option(Constants::AAT_OPTION_FIELD_PROMPT_OPENAI) ?: $defaultPrompt;
                 echo '<textarea name="' . Constants::AAT_OPTION_FIELD_PROMPT_OPENAI . '" rows="5" cols="50">' . $prompt . '</textarea>';
                 echo '</div>';

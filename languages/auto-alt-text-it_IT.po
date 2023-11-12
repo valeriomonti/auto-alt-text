@@ -4,8 +4,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Auto Alt Text 1.0.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/auto-alt-text\n"
-"POT-Creation-Date: 2023-11-05T22:39:48+00:00\n"
-"PO-Revision-Date: 2023-11-05 23:47+0100\n"
+"POT-Creation-Date: 2023-11-12T22:29:41+00:00\n"
+"PO-Revision-Date: 2023-11-12 23:30+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: it_IT\n"
@@ -86,13 +86,11 @@ msgstr "API di OpenAI"
 
 #: src/App/Admin/PluginOptions.php:144
 msgid ""
-"based on the prompt you set, an alt text will be created based on the name "
-"of the image file you upload to the media library (currently, OpenAI's APIs "
-"do not allow to analyze the content of the image);"
+"the image will be analyzed by the AI services provided by OpenAI and an alt "
+"text will be generated based on the prompt you set;"
 msgstr ""
-"in base al prompt che imposterai, verrà creato un alt text basato sul nome "
-"del file immagine che caricherai nella media library (al momento, le API di "
-"OpenAI non consentono di analizzare il contenuto dell’immagine);"
+"l’immagine verrà analizzata dai servizi di AI forniti da OpenAI e verrà "
+"generato un alt text basato sul prompt che hai inserito;"
 
 #: src/App/Admin/PluginOptions.php:147 src/App/Admin/PluginOptions.php:170
 msgid "Title of the article (not AI)"
@@ -151,67 +149,106 @@ msgstr "Quale metodo vuoi utilizzare per generare l’alt text delle immagini?"
 msgid "Deactivated"
 msgstr "Disattivato"
 
-#: src/App/Admin/PluginOptions.php:176 src/App/Admin/PluginOptions.php:253
-msgid "Warning"
-msgstr "Attenzione"
-
 #: src/App/Admin/PluginOptions.php:176
+msgid "Notice"
+msgstr "Avviso"
+
+#: src/App/Admin/PluginOptions.php:177
 msgid ""
-"At the moment, OpenAI's APIs do not offer the possibility to describe an "
-"image with computer vision."
+"This plugin leverages the new \"gpt-4-vision-preview\" model from OpenAI to "
+"identify the content of the image."
 msgstr ""
-"Al momento, le API di OpenAI non offrono la possibilità di descrivere "
-"un’immagine con la computer vision."
+"Questo plugin sfrutta il nuovo modello “gpt-4-vision-preview” di OpenAI per "
+"identificare il contenuto dell’immagine."
 
-#: src/App/Admin/PluginOptions.php:176
+#: src/App/Admin/PluginOptions.php:178
 msgid ""
-"Therefore, for the time being, by filling out the following fields you will "
-"be able to generate an alt text based solely on the name of the image file."
+"As the name suggests, this model is still in a preview stage and OpenAI "
+"states:"
 msgstr ""
-"Pertanto, per il momento, compilando i seguenti campi potrai generare un alt "
-"text basato solamente sul nome del file immagine."
-
-#: src/App/Admin/PluginOptions.php:176
-msgid "If you want an accurate description of the image, use Azure's APIs."
-msgstr ""
-"Se desideri una descrizione accurata dell’immagine, utilizza le API di Azure."
+"Tale modello, come dice il nome, è ancora in fase di preview e OpenAI "
+"afferma:"
 
 #: src/App/Admin/PluginOptions.php:179
+msgid ""
+"Therefore, it is necessary to select a fallback model in case gpt-4-preview "
+"fails."
+msgstr ""
+"Pertanto è necessario selezionare un modello di fallback in caso gpt-4-"
+"preview fallisca."
+
+#: src/App/Admin/PluginOptions.php:180
+msgid ""
+"The fallback models are not able to read the content of the image but will "
+"rely exclusively on the name of the image file, guessing its content."
+msgstr ""
+"I modelli di fallback non sono in grado di leggere il contenuto "
+"dell’immagine ma si baseranno esclusivamente sul nome del file dell’immagine "
+"ipotizzandone il contenuto."
+
+#: src/App/Admin/PluginOptions.php:181
+msgid ""
+"In case of errors, it is still possible to find the specific reason stated "
+"on the"
+msgstr ""
+"Nel caso di errori è comunque possibile trovarne la motivazione specificata "
+"nella"
+
+#: src/App/Admin/PluginOptions.php:181
+msgid "error log page"
+msgstr "pagina dell’error log"
+
+#: src/App/Admin/PluginOptions.php:185
 msgid "OpenAI API Key"
 msgstr "Chiave API di OpenAI"
 
-#: src/App/Admin/PluginOptions.php:180
+#: src/App/Admin/PluginOptions.php:186
 msgid "Enter your API Key"
 msgstr "Inserisci la tua chiave API"
 
-#: src/App/Admin/PluginOptions.php:186
+#: src/App/Admin/PluginOptions.php:192
 msgid "Prompt"
 msgstr "Prompt"
 
-#: src/App/Admin/PluginOptions.php:187
+#: src/App/Admin/PluginOptions.php:193 src/App/Admin/PluginOptions.php:221
 msgid "Enter a specific and detailed prompt according to your needs."
 msgstr "Inserisci un prompt specifico e dettagliato in base alle tue esigenze."
 
-#: src/App/Admin/PluginOptions.php:188
+#: src/App/Admin/PluginOptions.php:194
+msgid ""
+"Act like an SEO expert and write an alt text of up to 125 characters for "
+"this image."
+msgstr ""
+"Agisci come un esperto SEO e scrivi un alt text lungo al massimo 125 "
+"caratteri per questa immagine."
+
+#: src/App/Admin/PluginOptions.php:200
+msgid "Fallback OpenAi Model"
+msgstr "Modello OpenAI di fallback"
+
+#: src/App/Admin/PluginOptions.php:201
+msgid ""
+"Choose the alternative OpenAI model you want to use to generate the alt text "
+"when the gpt-4-vision-preview model fails."
+msgstr ""
+"Scegli un modello di OpenAI alternativo che vuoi utilizzare per generare "
+"l’alt text in caso in cui il modello gpt-4-vision-preview fallisca."
+
+#: src/App/Admin/PluginOptions.php:220
+msgid "Fallback Prompt"
+msgstr "Prompt di fallback"
+
+#: src/App/Admin/PluginOptions.php:222
 msgid ""
 "Act like an SEO expert and write an English alt text for this image %s, "
-"using a maximum of 15 words. Just return the text without any additional "
-"comments."
+"using a maximum of 125 characters. Just return the text without any "
+"additional comments."
 msgstr ""
 "Comportati come un esperto di SEO e scrivi un alt text in inglese per questa "
-"immagine %s, usando al massimo 15 parole. Restituisci solo il testo senza "
-"alcun commento aggiuntivo."
+"immagine %s, usando al massimo 125 caratteri. Restituisci solo il testo "
+"senza alcun commento aggiuntivo."
 
-#: src/App/Admin/PluginOptions.php:194
-msgid "OpenAi Model"
-msgstr "Modello OpenAI"
-
-#: src/App/Admin/PluginOptions.php:195
-msgid "Choose the OpenAI model you want to use to generate the alt text."
-msgstr ""
-"Scegli il modello di OpenAI che vuoi utilizzare per generare l’alt text."
-
-#: src/App/Admin/PluginOptions.php:213
+#: src/App/Admin/PluginOptions.php:227
 msgid ""
 "Fill out the following fields to leverage Azure's computer vision services "
 "to generate the Alt texts."
@@ -219,33 +256,37 @@ msgstr ""
 "Compila i seguenti campi per sfruttare i servizi di computer vision di Azure "
 "per generare gli Alt text."
 
-#: src/App/Admin/PluginOptions.php:216
+#: src/App/Admin/PluginOptions.php:230
 msgid "Azure Computer Vision API Key"
 msgstr "Chiave API Computer Vision di Azure"
 
-#: src/App/Admin/PluginOptions.php:217
+#: src/App/Admin/PluginOptions.php:231
 msgid ""
 "Enter the API key for the Computer Vision service of your Azure account."
 msgstr ""
 "Inserisci la chiave API del servizio Computer Vision del tuo account Azure."
 
-#: src/App/Admin/PluginOptions.php:223
+#: src/App/Admin/PluginOptions.php:237
 msgid "Azure Computer Vision Endpoint"
 msgstr "Endpoint Azure Computer Vision"
 
-#: src/App/Admin/PluginOptions.php:224
+#: src/App/Admin/PluginOptions.php:238
 msgid "Enter the endpoint of the Computer Vision service."
 msgstr "Inserisci l’endpoint del servizio di Computer Vision."
 
-#: src/App/Admin/PluginOptions.php:230
+#: src/App/Admin/PluginOptions.php:244
 msgid "Alt Text Language"
 msgstr "Lingua Alt Text"
 
-#: src/App/Admin/PluginOptions.php:231
+#: src/App/Admin/PluginOptions.php:245
 msgid "Select the language in which the alt text should be written."
 msgstr "Seleziona la lingua in cui deve essere scritto l’alt text."
 
-#: src/App/Admin/PluginOptions.php:253
+#: src/App/Admin/PluginOptions.php:267
+msgid "Warning"
+msgstr "Attenzione"
+
+#: src/App/Admin/PluginOptions.php:267
 msgid ""
 "The default language is English. You have selected a different language, "
 "therefore it is necessary to enter the required information in order to "
@@ -255,27 +296,56 @@ msgstr ""
 "pertanto è necessario inserire le informazioni richieste per poter tradurre "
 "l’alt text utilizzando il servizio Translation Instance di Azure."
 
-#: src/App/Admin/PluginOptions.php:256
+#: src/App/Admin/PluginOptions.php:270
 msgid "Azure Translate Instance API Key"
 msgstr "Chiave API Translate Instance di Azure"
 
-#: src/App/Admin/PluginOptions.php:257
+#: src/App/Admin/PluginOptions.php:271
 msgid "Enter your API key for the Azure Translate Instance service."
 msgstr ""
 "Inserisci la tua chiave API per il servizio Translate Instance di Azure."
 
-#: src/App/Admin/PluginOptions.php:263
+#: src/App/Admin/PluginOptions.php:277
 msgid "Azure Translate Instance Endpoint"
 msgstr "Endpoint Translate Instance di Azure"
 
-#: src/App/Admin/PluginOptions.php:264
+#: src/App/Admin/PluginOptions.php:278
 msgid "Enter the endpoint of the Translate Instance service"
 msgstr "Inserisci l’endpoint del servizio Translate Instance"
 
-#: src/App/Admin/PluginOptions.php:270
+#: src/App/Admin/PluginOptions.php:284
 msgid "Azure Translate Instance Region"
 msgstr "Regione Translate Instance di Azure"
 
-#: src/App/Admin/PluginOptions.php:271
+#: src/App/Admin/PluginOptions.php:285
 msgid "Enter the region of the Azure Translate Instance service."
 msgstr "Inserisci la regione del servizio Translate Instance di Azure."
+
+#~ msgid ""
+#~ "based on the prompt you set, an alt text will be created based on the "
+#~ "name of the image file you upload to the media library (currently, "
+#~ "OpenAI's APIs do not allow to analyze the content of the image);"
+#~ msgstr ""
+#~ "in base al prompt che imposterai, verrà creato un alt text basato sul "
+#~ "nome del file immagine che caricherai nella media library (al momento, le "
+#~ "API di OpenAI non consentono di analizzare il contenuto dell’immagine);"
+
+#~ msgid ""
+#~ "At the moment, OpenAI's APIs do not offer the possibility to describe an "
+#~ "image with computer vision."
+#~ msgstr ""
+#~ "Al momento, le API di OpenAI non offrono la possibilità di descrivere "
+#~ "un’immagine con la computer vision."
+
+#~ msgid ""
+#~ "Therefore, for the time being, by filling out the following fields you "
+#~ "will be able to generate an alt text based solely on the name of the "
+#~ "image file."
+#~ msgstr ""
+#~ "Pertanto, per il momento, compilando i seguenti campi potrai generare un "
+#~ "alt text basato solamente sul nome del file immagine."
+
+#~ msgid "If you want an accurate description of the image, use Azure's APIs."
+#~ msgstr ""
+#~ "Se desideri una descrizione accurata dell’immagine, utilizza le API di "
+#~ "Azure."

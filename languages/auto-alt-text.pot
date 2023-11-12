@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2023-11-05T22:39:48+00:00\n"
+"POT-Creation-Date: 2023-11-12T22:29:41+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.8.1\n"
 "X-Domain: auto-alt-text\n"
@@ -69,7 +69,7 @@ msgid "Open AI' APIs"
 msgstr ""
 
 #: src/App/Admin/PluginOptions.php:144
-msgid "based on the prompt you set, an alt text will be created based on the name of the image file you upload to the media library (currently, OpenAI's APIs do not allow to analyze the content of the image);"
+msgid "the image will be analyzed by the AI services provided by OpenAI and an alt text will be generated based on the prompt you set;"
 msgstr ""
 
 #: src/App/Admin/PluginOptions.php:147
@@ -119,102 +119,126 @@ msgid "Deactivated"
 msgstr ""
 
 #: src/App/Admin/PluginOptions.php:176
-#: src/App/Admin/PluginOptions.php:253
-msgid "Warning"
+msgid "Notice"
 msgstr ""
 
-#: src/App/Admin/PluginOptions.php:176
-msgid "At the moment, OpenAI's APIs do not offer the possibility to describe an image with computer vision."
+#: src/App/Admin/PluginOptions.php:177
+msgid "This plugin leverages the new \"gpt-4-vision-preview\" model from OpenAI to identify the content of the image."
 msgstr ""
 
-#: src/App/Admin/PluginOptions.php:176
-msgid "Therefore, for the time being, by filling out the following fields you will be able to generate an alt text based solely on the name of the image file."
-msgstr ""
-
-#: src/App/Admin/PluginOptions.php:176
-msgid "If you want an accurate description of the image, use Azure's APIs."
+#: src/App/Admin/PluginOptions.php:178
+msgid "As the name suggests, this model is still in a preview stage and OpenAI states:"
 msgstr ""
 
 #: src/App/Admin/PluginOptions.php:179
-msgid "OpenAI API Key"
+msgid "Therefore, it is necessary to select a fallback model in case gpt-4-preview fails."
 msgstr ""
 
 #: src/App/Admin/PluginOptions.php:180
-msgid "Enter your API Key"
+msgid "The fallback models are not able to read the content of the image but will rely exclusively on the name of the image file, guessing its content."
+msgstr ""
+
+#: src/App/Admin/PluginOptions.php:181
+msgid "In case of errors, it is still possible to find the specific reason stated on the"
+msgstr ""
+
+#: src/App/Admin/PluginOptions.php:181
+msgid "error log page"
+msgstr ""
+
+#: src/App/Admin/PluginOptions.php:185
+msgid "OpenAI API Key"
 msgstr ""
 
 #: src/App/Admin/PluginOptions.php:186
+msgid "Enter your API Key"
+msgstr ""
+
+#: src/App/Admin/PluginOptions.php:192
 msgid "Prompt"
 msgstr ""
 
-#: src/App/Admin/PluginOptions.php:187
+#: src/App/Admin/PluginOptions.php:193
+#: src/App/Admin/PluginOptions.php:221
 msgid "Enter a specific and detailed prompt according to your needs."
 msgstr ""
 
-#: src/App/Admin/PluginOptions.php:188
-msgid "Act like an SEO expert and write an English alt text for this image %s, using a maximum of 15 words. Just return the text without any additional comments."
-msgstr ""
-
 #: src/App/Admin/PluginOptions.php:194
-msgid "OpenAi Model"
+msgid "Act like an SEO expert and write an alt text of up to 125 characters for this image."
 msgstr ""
 
-#: src/App/Admin/PluginOptions.php:195
-msgid "Choose the OpenAI model you want to use to generate the alt text."
+#: src/App/Admin/PluginOptions.php:200
+msgid "Fallback OpenAi Model"
 msgstr ""
 
-#: src/App/Admin/PluginOptions.php:213
+#: src/App/Admin/PluginOptions.php:201
+msgid "Choose the alternative OpenAI model you want to use to generate the alt text when the gpt-4-vision-preview model fails."
+msgstr ""
+
+#: src/App/Admin/PluginOptions.php:220
+msgid "Fallback Prompt"
+msgstr ""
+
+#: src/App/Admin/PluginOptions.php:222
+msgid "Act like an SEO expert and write an English alt text for this image %s, using a maximum of 125 characters. Just return the text without any additional comments."
+msgstr ""
+
+#: src/App/Admin/PluginOptions.php:227
 msgid "Fill out the following fields to leverage Azure's computer vision services to generate the Alt texts."
 msgstr ""
 
-#: src/App/Admin/PluginOptions.php:216
+#: src/App/Admin/PluginOptions.php:230
 msgid "Azure Computer Vision API Key"
 msgstr ""
 
-#: src/App/Admin/PluginOptions.php:217
+#: src/App/Admin/PluginOptions.php:231
 msgid "Enter the API key for the Computer Vision service of your Azure account."
 msgstr ""
 
-#: src/App/Admin/PluginOptions.php:223
+#: src/App/Admin/PluginOptions.php:237
 msgid "Azure Computer Vision Endpoint"
 msgstr ""
 
-#: src/App/Admin/PluginOptions.php:224
+#: src/App/Admin/PluginOptions.php:238
 msgid "Enter the endpoint of the Computer Vision service."
 msgstr ""
 
-#: src/App/Admin/PluginOptions.php:230
+#: src/App/Admin/PluginOptions.php:244
 msgid "Alt Text Language"
 msgstr ""
 
-#: src/App/Admin/PluginOptions.php:231
+#: src/App/Admin/PluginOptions.php:245
 msgid "Select the language in which the alt text should be written."
 msgstr ""
 
-#: src/App/Admin/PluginOptions.php:253
+#: src/App/Admin/PluginOptions.php:267
+msgid "Warning"
+msgstr ""
+
+#: src/App/Admin/PluginOptions.php:267
 msgid "The default language is English. You have selected a different language, therefore it is necessary to enter the required information in order to translate the alt text using the Azure Translation Instance service."
 msgstr ""
 
-#: src/App/Admin/PluginOptions.php:256
+#: src/App/Admin/PluginOptions.php:270
 msgid "Azure Translate Instance API Key"
 msgstr ""
 
-#: src/App/Admin/PluginOptions.php:257
+#: src/App/Admin/PluginOptions.php:271
 msgid "Enter your API key for the Azure Translate Instance service."
 msgstr ""
 
-#: src/App/Admin/PluginOptions.php:263
+#: src/App/Admin/PluginOptions.php:277
 msgid "Azure Translate Instance Endpoint"
 msgstr ""
 
-#: src/App/Admin/PluginOptions.php:264
+#: src/App/Admin/PluginOptions.php:278
 msgid "Enter the endpoint of the Translate Instance service"
 msgstr ""
 
-#: src/App/Admin/PluginOptions.php:270
+#: src/App/Admin/PluginOptions.php:284
 msgid "Azure Translate Instance Region"
 msgstr ""
 
-#: src/App/Admin/PluginOptions.php:271
+#: src/App/Admin/PluginOptions.php:285
 msgid "Enter the region of the Azure Translate Instance service."
 msgstr ""
