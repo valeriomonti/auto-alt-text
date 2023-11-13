@@ -4,8 +4,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Auto Alt Text 1.0.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/auto-alt-text\n"
-"POT-Creation-Date: 2023-11-12T22:29:41+00:00\n"
-"PO-Revision-Date: 2023-11-12 23:30+0100\n"
+"POT-Creation-Date: 2023-11-13T20:56:11+00:00\n"
+"PO-Revision-Date: 2023-11-13 21:56+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: it_IT\n"
@@ -49,8 +49,8 @@ msgstr ""
 "generato. I log dei giorni precedenti vengono salvati nella cartella"
 
 #: src/App/Admin/PluginOptions.php:114
-msgid "Log file does not exist"
-msgstr "Il file di log non esiste"
+msgid "There is no log file yet!"
+msgstr "Non esiste ancora nessun file di log!"
 
 #: src/App/Admin/PluginOptions.php:131
 msgid "Auto Alt Text Options"
@@ -320,6 +320,9 @@ msgstr "Regione Translate Instance di Azure"
 #: src/App/Admin/PluginOptions.php:285
 msgid "Enter the region of the Azure Translate Instance service."
 msgstr "Inserisci la regione del servizio Translate Instance di Azure."
+
+#~ msgid "Log file does not exist"
+#~ msgstr "Il file di log non esiste"
 
 #~ msgid ""
 #~ "based on the prompt you set, an alt text will be created based on the "

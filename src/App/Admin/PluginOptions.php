@@ -111,7 +111,7 @@ class PluginOptions
                     $logContent = file_get_contents($logFile);
                     echo '<textarea id="error-log" name="error-log" readonly>' . esc_html($logContent) . '</textarea>';
                 } else {
-                    _e('Log file does not exist', 'auto-alt-text');
+                    echo '<p>' . __('There is no log file yet!', 'auto-alt-text') . '</p>';
                 }
 
                 ?>
