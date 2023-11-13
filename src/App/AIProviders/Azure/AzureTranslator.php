@@ -88,6 +88,10 @@ class AzureTranslator implements AITranslatorInterface
 
         $bodyResult = json_decode(wp_remote_retrieve_body($response), true);
 
+        if (empty($bodyResult)) {
+            throw new AzureTranslateInstanceException(__('No language retrieved: maybe the translation endpoint is wrong. Please check it out and try again.', 'auto-alt-text'));
+        }
+
         if (array_key_exists('error', $bodyResult)) {
             throw new AzureTranslateInstanceException("Error code: " . $bodyResult['error']['code'] . " - " . $bodyResult['error']['message']);
         }
