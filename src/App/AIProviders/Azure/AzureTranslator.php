@@ -1,4 +1,5 @@
 <?php
+
 namespace ValerioMonti\AutoAltText\App\AIProviders\Azure;
 
 use ValerioMonti\AutoAltText\App\Admin\PluginOptions;
@@ -30,9 +31,9 @@ class AzureTranslator implements AITranslatorInterface
         $response = wp_remote_post(
             PluginOptions::endpointAzureTranslateInstance() . $route,
             [
-                'headers'   => [
+                'headers' => [
                     'Content-type' => 'application/json',
-                    'Ocp-Apim-Subscription-Key'     => PluginOptions::apiKeyAzureTranslateInstance(),
+                    'Ocp-Apim-Subscription-Key' => PluginOptions::apiKeyAzureTranslateInstance(),
                     'Ocp-Apim-Subscription-Region' => PluginOptions::regionAzureTranslateInstance()
                 ],
                 'body' => json_encode([
@@ -60,13 +61,22 @@ class AzureTranslator implements AITranslatorInterface
      */
     public function supportedLanguages(): array
     {
+        $apiKey = PluginOptions::apiKeyAzureTranslateInstance();
+        if (empty($apiKey)) {
+            return [];
+        }
+        $endpoint = PluginOptions::endpointAzureTranslateInstance();
+        if (empty($endpoint)) {
+            return [];
+        }
+
         $route = 'languages?api-version=3.0';
 
-        $url = PluginOptions::endpointAzureTranslateInstance() . $route;
+        $url = $endpoint . $route;
 
         $headers = array(
             'Content-type' => 'application/json',
-            'Ocp-Apim-Subscription-Key' => PluginOptions::apiKeyAzureTranslateInstance()
+            'Ocp-Apim-Subscription-Key' => $apiKey
         );
 
         $response = wp_remote_get(
