@@ -56,7 +56,7 @@ class FileLogger implements LoggerInterface
     public function findLatestLogFile(string $logDir): string
     {
         $latest_time = 0;
-        $latest_file = null;
+        $latest_file = '';
 
         $files = glob(trailingslashit($logDir) . '*.log');
         foreach ($files as $file) {
