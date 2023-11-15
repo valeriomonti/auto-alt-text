@@ -44,7 +44,15 @@ class AzureComputerVisionCaptionsResponse implements AIProviderInterface
             ]
         );
 
-        $bodyResult = json_decode(wp_remote_retrieve_body($response), true);
+        $responseBody = wp_remote_retrieve_body($response);
+        if(empty($responseBody)) {
+            if(property_exists($responseBody, 'errors') && array_key_exists('http_request_failed', $response->errors)) {
+                throw new AzureComputerVisionException("Error: " . $response->errors['http_request_failed'][0]);
+            }
+            throw new AzureComputerVisionException("Error: please check if the Azure endpoint in plugin options is right");
+        }
+
+        $bodyResult = json_decode($responseBody, true);
         if (array_key_exists('error', $bodyResult)) {
             throw new AzureComputerVisionException("Error code: " . $bodyResult['error']['code'] . " - " . $bodyResult['error']['message']);
         }
@@ -56,6 +64,7 @@ class AzureComputerVisionCaptionsResponse implements AIProviderInterface
         if ($selectedLanguage == Constants::AAT_AZURE_DEFAULT_LANGUAGE) {
             return $altText;
         }
+
         return (AzureTranslator::make())->translate($altText, $selectedLanguage);
     }
 }
