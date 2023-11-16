@@ -26,7 +26,7 @@ class OpenAITextCompletionResponse extends OpenAIResponse
      */
     public function response(string $imageUrl): string
     {
-        $prompt = parent::prompt($imageUrl);
+        $prompt = parent::prompt();
         $model = PluginOptions::model();
 
         $requestBody = [

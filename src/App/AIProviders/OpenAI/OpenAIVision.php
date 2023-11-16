@@ -24,7 +24,7 @@ class OpenAIVision extends OpenAIResponse
      */
     public function response(string $imageUrl): string
     {
-        $prompt = parent::prompt($imageUrl);
+        $prompt = parent::prompt();
 
         $requestBody = [
             'model' => Constants::AAT_OPENAI_VISION_MODEL,
@@ -39,7 +39,7 @@ class OpenAIVision extends OpenAIResponse
                         [
                             "type" => "image_url",
                             "image_url" => [
-                                "url" => "https://upload.wikimedia.org/wikipedia/commons/thumb/d/dd/Gfp-wisconsin-madison-the-nature-boardwalk.jpg/2560px-Gfp-wisconsin-madison-the-nature-boardwalk.jpg"
+                                "url" => $imageUrl
                             ]
                         ]
                     ]

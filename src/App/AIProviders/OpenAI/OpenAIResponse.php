@@ -54,10 +54,9 @@ abstract class OpenAIResponse implements AIProviderInterface
 
     /**
      * Return the main OpenAI prompt
-     * @param string $imageUrl
      * @return string
      */
-    protected function prompt(string $imageUrl): string
+    protected function prompt(): string
     {
         return PluginOptions::prompt() ?: Constants::AAT_OPENAI_DEFAULT_PROMPT;
     }
