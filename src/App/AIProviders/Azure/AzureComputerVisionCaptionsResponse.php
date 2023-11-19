@@ -45,8 +45,11 @@ class AzureComputerVisionCaptionsResponse implements AIProviderInterface
 
         $responseBody = wp_remote_retrieve_body($response);
         if(empty($responseBody)) {
-            if(property_exists($response, 'errors') && array_key_exists('http_request_failed', $response->errors)) {
-                throw new AzureComputerVisionException("Error: " . $response->errors['http_request_failed'][0]);
+            if (is_object($response) && property_exists($response, 'errors') && array_key_exists('http_request_failed', $response->errors)) {
+                throw new AzureTranslateInstanceException("Error: " . $response->errors['http_request_failed'][0]);
+            }
+            if (is_array($response) && array_key_exists('response', $response)) {
+                throw new AzureTranslateInstanceException("Code: " . $response['response']['code'] . " - " . $response['response']['message']);
             }
             throw new AzureComputerVisionException("Error: please check if the Azure endpoint in plugin options is right");
         }

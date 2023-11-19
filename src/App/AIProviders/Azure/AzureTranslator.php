@@ -26,15 +26,23 @@ class AzureTranslator implements AITranslatorInterface
      */
     public function translate(string $text, string $language): string
     {
+        $apiKey = PluginOptions::apiKeyAzureTranslateInstance();
+        $region = PluginOptions::regionAzureTranslateInstance();
+        $endpoint = PluginOptions::endpointAzureTranslateInstance();
+
+        if (empty($apiKey) || empty($region) || empty($endpoint)) {
+            return $text;
+        }
+
         $route = "translate?api-version=3.0&from=en&to=" . $language;
 
         $response = wp_remote_post(
-            PluginOptions::endpointAzureTranslateInstance() . $route,
+            $endpoint . $route,
             [
                 'headers' => [
                     'Content-type' => 'application/json',
-                    'Ocp-Apim-Subscription-Key' => PluginOptions::apiKeyAzureTranslateInstance(),
-                    'Ocp-Apim-Subscription-Region' => PluginOptions::regionAzureTranslateInstance()
+                    'Ocp-Apim-Subscription-Key' => $apiKey,
+                    'Ocp-Apim-Subscription-Region' => $region,
                 ],
                 'body' => json_encode([
                     [
@@ -49,9 +57,12 @@ class AzureTranslator implements AITranslatorInterface
         //$bodyResult = json_decode(wp_remote_retrieve_body($response), true);
 
         $responseBody = wp_remote_retrieve_body($response);
-        if(empty($responseBody)) {
-            if(property_exists($response, 'errors') && array_key_exists('http_request_failed', $response->errors)) {
+        if (empty($responseBody)) {
+            if (is_object($response) && property_exists($response, 'errors') && array_key_exists('http_request_failed', $response->errors)) {
                 throw new AzureTranslateInstanceException("Error: " . $response->errors['http_request_failed'][0]);
+            }
+            if (is_array($response) && array_key_exists('response', $response)) {
+                throw new AzureTranslateInstanceException("Code: " . $response['response']['code'] . " - " . $response['response']['message']);
             }
             throw new AzureTranslateInstanceException("Error: please check if the Azure endpoint in plugin options is right");
         }
