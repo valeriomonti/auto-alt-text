@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2023-11-13T22:45:41+00:00\n"
+"POT-Creation-Date: 2023-11-19T14:56:38+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.8.1\n"
 "X-Domain: auto-alt-text\n"
@@ -19,7 +19,7 @@ msgid "Auto Alt Text"
 msgstr ""
 
 #. Description of the plugin
-msgid "This WordPress plugin allows you to automatically generate an Alt Text for images uploaded to the media library using Azure or OpenaAi AI APIs."
+msgid "This plugin allows you to automatically generate an Alt Text for images uploaded into the media library via AI.."
 msgstr ""
 
 #. Author of the plugin
@@ -65,7 +65,7 @@ msgstr ""
 
 #: src/App/Admin/PluginOptions.php:144
 #: src/App/Admin/PluginOptions.php:172
-msgid "Open AI' APIs"
+msgid "OpenAI's APIs"
 msgstr ""
 
 #: src/App/Admin/PluginOptions.php:144
@@ -247,6 +247,6 @@ msgstr ""
 msgid "Select the language in which the alt text should be written."
 msgstr ""
 
-#: src/App/AIProviders/Azure/AzureTranslator.php:92
+#: src/App/AIProviders/Azure/AzureTranslator.php:114
 msgid "No language retrieved: maybe the translation endpoint is wrong. Please check it out and try again."
 msgstr ""

@@ -141,7 +141,7 @@ class PluginOptions
                         <strong><?php _e("Azure's APIs", 'auto-alt-text'); ?></strong>: <?php _e("the image will be analyzed by the AI services provided by Azure and an alt text will be generated in the language of your choice;", 'auto-alt-text'); ?>
                     </li>
                     <li>
-                        <strong><?php _e("Open AI' APIs", 'auto-alt-text'); ?></strong>: <?php _e("the image will be analyzed by the AI services provided by OpenAI and an alt text will be generated based on the prompt you set;", 'auto-alt-text'); ?>
+                        <strong><?php _e("OpenAI's APIs", 'auto-alt-text'); ?></strong>: <?php _e("the image will be analyzed by the AI services provided by OpenAI and an alt text will be generated based on the prompt you set;", 'auto-alt-text'); ?>
                     </li>
                     <li>
                         <strong><?php _e("Title of the article (not AI)", 'auto-alt-text'); ?></strong>: <?php _e("if the image is uploaded within an article, the title of the article will be used as alt text;", 'auto-alt-text'); ?>
@@ -169,7 +169,7 @@ class PluginOptions
                         id="<?php echo Constants::AAT_OPTION_FIELD_TYPOLOGY; ?>">
                     <option value="<?php echo Constants::AAT_OPTION_TYPOLOGY_DEACTIVATED; ?>"<?php echo self::selected($typology, Constants::AAT_OPTION_TYPOLOGY_DEACTIVATED); ?>><?php _e("Deactivated", 'auto-alt-text'); ?></option>
                     <option value="<?php echo Constants::AAT_OPTION_TYPOLOGY_CHOICE_AZURE; ?>"<?php echo self::selected($typology, Constants::AAT_OPTION_TYPOLOGY_CHOICE_AZURE); ?>><?php _e("Azure's APIs", 'auto-alt-text'); ?></option>
-                    <option value="<?php echo Constants::AAT_OPTION_TYPOLOGY_CHOICE_OPENAI; ?>"<?php echo self::selected($typology, Constants::AAT_OPTION_TYPOLOGY_CHOICE_OPENAI); ?>><?php _e("Open AI' APIs", 'auto-alt-text'); ?></option>
+                    <option value="<?php echo Constants::AAT_OPTION_TYPOLOGY_CHOICE_OPENAI; ?>"<?php echo self::selected($typology, Constants::AAT_OPTION_TYPOLOGY_CHOICE_OPENAI); ?>><?php _e("OpenAI's APIs", 'auto-alt-text'); ?></option>
                     <option value="<?php echo Constants::AAT_OPTION_TYPOLOGY_CHOICE_ARTICLE_TITLE; ?>"<?php echo self::selected($typology, Constants::AAT_OPTION_TYPOLOGY_CHOICE_ARTICLE_TITLE); ?>><?php _e("Title of the article (not AI)", 'auto-alt-text'); ?></option>
                     <option value="<?php echo Constants::AAT_OPTION_TYPOLOGY_CHOICE_ATTACHMENT_TITLE; ?>"<?php echo self::selected($typology, Constants::AAT_OPTION_TYPOLOGY_CHOICE_ATTACHMENT_TITLE); ?>><?php _e("Title of the attachment (not AI)", 'auto-alt-text'); ?></option>
                 </select>

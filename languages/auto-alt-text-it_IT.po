@@ -4,8 +4,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Auto Alt Text 1.0.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/auto-alt-text\n"
-"POT-Creation-Date: 2023-11-13T22:45:41+00:00\n"
-"PO-Revision-Date: 2023-11-13 23:47+0100\n"
+"POT-Creation-Date: 2023-11-19T14:56:38+00:00\n"
+"PO-Revision-Date: 2023-11-19 15:59+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: it_IT\n"
@@ -21,12 +21,11 @@ msgstr "Auto Alt Text"
 
 #. Description of the plugin
 msgid ""
-"This WordPress plugin allows you to automatically generate an Alt Text for "
-"images uploaded to the media library using Azure or OpenaAi AI APIs."
+"This plugin allows you to automatically generate an Alt Text for images "
+"uploaded into the media library via AI.."
 msgstr ""
-"Questo plugin WordPress ti permette di generare automaticamente un Alt Text "
-"per le immagini caricate nella media library utilizzando le API IA di Azure "
-"o OpenAi."
+"Questo plugin ti permette di generare in modo automatico, tramite AI, un Alt "
+"Text per le immagini che vengono caricate nella media library del sito."
 
 #. Author of the plugin
 msgid "Valerio Monti"
@@ -81,7 +80,7 @@ msgstr ""
 "generato un alt text nella lingua che preferisci;"
 
 #: src/App/Admin/PluginOptions.php:144 src/App/Admin/PluginOptions.php:172
-msgid "Open AI' APIs"
+msgid "OpenAI's APIs"
 msgstr "API di OpenAI"
 
 #: src/App/Admin/PluginOptions.php:144
@@ -324,13 +323,21 @@ msgstr "Lingua Alt Text"
 msgid "Select the language in which the alt text should be written."
 msgstr "Seleziona la lingua in cui deve essere scritto l’alt text."
 
-#: src/App/AIProviders/Azure/AzureTranslator.php:92
+#: src/App/AIProviders/Azure/AzureTranslator.php:114
 msgid ""
 "No language retrieved: maybe the translation endpoint is wrong. Please check "
 "it out and try again."
 msgstr ""
 "Non è stata trovata nessuna lingua: forse l’endopoint per le traduzioni è "
 "errato. Per favore controllalo e prova di nuovo."
+
+#~ msgid ""
+#~ "This WordPress plugin allows you to automatically generate an Alt Text "
+#~ "for images uploaded to the media library using Azure or OpenaAi AI APIs."
+#~ msgstr ""
+#~ "Questo plugin WordPress ti permette di generare automaticamente un Alt "
+#~ "Text per le immagini caricate nella media library utilizzando le API IA "
+#~ "di Azure o OpenAi."
 
 #~ msgid "Warning"
 #~ msgstr "Attenzione"
