@@ -2,7 +2,7 @@
 
 /**
  * Plugin Name:     Auto Alt Text
- * Description:     This WordPress plugin allows you to automatically generate an Alt Text for images uploaded to the media library using Azure or OpenaAi AI APIs.
+ * Description:     This plugin allows you to automatically generate an Alt Text for images uploaded into the media library via AI..
  * Version:         1.0.0
  * Author:          Valerio Monti
  * Author URI:      https://www.vmweb.it
@@ -10,7 +10,7 @@
  * Domain Path:     /languages
  * License:         GPL v3
  * Requires PHP:    7.4
- * Requires WP:     5.5.0
+ * Requires WP:     6.0
  * Namespace:       AutoAltText
  */
 
