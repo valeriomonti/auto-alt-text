@@ -254,21 +254,21 @@ class PluginOptions
                 echo '<label for="' . Constants::AAT_OPTION_FIELD_API_KEY_AZURE_TRANSLATE_INSTANCE . '">' . __('Azure Translate Instance API Key', 'auto-alt-text') . '</label>';
                 echo '<p class="description">' . __("Enter your API key for the Azure Translate Instance service.", 'auto-alt-text') . '</p>';
                 $translationApiKey = get_option(Constants::AAT_OPTION_FIELD_API_KEY_AZURE_TRANSLATE_INSTANCE);
-                echo '<input type="password" name="' . Constants::AAT_OPTION_FIELD_API_KEY_AZURE_TRANSLATE_INSTANCE . '" value="' . (Encryption::make())->decrypt($translationApiKey) . '" />';
+                echo '<input type="password" name="' . Constants::AAT_OPTION_FIELD_API_KEY_AZURE_TRANSLATE_INSTANCE . '" value="' . (Encryption::make())->decrypt($translationApiKey) . '" class="notRequired" />';
                 echo '</div>';
 
                 echo '<div class="plugin-option type-azure">';
                 echo '<label for="' . Constants::AAT_OPTION_FIELD_ENDPOINT_AZURE_TRANSLATE_INSTANCE . '">' . __('Azure Translate Instance Endpoint', 'auto-alt-text') . '</label>';
                 echo '<p class="description">' . __("Enter the endpoint of the Translate Instance service", 'auto-alt-text') . ' (es. https://api.cognitive.microsofttranslator.com/)</p>';
                 $translationEndpoint = get_option(Constants::AAT_OPTION_FIELD_ENDPOINT_AZURE_TRANSLATE_INSTANCE);
-                echo '<input type="text" name="' . Constants::AAT_OPTION_FIELD_ENDPOINT_AZURE_TRANSLATE_INSTANCE . '" value="' . $translationEndpoint . '" />';
+                echo '<input type="text" name="' . Constants::AAT_OPTION_FIELD_ENDPOINT_AZURE_TRANSLATE_INSTANCE . '" value="' . $translationEndpoint . '" class="notRequired" />';
                 echo '</div>';
 
                 echo '<div class="plugin-option type-azure">';
                 echo '<label for="' . Constants::AAT_OPTION_FIELD_REGION_AZURE_TRANSLATE_INSTANCE . '">' . __('Azure Translate Instance Region', 'auto-alt-text') . '</label>';
                 echo '<p class="description">' . __("Enter the region of the Azure Translate Instance service.", 'auto-alt-text') . ' (es. westeurope)</p>';
                 $translationRegion = get_option(Constants::AAT_OPTION_FIELD_REGION_AZURE_TRANSLATE_INSTANCE);
-                echo '<input type="text" name="' . Constants::AAT_OPTION_FIELD_REGION_AZURE_TRANSLATE_INSTANCE . '" value="' . $translationRegion . '" />';
+                echo '<input type="text" name="' . Constants::AAT_OPTION_FIELD_REGION_AZURE_TRANSLATE_INSTANCE . '" value="' . $translationRegion . '" class="notRequired" />';
                 echo '</div>';
 
                 if ($translationApiKey && $translationEndpoint && $translationRegion):
@@ -435,7 +435,7 @@ class PluginOptions
      */
     public static function languageAzureTranslateInstance(): string
     {
-        return get_option(Constants::AAT_OPTION_FIELD_LANGUAGE_AZURE_TRANSLATE_INSTANCE);
+        return get_option(Constants::AAT_OPTION_FIELD_LANGUAGE_AZURE_TRANSLATE_INSTANCE) ?: 'en';
     }
 
     /**

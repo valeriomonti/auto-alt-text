@@ -8,7 +8,11 @@ document.addEventListener('DOMContentLoaded', function() {
             let inputs = pluginOption.querySelectorAll('input, select, textarea');
             if (pluginOption.classList.contains('type-' + typology)) {
                 pluginOption.style.display = 'block';
-                inputs.forEach(input => input.setAttribute('required', ''));
+                inputs.forEach(input => {
+                    if (!input.classList.contains('notRequired')) {
+                        input.setAttribute('required', '');
+                    }
+                });
             } else {
                 pluginOption.style.display = 'none';
                 inputs.forEach(input => input.removeAttribute('required'));
