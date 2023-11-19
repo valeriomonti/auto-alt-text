@@ -44,6 +44,24 @@ class Setup
         add_action('add_attachment', [self::$instance, 'addAltTextOnUpload']);
         // When plugin is loaded, load text domain
         add_action('plugins_loaded', [self::$instance, 'loadTextDomain']);
+
+        add_filter('plugin_action_links_auto-alt-text/auto-alt-text.php', [self::$instance, 'settingsLink']);
+    }
+
+    /**
+     * Add link to the options page of the plugin in the plugins listing
+     */
+    public static function settingsLink(array $links): array
+    {
+        $url = esc_url(add_query_arg(
+            'page',
+            'auto-alt-text-options',
+            get_admin_url() . 'admin.php'
+        ));
+        $settingsLink = "<a href='$url'>" . __('Settings', 'auto-alt-text') . '</a>';
+        $links[] = $settingsLink;
+
+        return $links;
     }
 
     /**
