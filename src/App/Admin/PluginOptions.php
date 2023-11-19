@@ -176,6 +176,12 @@ class PluginOptions
                 <?php
                 echo '</div>';
 
+                echo '<div class="plugin-option type-article-title"><strong>' . __('Notice', 'auto-alt-text') . '</strong>: ' .
+                    __('If you try to insert an image into a post that has not yet been saved as a draft or published, the plugin cannot generate an alt text based on the post\'s title since the title itself has not yet been saved.', 'auto-alt-text') . ' ' .
+                    __('Therefore, the alt text "Auto draft" will be inserted. To avoid this behavior, save the article draft first and then upload the image.', 'auto-alt-text') .
+                    '</div>';
+
+
                 echo '<div class="plugin-option type-openai"><strong>' . __('Notice', 'auto-alt-text') . '</strong>: ' .
                     __('This plugin leverages the new "gpt-4-vision-preview" model from OpenAI to identify the content of the image.', 'auto-alt-text') . ' ' .
                     __('As the name suggests, this model is still in a preview stage and OpenAI states:', 'auto-alt-text') . ' "<em>This is a preview model version and not suited yet for production traffic</em>".<br>' .
