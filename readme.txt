@@ -3,7 +3,7 @@ Contributors: valeriomonti
 Tags: alt text, alt tag, alt text generation, alt tag generation, alt text AI, alt tag AI
 Requires at least: 6.0
 Tested up to: 6.4.1
-Stable tag: 1.0
+Stable tag: 1.0.0
 Requires PHP: 7.4
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
