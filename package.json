@@ -1,4 +1,6 @@
 {
+  "name": "auto-alt-text",
+  "version": "1.0.0",
   "type": "module",
   "scripts": {
     "build": "npx vite build",
@@ -11,5 +13,8 @@
   },
   "dependencies": {
     "vite": "^5.0.10"
+  },
+  "volta": {
+    "node": "18.19.0"
   }
 }
