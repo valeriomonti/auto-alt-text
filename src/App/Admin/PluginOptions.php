@@ -6,12 +6,14 @@ use OpenAI;
 use ValerioMonti\AutoAltText\App\AIProviders\Azure\AzureTranslator;
 use ValerioMonti\AutoAltText\App\Exceptions\Azure\AzureTranslateInstanceException;
 use ValerioMonti\AutoAltText\App\Logging\FileLogger;
+use ValerioMonti\AutoAltText\App\Utilities\AssetsManager;
 use ValerioMonti\AutoAltText\App\Utilities\Encryption;
 use ValerioMonti\AutoAltText\Config\Constants;
 
 class PluginOptions
 {
     private static ?self $instance = null;
+    private static AssetsManager $assetsManager;
 
     private function __construct()
     {
@@ -27,6 +29,8 @@ class PluginOptions
         if (is_null(self::$instance)) {
             self::$instance = new self();
         }
+
+        self::$assetsManager = AssetsManager::make();
 
         add_action('admin_enqueue_scripts', [self::$instance, 'enqueueAdminScripts'], 1);
         add_action('admin_menu', [self::$instance, 'addOptionsPageToTheMenu']);
@@ -61,15 +65,14 @@ class PluginOptions
         $isMainOptionsPage = $screen->id === 'toplevel_page_' . Constants::AAT_PLUGIN_OPTIONS_PAGE_SLUG;
 
         if ($isMainOptionsPage || strpos($screen->id, Constants::AAT_PLUGIN_SLUG . '_') !== false) {
-            $entryPoints = AUTO_ALT_TEXT_ABSPATH . '/dist/mix-manifest.json';
-            $json = json_decode(file_get_contents($entryPoints), JSON_OBJECT_AS_ARRAY);
-            $adminCss = $json['/css/admin.css'];
 
-            wp_enqueue_style(Constants::AAT_PLUGIN_OPTIONS_PAGE_SLUG, AUTO_ALT_TEXT_URL . 'dist' . $adminCss, [], false);
+            $adminCss = self::$assetsManager->getAssetUrl('resources/js/admin.js', true);
+
+            wp_enqueue_style(Constants::AAT_PLUGIN_OPTIONS_PAGE_SLUG, $adminCss, [], false);
 
             if ($isMainOptionsPage) {
-                $adminJs = $json['/js/admin.js'];
-                wp_enqueue_script(Constants::AAT_PLUGIN_OPTIONS_PAGE_SLUG, AUTO_ALT_TEXT_URL . 'dist' . $adminJs, [], false);
+                $adminJs = self::$assetsManager->getAssetUrl('resources/js/admin.js', false);
+                wp_enqueue_script(Constants::AAT_PLUGIN_OPTIONS_PAGE_SLUG, $adminJs, [], false);
             }
 
         }

@@ -1,3 +1,5 @@
+import '../css/admin.css';
+
 document.addEventListener('DOMContentLoaded', function() {
 
     const typologyField = document.getElementById('aat_typology');
