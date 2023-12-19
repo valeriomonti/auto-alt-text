@@ -3,7 +3,7 @@ This WordPress plugin allows you to automatically generate an Alt Text for image
 This plugin is able to use the AI of external services of Azure or Openai to generate an alt text that is as faithful as possible to the content of the image.
 
 ## Features
-___
+
 This plugin allows you to generate alt texts in the following ways:
 - using Azure APIs for computational vision;
 - using Openai APIs for computational vision;
@@ -11,7 +11,6 @@ This plugin allows you to generate alt texts in the following ways:
 - recovering the title of the article in which the image is uploaded.
 
 ## Prerequisites
-___
 Please ensure you have the following tools installed:
 - PHP version: >= 7.4
 - composer
@@ -19,7 +18,6 @@ Please ensure you have the following tools installed:
 - npm
 
 ## Getting started
-___
 Within your WordPress installation, navigate to the plugin directory and run the following commands:
 
 ```bash
