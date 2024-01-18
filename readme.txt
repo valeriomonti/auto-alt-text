@@ -3,7 +3,7 @@ Contributors: valeriomonti
 Tags: alt text, alt tag, alt text generation, alt tag generation, alt text AI, alt tag AI
 Requires at least: 6.0
 Tested up to: 6.4.1
-Stable tag: 1.1.0
+Stable tag: 1.1.1
 Requires PHP: 7.4
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
@@ -77,6 +77,32 @@ Once the plugin is configured, each time an image is uploaded to the media libra
 
 In case of an error in the API call, the image will still be uploaded but without alt text as usual. In this case, the cause of the error can be seen on the Auto Alt Text -> Error log page.
 
+## External Services
+This plugin uses the following external services alternatively:
+
+### OpenAI
+Selecting the generation method "OpenAI's APIs" will use the API services of [OpenAI](https://openai.com/).
+
+This plugin does not collect any information from your OpenAI account. The data transmitted to OpenAI mainly consists of the image files uploaded to your website and the specified prompt.
+
+For accurate information on privacy and conditions of use, please consult the [privacy policy](https://openai.com/policies/privacy-policy) and [terms and conditions](https://openai.com/) directly on the official website. It is also advisable to check the costs and usage statistics of the API service on the OpenAI website.
+
+### Azure
+Selecting the "Azure's APIs" generation method will use the API services of [Microsoft Azure](https://azure.microsoft.com/en-us/).
+
+This plugin does not collect any information from your Azure account. The data transmitted to Azure consists mainly of image files uploaded to your website.
+
+For accurate information on privacy and conditions of use, please directly consult the [privacy policy](https://privacy.microsoft.com/en-us/privacystatement) and [terms and conditions](https://azure.microsoft.com/en-us/support/legal/) on the official website. It is also advisable to check the costs and usage statistics of the API service on the Microsoft Azure's website.
+
+## Disclaimer
+Auto Alt Text is a plugin that helps users automatically generate Alt Texts of their images using AI services such as OpenAI's ChatGPT or Microsoft Azure.
+Users need their own API key and must follow the rules set by the AI service they choose.
+
+By using Auto Alt Text, users agree to watch and manage AI-made content and address any issues or misuse.
+
+AI Engine developer and related parties are not responsible for any problems or losses caused by the use of the plugin or AI-generated content.
+
+
 == Frequently Asked Questions ==
 
 = Is it mandatory to use external AI services? =
@@ -94,7 +120,7 @@ If you wish to obtain the most accurate description possible of the image, you s
 
 == Changelog ==
 
-= 1.0 =
+= 1.0.0 =
 Plugin released
 
 == Upgrade Notice ==
