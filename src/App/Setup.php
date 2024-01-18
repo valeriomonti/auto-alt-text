@@ -58,7 +58,7 @@ class Setup
             'auto-alt-text-options',
             get_admin_url() . 'admin.php'
         ));
-        $settingsLink = "<a href='$url'>" . __('Settings', 'auto-alt-text') . '</a>';
+        $settingsLink = "<a href='$url'>" . esc_html__('Settings', 'auto-alt-text') . '</a>';
         $links[] = $settingsLink;
 
         return $links;

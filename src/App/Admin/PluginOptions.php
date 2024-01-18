@@ -114,7 +114,7 @@ class PluginOptions
                     $logContent = file_get_contents($logFile);
                     echo '<textarea id="error-log" name="error-log" readonly>' . esc_html($logContent) . '</textarea>';
                 } else {
-                    echo '<p>' . __('There is no log file yet!', 'auto-alt-text') . '</p>';
+                    echo '<p>' . esc_html__('There is no log file yet!', 'auto-alt-text') . '</p>';
                 }
 
                 ?>
@@ -164,8 +164,8 @@ class PluginOptions
                 settings_fields('auto_alt_text_options');
 
                 echo '<div>';
-                echo '<label for="' . Constants::AAT_OPTION_FIELD_TYPOLOGY . '">' . __('Generation method', 'auto-alt-text') . '</label>';
-                echo '<p class="description">' . __("Which method do you want to use to generate the alt text for the images?", 'auto-alt-text') . '</p>';
+                echo '<label for="' . Constants::AAT_OPTION_FIELD_TYPOLOGY . '">' . esc_html__('Generation method', 'auto-alt-text') . '</label>';
+                echo '<p class="description">' . esc_html__("Which method do you want to use to generate the alt text for the images?", 'auto-alt-text') . '</p>';
                 $typology = get_option(Constants::AAT_OPTION_FIELD_TYPOLOGY);
                 ?>
                 <select name="<?php echo Constants::AAT_OPTION_FIELD_TYPOLOGY; ?>"
@@ -179,38 +179,38 @@ class PluginOptions
                 <?php
                 echo '</div>';
 
-                echo '<div class="plugin-option type-article-title"><strong>' . __('Notice', 'auto-alt-text') . '</strong>: ' .
-                    __('If you try to insert an image into a post that has not yet been saved as a draft or published, the plugin cannot generate an alt text based on the post\'s title since the title itself has not yet been saved.', 'auto-alt-text') . ' ' .
-                    __('Therefore, the alt text "Auto draft" will be inserted. To avoid this behavior, save the article draft first and then upload the image.', 'auto-alt-text') .
+                echo '<div class="plugin-option type-article-title"><strong>' . esc_html__('Notice', 'auto-alt-text') . '</strong>: ' .
+                    esc_html__('If you try to insert an image into a post that has not yet been saved as a draft or published, the plugin cannot generate an alt text based on the post\'s title since the title itself has not yet been saved.', 'auto-alt-text') . ' ' .
+                    esc_html__('Therefore, the alt text "Auto draft" will be inserted. To avoid this behavior, save the article draft first and then upload the image.', 'auto-alt-text') .
                     '</div>';
 
 
-                echo '<div class="plugin-option type-openai"><strong>' . __('Notice', 'auto-alt-text') . '</strong>: ' .
-                    __('This plugin leverages the new "gpt-4-vision-preview" model from OpenAI to identify the content of the image.', 'auto-alt-text') . ' ' .
-                    __('As the name suggests, this model is still in a preview stage and OpenAI states:', 'auto-alt-text') . ' "<em>This is a preview model version and not suited yet for production traffic</em>".<br>' .
-                    __('Therefore, it is necessary to select a fallback model in case gpt-4-preview fails.', 'auto-alt-text') . '<br>' .
-                    __('The fallback models are not able to read the content of the image but will rely exclusively on the name of the image file, guessing its content.', 'auto-alt-text') . '<br>' .
-                    __('In case of errors, it is still possible to find the specific reason stated on the', 'auto-alt-text') . ' <a href="' . menu_page_url(Constants::AAT_PLUGIN_OPTION_LOG_PAGE_SLUG, false) . '">' . __('error log page', 'auto-alt-text') . '</a>.' .
+                echo '<div class="plugin-option type-openai"><strong>' . esc_html__('Notice', 'auto-alt-text') . '</strong>: ' .
+                    esc_html__('This plugin leverages the new "gpt-4-vision-preview" model from OpenAI to identify the content of the image.', 'auto-alt-text') . ' ' .
+                    esc_html__('As the name suggests, this model is still in a preview stage and OpenAI states:', 'auto-alt-text') . ' "<em>This is a preview model version and not suited yet for production traffic</em>".<br>' .
+                    esc_html__('Therefore, it is necessary to select a fallback model in case gpt-4-preview fails.', 'auto-alt-text') . '<br>' .
+                    esc_html__('The fallback models are not able to read the content of the image but will rely exclusively on the name of the image file, guessing its content.', 'auto-alt-text') . '<br>' .
+                    esc_html__('In case of errors, it is still possible to find the specific reason stated on the', 'auto-alt-text') . ' <a href="' . menu_page_url(Constants::AAT_PLUGIN_OPTION_LOG_PAGE_SLUG, false) . '">' . esc_html__('error log page', 'auto-alt-text') . '</a>.' .
                     '</div>';
 
                 echo '<div class="plugin-option type-openai">';
-                echo '<label for="' . Constants::AAT_OPTION_FIELD_API_KEY_OPENAI . '">' . __('OpenAI API Key', 'auto-alt-text') . '</label>';
-                echo '<p class="description">' . __("Enter your API Key", 'auto-alt-text') . '</p>';
+                echo '<label for="' . Constants::AAT_OPTION_FIELD_API_KEY_OPENAI . '">' . esc_html__('OpenAI API Key', 'auto-alt-text') . '</label>';
+                echo '<p class="description">' . esc_html__("Enter your API Key", 'auto-alt-text') . '</p>';
                 $apiKey = get_option(Constants::AAT_OPTION_FIELD_API_KEY_OPENAI);
                 echo '<input type="password" name="' . Constants::AAT_OPTION_FIELD_API_KEY_OPENAI . '" value="' . (Encryption::make())->decrypt($apiKey) . '" />';
                 echo '</div>';
 
                 echo '<div class="plugin-option type-openai">';
-                echo '<label for="' . Constants::AAT_OPTION_FIELD_PROMPT_OPENAI . '">' . __('Prompt', 'auto-alt-text') . '</label>';
-                echo '<p class="description">' . __("Enter a specific and detailed prompt according to your needs.", 'auto-alt-text') . '</p>';
-                $defaultPrompt = sprintf(__("Act like an SEO expert and write an alt text of up to 125 characters for this image.", 'auto-alt-text'), Constants::AAT_IMAGE_URL_TAG);
+                echo '<label for="' . Constants::AAT_OPTION_FIELD_PROMPT_OPENAI . '">' . esc_html__('Prompt', 'auto-alt-text') . '</label>';
+                echo '<p class="description">' . esc_html__("Enter a specific and detailed prompt according to your needs.", 'auto-alt-text') . '</p>';
+                $defaultPrompt = sprintf(esc_html__("Act like an SEO expert and write an alt text of up to 125 characters for this image.", 'auto-alt-text'), Constants::AAT_IMAGE_URL_TAG);
                 $prompt = get_option(Constants::AAT_OPTION_FIELD_PROMPT_OPENAI) ?: $defaultPrompt;
                 echo '<textarea name="' . Constants::AAT_OPTION_FIELD_PROMPT_OPENAI . '" rows="5" cols="50">' . $prompt . '</textarea>';
                 echo '</div>';
 
                 echo '<div class="plugin-option type-openai">';
-                echo '<label for="' . Constants::AAT_OPTION_FIELD_FALLBACK_MODEL_OPENAI . '">' . __('Fallback OpenAi Model', 'auto-alt-text') . '</label>';
-                echo '<p class="description">' . __("Choose the alternative OpenAI model you want to use to generate the alt text when the gpt-4-vision-preview model fails.", 'auto-alt-text') . '</p>';
+                echo '<label for="' . Constants::AAT_OPTION_FIELD_FALLBACK_MODEL_OPENAI . '">' . esc_html__('Fallback OpenAi Model', 'auto-alt-text') . '</label>';
+                echo '<p class="description">' . esc_html__("Choose the alternative OpenAI model you want to use to generate the alt text when the gpt-4-vision-preview model fails.", 'auto-alt-text') . '</p>';
                 $modelSaved = get_option(Constants::AAT_OPTION_FIELD_FALLBACK_MODEL_OPENAI);
                 ?>
 
@@ -229,61 +229,61 @@ class PluginOptions
                 echo '</div>';
 
                 echo '<div class="plugin-option type-openai">';
-                echo '<label for="' . Constants::AAT_OPTION_FIELD_FALLBACK_PROMPT_OPENAI . '">' . __('Fallback Prompt', 'auto-alt-text') . '</label>';
-                echo '<p class="description">' . __("Enter a specific and detailed prompt according to your needs.", 'auto-alt-text') . '</p>';
-                $defaultPrompt = sprintf(__("Act like an SEO expert and write an English alt text for this image %s, using a maximum of 125 characters. Just return the text without any additional comments.", 'auto-alt-text'), Constants::AAT_IMAGE_URL_TAG);
+                echo '<label for="' . Constants::AAT_OPTION_FIELD_FALLBACK_PROMPT_OPENAI . '">' . esc_html__('Fallback Prompt', 'auto-alt-text') . '</label>';
+                echo '<p class="description">' . esc_html__("Enter a specific and detailed prompt according to your needs.", 'auto-alt-text') . '</p>';
+                $defaultPrompt = sprintf(esc_html__("Act like an SEO expert and write an English alt text for this image %s, using a maximum of 125 characters. Just return the text without any additional comments.", 'auto-alt-text'), Constants::AAT_IMAGE_URL_TAG);
                 $fallbackPrompt = get_option(Constants::AAT_OPTION_FIELD_FALLBACK_PROMPT_OPENAI) ?: $defaultPrompt;
                 echo '<textarea name="' . Constants::AAT_OPTION_FIELD_FALLBACK_PROMPT_OPENAI . '" rows="5" cols="50">' . $fallbackPrompt . '</textarea>';
                 echo '</div>';
 
-                echo '<div class="plugin-option type-azure">' . __("Fill out the following fields to leverage Azure's computer vision services to generate the Alt texts.", 'auto-alt-text') . '</div>';
+                echo '<div class="plugin-option type-azure">' . esc_html__("Fill out the following fields to leverage Azure's computer vision services to generate the Alt texts.", 'auto-alt-text') . '</div>';
 
                 echo '<div class="plugin-option type-azure">';
-                echo '<label for="' . Constants::AAT_OPTION_FIELD_API_KEY_AZURE_COMPUTER_VISION . '">' . __('Azure Computer Vision API Key', 'auto-alt-text') . '</label>';
-                echo '<p class="description">' . __("Enter the API key for the Computer Vision service of your Azure account.", 'auto-alt-text') . '</p>';
+                echo '<label for="' . Constants::AAT_OPTION_FIELD_API_KEY_AZURE_COMPUTER_VISION . '">' . esc_html__('Azure Computer Vision API Key', 'auto-alt-text') . '</label>';
+                echo '<p class="description">' . esc_html__("Enter the API key for the Computer Vision service of your Azure account.", 'auto-alt-text') . '</p>';
                 $apiKey = get_option(Constants::AAT_OPTION_FIELD_API_KEY_AZURE_COMPUTER_VISION);
                 echo '<input type="password" name="' . Constants::AAT_OPTION_FIELD_API_KEY_AZURE_COMPUTER_VISION . '" value="' . (Encryption::make())->decrypt($apiKey) . '" />';
                 echo '</div>';
 
                 echo '<div class="plugin-option type-azure">';
-                echo '<label for="' . Constants::AAT_OPTION_FIELD_ENDPOINT_AZURE_COMPUTER_VISION . '">' . __('Azure Computer Vision Endpoint', 'auto-alt-text') . '</label>';
-                echo '<p class="description">' . __("Enter the endpoint of the Computer Vision service.", 'auto-alt-text') . ' (es. https://computer-vision-france-central.cognitiveservices.azure.com/)</p>';
+                echo '<label for="' . Constants::AAT_OPTION_FIELD_ENDPOINT_AZURE_COMPUTER_VISION . '">' . esc_html__('Azure Computer Vision Endpoint', 'auto-alt-text') . '</label>';
+                echo '<p class="description">' . esc_html__("Enter the endpoint of the Computer Vision service.", 'auto-alt-text') . ' (es. https://computer-vision-france-central.cognitiveservices.azure.com/)</p>';
                 $endpoint = get_option(Constants::AAT_OPTION_FIELD_ENDPOINT_AZURE_COMPUTER_VISION);
                 echo '<input type="text" name="' . Constants::AAT_OPTION_FIELD_ENDPOINT_AZURE_COMPUTER_VISION . '" value="' . $endpoint . '" />';
                 echo '</div>';
 
                 echo '<div class="plugin-option type-azure">' .
-                    '<strong>' . __('The default alt text language is English.', 'auto-alt-text') . '</strong><br>' .
-                    __('If you want to translate into another language, enter the following data necessary for the translation API to work.', 'auto-alt-text') . ' ' .
-                    __('After saving the changes you can select the desired language.', 'auto-alt-text') .
+                    '<strong>' . esc_html__('The default alt text language is English.', 'auto-alt-text') . '</strong><br>' .
+                    esc_html__('If you want to translate into another language, enter the following data necessary for the translation API to work.', 'auto-alt-text') . ' ' .
+                    esc_html__('After saving the changes you can select the desired language.', 'auto-alt-text') .
 
                     '</div>';
 
                 echo '<div class="plugin-option type-azure">';
-                echo '<label for="' . Constants::AAT_OPTION_FIELD_API_KEY_AZURE_TRANSLATE_INSTANCE . '">' . __('Azure Translate Instance API Key', 'auto-alt-text') . '</label>';
-                echo '<p class="description">' . __("Enter your API key for the Azure Translate Instance service.", 'auto-alt-text') . '</p>';
+                echo '<label for="' . Constants::AAT_OPTION_FIELD_API_KEY_AZURE_TRANSLATE_INSTANCE . '">' . esc_html__('Azure Translate Instance API Key', 'auto-alt-text') . '</label>';
+                echo '<p class="description">' . esc_html__("Enter your API key for the Azure Translate Instance service.", 'auto-alt-text') . '</p>';
                 $translationApiKey = get_option(Constants::AAT_OPTION_FIELD_API_KEY_AZURE_TRANSLATE_INSTANCE);
                 echo '<input type="password" name="' . Constants::AAT_OPTION_FIELD_API_KEY_AZURE_TRANSLATE_INSTANCE . '" value="' . (Encryption::make())->decrypt($translationApiKey) . '" class="notRequired" />';
                 echo '</div>';
 
                 echo '<div class="plugin-option type-azure">';
-                echo '<label for="' . Constants::AAT_OPTION_FIELD_ENDPOINT_AZURE_TRANSLATE_INSTANCE . '">' . __('Azure Translate Instance Endpoint', 'auto-alt-text') . '</label>';
-                echo '<p class="description">' . __("Enter the endpoint of the Translate Instance service", 'auto-alt-text') . ' (es. https://api.cognitive.microsofttranslator.com/)</p>';
+                echo '<label for="' . Constants::AAT_OPTION_FIELD_ENDPOINT_AZURE_TRANSLATE_INSTANCE . '">' . esc_html__('Azure Translate Instance Endpoint', 'auto-alt-text') . '</label>';
+                echo '<p class="description">' . esc_html__("Enter the endpoint of the Translate Instance service", 'auto-alt-text') . ' (es. https://api.cognitive.microsofttranslator.com/)</p>';
                 $translationEndpoint = get_option(Constants::AAT_OPTION_FIELD_ENDPOINT_AZURE_TRANSLATE_INSTANCE);
                 echo '<input type="text" name="' . Constants::AAT_OPTION_FIELD_ENDPOINT_AZURE_TRANSLATE_INSTANCE . '" value="' . $translationEndpoint . '" class="notRequired" />';
                 echo '</div>';
 
                 echo '<div class="plugin-option type-azure">';
-                echo '<label for="' . Constants::AAT_OPTION_FIELD_REGION_AZURE_TRANSLATE_INSTANCE . '">' . __('Azure Translate Instance Region', 'auto-alt-text') . '</label>';
-                echo '<p class="description">' . __("Enter the region of the Azure Translate Instance service.", 'auto-alt-text') . ' (es. westeurope)</p>';
+                echo '<label for="' . Constants::AAT_OPTION_FIELD_REGION_AZURE_TRANSLATE_INSTANCE . '">' . esc_html__('Azure Translate Instance Region', 'auto-alt-text') . '</label>';
+                echo '<p class="description">' . esc_html__("Enter the region of the Azure Translate Instance service.", 'auto-alt-text') . ' (es. westeurope)</p>';
                 $translationRegion = get_option(Constants::AAT_OPTION_FIELD_REGION_AZURE_TRANSLATE_INSTANCE);
                 echo '<input type="text" name="' . Constants::AAT_OPTION_FIELD_REGION_AZURE_TRANSLATE_INSTANCE . '" value="' . $translationRegion . '" class="notRequired" />';
                 echo '</div>';
 
                 if ($translationApiKey && $translationEndpoint && $translationRegion):
                     echo '<div class="plugin-option type-azure">';
-                    echo '<label for="' . Constants::AAT_OPTION_FIELD_LANGUAGE_AZURE_TRANSLATE_INSTANCE . '">' . __('Alt Text Language', 'auto-alt-text') . '</label>';
-                    echo '<p class="description">' . __("Select the language in which the alt text should be written.", 'auto-alt-text') . '</p>';
+                    echo '<label for="' . Constants::AAT_OPTION_FIELD_LANGUAGE_AZURE_TRANSLATE_INSTANCE . '">' . esc_html__('Alt Text Language', 'auto-alt-text') . '</label>';
+                    echo '<p class="description">' . esc_html__("Select the language in which the alt text should be written.", 'auto-alt-text') . '</p>';
                     $currentLanguage = get_option(Constants::AAT_OPTION_FIELD_LANGUAGE_AZURE_TRANSLATE_INSTANCE);
 
                     try {
