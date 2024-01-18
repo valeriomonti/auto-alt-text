@@ -98,9 +98,9 @@ class PluginOptions
         $logDir = trailingslashit($uploadDir['basedir']) . Constants::AAT_PLUGIN_SLUG;
         ?>
         <div class="wrap">
-            <h1><?php _e('Auto Alt Text Error Log', 'auto-alt-text') ?></h1>
+            <h1><?php esc_html_e('Auto Alt Text Error Log', 'auto-alt-text') ?></h1>
             <div class="aat-options plugin-description">
-                <p><?php _e("On this page you can view the last daily error log generated. The logs from previous days are saved in the folder", 'auto-alt-text'); ?>
+                <p><?php esc_html_e("On this page you can view the last daily error log generated. The logs from previous days are saved in the folder", 'auto-alt-text'); ?>
                     <strong><?php echo $logDir; ?></strong></p>
                 <?php
                 $hash = get_option(Constants::AAT_LOG_ASH);
@@ -131,32 +131,32 @@ class PluginOptions
     {
         ?>
         <div class="wrap">
-            <h1><?php _e('Auto Alt Text Options', 'auto-alt-text') ?></h1>
+            <h1><?php esc_html_e('Auto Alt Text Options', 'auto-alt-text') ?></h1>
 
             <div class="aat-options plugin-description">
                 <p>
-                    <?php _e("This plugin allows you to automatically generate Alt Text for the images that are uploaded to the site's media library.", 'auto-alt-text'); ?>
+                    <?php esc_html_e("This plugin allows you to automatically generate Alt Text for the images that are uploaded to the site's media library.", 'auto-alt-text'); ?>
                     <br>
-                    <?php _e("The following methods are available to generate the alt text:", 'auto-alt-text'); ?>
+                    <?php esc_html_e("The following methods are available to generate the alt text:", 'auto-alt-text'); ?>
                 </p>
                 <ul>
                     <li>
-                        <strong><?php _e("Azure's APIs", 'auto-alt-text'); ?></strong>: <?php _e("the image will be analyzed by the AI services provided by Azure and an alt text will be generated in the language of your choice;", 'auto-alt-text'); ?>
+                        <strong><?php esc_html_e("Azure's APIs", 'auto-alt-text'); ?></strong>: <?php esc_html_e("the image will be analyzed by the AI services provided by Azure and an alt text will be generated in the language of your choice;", 'auto-alt-text'); ?>
                     </li>
                     <li>
-                        <strong><?php _e("OpenAI's APIs", 'auto-alt-text'); ?></strong>: <?php _e("the image will be analyzed by the AI services provided by OpenAI and an alt text will be generated based on the prompt you set;", 'auto-alt-text'); ?>
+                        <strong><?php esc_html_e("OpenAI's APIs", 'auto-alt-text'); ?></strong>: <?php esc_html_e("the image will be analyzed by the AI services provided by OpenAI and an alt text will be generated based on the prompt you set;", 'auto-alt-text'); ?>
                     </li>
                     <li>
-                        <strong><?php _e("Title of the article (not AI)", 'auto-alt-text'); ?></strong>: <?php _e("if the image is uploaded within an article, the title of the article will be used as alt text;", 'auto-alt-text'); ?>
+                        <strong><?php esc_html_e("Title of the article (not AI)", 'auto-alt-text'); ?></strong>: <?php esc_html_e("if the image is uploaded within an article, the title of the article will be used as alt text;", 'auto-alt-text'); ?>
                     </li>
                     <li>
-                        <strong><?php _e("Title of the attachment (not AI)", 'auto-alt-text'); ?></strong>: <?php _e("the title of the attachment will be copied into the alt text;", 'auto-alt-text'); ?>
+                        <strong><?php esc_html_e("Title of the attachment (not AI)", 'auto-alt-text'); ?></strong>: <?php esc_html_e("the title of the attachment will be copied into the alt text;", 'auto-alt-text'); ?>
                     </li>
                 </ul>
-                <p><?php _e("Once all the necessary data for the chosen generation method has been entered, the alt texts will be created automatically upon uploading each image.", 'auto-alt-text'); ?></p>
+                <p><?php esc_html_e("Once all the necessary data for the chosen generation method has been entered, the alt texts will be created automatically upon uploading each image.", 'auto-alt-text'); ?></p>
                 <p>
-                    <strong><?php _e('Pay attention please:', 'auto-alt-text') ?></strong> <?php _e("if the alt text for an image is not generated, check the logs on the", 'auto-alt-text'); ?>
-                    <a href="<?php menu_page_url(Constants::AAT_PLUGIN_OPTION_LOG_PAGE_SLUG, true) ?>"><?php _e('designated page.', 'auto-alt-text') ?></a>
+                    <strong><?php esc_html_e('Pay attention please:', 'auto-alt-text') ?></strong> <?php esc_html_e("if the alt text for an image is not generated, check the logs on the", 'auto-alt-text'); ?>
+                    <a href="<?php menu_page_url(Constants::AAT_PLUGIN_OPTION_LOG_PAGE_SLUG, true) ?>"><?php esc_html_e('designated page.', 'auto-alt-text') ?></a>
                 </p>
             </div>
             <form method="post" action="options.php" class="aat-options">
@@ -170,11 +170,11 @@ class PluginOptions
                 ?>
                 <select name="<?php echo Constants::AAT_OPTION_FIELD_TYPOLOGY; ?>"
                         id="<?php echo Constants::AAT_OPTION_FIELD_TYPOLOGY; ?>">
-                    <option value="<?php echo Constants::AAT_OPTION_TYPOLOGY_DEACTIVATED; ?>"<?php echo self::selected($typology, Constants::AAT_OPTION_TYPOLOGY_DEACTIVATED); ?>><?php _e("Deactivated", 'auto-alt-text'); ?></option>
-                    <option value="<?php echo Constants::AAT_OPTION_TYPOLOGY_CHOICE_AZURE; ?>"<?php echo self::selected($typology, Constants::AAT_OPTION_TYPOLOGY_CHOICE_AZURE); ?>><?php _e("Azure's APIs", 'auto-alt-text'); ?></option>
-                    <option value="<?php echo Constants::AAT_OPTION_TYPOLOGY_CHOICE_OPENAI; ?>"<?php echo self::selected($typology, Constants::AAT_OPTION_TYPOLOGY_CHOICE_OPENAI); ?>><?php _e("OpenAI's APIs", 'auto-alt-text'); ?></option>
-                    <option value="<?php echo Constants::AAT_OPTION_TYPOLOGY_CHOICE_ARTICLE_TITLE; ?>"<?php echo self::selected($typology, Constants::AAT_OPTION_TYPOLOGY_CHOICE_ARTICLE_TITLE); ?>><?php _e("Title of the article (not AI)", 'auto-alt-text'); ?></option>
-                    <option value="<?php echo Constants::AAT_OPTION_TYPOLOGY_CHOICE_ATTACHMENT_TITLE; ?>"<?php echo self::selected($typology, Constants::AAT_OPTION_TYPOLOGY_CHOICE_ATTACHMENT_TITLE); ?>><?php _e("Title of the attachment (not AI)", 'auto-alt-text'); ?></option>
+                    <option value="<?php echo Constants::AAT_OPTION_TYPOLOGY_DEACTIVATED; ?>"<?php echo self::selected($typology, Constants::AAT_OPTION_TYPOLOGY_DEACTIVATED); ?>><?php esc_html_e("Deactivated", 'auto-alt-text'); ?></option>
+                    <option value="<?php echo Constants::AAT_OPTION_TYPOLOGY_CHOICE_AZURE; ?>"<?php echo self::selected($typology, Constants::AAT_OPTION_TYPOLOGY_CHOICE_AZURE); ?>><?php esc_html_e("Azure's APIs", 'auto-alt-text'); ?></option>
+                    <option value="<?php echo Constants::AAT_OPTION_TYPOLOGY_CHOICE_OPENAI; ?>"<?php echo self::selected($typology, Constants::AAT_OPTION_TYPOLOGY_CHOICE_OPENAI); ?>><?php esc_html_e("OpenAI's APIs", 'auto-alt-text'); ?></option>
+                    <option value="<?php echo Constants::AAT_OPTION_TYPOLOGY_CHOICE_ARTICLE_TITLE; ?>"<?php echo self::selected($typology, Constants::AAT_OPTION_TYPOLOGY_CHOICE_ARTICLE_TITLE); ?>><?php esc_html_e("Title of the article (not AI)", 'auto-alt-text'); ?></option>
+                    <option value="<?php echo Constants::AAT_OPTION_TYPOLOGY_CHOICE_ATTACHMENT_TITLE; ?>"<?php echo self::selected($typology, Constants::AAT_OPTION_TYPOLOGY_CHOICE_ATTACHMENT_TITLE); ?>><?php esc_html_e("Title of the attachment (not AI)", 'auto-alt-text'); ?></option>
                 </select>
                 <?php
                 echo '</div>';
