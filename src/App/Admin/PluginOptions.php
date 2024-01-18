@@ -112,7 +112,7 @@ class PluginOptions
 
                 if ($logFile && file_exists($logFile)) {
                     $logContent = file_get_contents($logFile);
-                    echo '<textarea id="error-log" name="error-log" readonly>' . esc_html($logContent) . '</textarea>';
+                    echo '<textarea id="error-log" name="error-log" readonly>' . esc_textarea($logContent) . '</textarea>';
                 } else {
                     echo '<p>' . esc_html__('There is no log file yet!', 'auto-alt-text') . '</p>';
                 }
@@ -156,7 +156,7 @@ class PluginOptions
                 <p><?php esc_html_e("Once all the necessary data for the chosen generation method has been entered, the alt texts will be created automatically upon uploading each image.", 'auto-alt-text'); ?></p>
                 <p>
                     <strong><?php esc_html_e('Pay attention please:', 'auto-alt-text') ?></strong> <?php esc_html_e("if the alt text for an image is not generated, check the logs on the", 'auto-alt-text'); ?>
-                    <a href="<?php menu_page_url(Constants::AAT_PLUGIN_OPTION_LOG_PAGE_SLUG, true) ?>"><?php esc_html_e('designated page.', 'auto-alt-text') ?></a>
+                    <a href="<?php esc_url(menu_page_url(Constants::AAT_PLUGIN_OPTION_LOG_PAGE_SLUG, true)); ?>"><?php esc_html_e('designated page.', 'auto-alt-text') ?></a>
                 </p>
             </div>
             <form method="post" action="options.php" class="aat-options">
@@ -190,7 +190,7 @@ class PluginOptions
                     esc_html__('As the name suggests, this model is still in a preview stage and OpenAI states:', 'auto-alt-text') . ' "<em>This is a preview model version and not suited yet for production traffic</em>".<br>' .
                     esc_html__('Therefore, it is necessary to select a fallback model in case gpt-4-preview fails.', 'auto-alt-text') . '<br>' .
                     esc_html__('The fallback models are not able to read the content of the image but will rely exclusively on the name of the image file, guessing its content.', 'auto-alt-text') . '<br>' .
-                    esc_html__('In case of errors, it is still possible to find the specific reason stated on the', 'auto-alt-text') . ' <a href="' . esc_attr(menu_page_url(Constants::AAT_PLUGIN_OPTION_LOG_PAGE_SLUG, false)) . '">' . esc_html__('error log page', 'auto-alt-text') . '</a>.' .
+                    esc_html__('In case of errors, it is still possible to find the specific reason stated on the', 'auto-alt-text') . ' <a href="' . esc_url(menu_page_url(Constants::AAT_PLUGIN_OPTION_LOG_PAGE_SLUG, false)) . '">' . esc_html__('error log page', 'auto-alt-text') . '</a>.' .
                     '</div>';
 
                 echo '<div class="plugin-option type-openai">';
@@ -205,7 +205,7 @@ class PluginOptions
                 echo '<p class="description">' . esc_html__("Enter a specific and detailed prompt according to your needs.", 'auto-alt-text') . '</p>';
                 $defaultPrompt = sprintf(esc_html__("Act like an SEO expert and write an alt text of up to 125 characters for this image.", 'auto-alt-text'), Constants::AAT_IMAGE_URL_TAG);
                 $prompt = get_option(Constants::AAT_OPTION_FIELD_PROMPT_OPENAI) ?: $defaultPrompt;
-                echo '<textarea name="' . esc_attr(Constants::AAT_OPTION_FIELD_PROMPT_OPENAI) . '" rows="5" cols="50">' . esc_html($prompt) . '</textarea>';
+                echo '<textarea name="' . esc_attr(Constants::AAT_OPTION_FIELD_PROMPT_OPENAI) . '" rows="5" cols="50">' . esc_textarea($prompt) . '</textarea>';
                 echo '</div>';
 
                 echo '<div class="plugin-option type-openai">';
@@ -233,7 +233,7 @@ class PluginOptions
                 echo '<p class="description">' . esc_html__("Enter a specific and detailed prompt according to your needs.", 'auto-alt-text') . '</p>';
                 $defaultPrompt = sprintf(esc_html__("Act like an SEO expert and write an English alt text for this image %s, using a maximum of 125 characters. Just return the text without any additional comments.", 'auto-alt-text'), Constants::AAT_IMAGE_URL_TAG);
                 $fallbackPrompt = get_option(Constants::AAT_OPTION_FIELD_FALLBACK_PROMPT_OPENAI) ?: $defaultPrompt;
-                echo '<textarea name="' . esc_attr(Constants::AAT_OPTION_FIELD_FALLBACK_PROMPT_OPENAI) . '" rows="5" cols="50">' . esc_html($fallbackPrompt) . '</textarea>';
+                echo '<textarea name="' . esc_attr(Constants::AAT_OPTION_FIELD_FALLBACK_PROMPT_OPENAI) . '" rows="5" cols="50">' . esc_textarea($fallbackPrompt) . '</textarea>';
                 echo '</div>';
 
                 echo '<div class="plugin-option type-azure">' . esc_html__("Fill out the following fields to leverage Azure's computer vision services to generate the Alt texts.", 'auto-alt-text') . '</div>';
