@@ -45,7 +45,7 @@ class FileLogger implements LoggerInterface
             wp_mkdir_p($logDir);
         }
         $logFile = trailingslashit($logDir) . date('Y-m-d') . '-' . $hash . '.log';
-        error_log($errorMessage, 3, $logFile);
+        file_put_contents($logFile, $errorMessage, FILE_APPEND | LOCK_EX);
     }
 
     /**
