@@ -27,7 +27,7 @@ class OpenAIVision extends OpenAIResponse
         $prompt = parent::prompt();
 
         $requestBody = [
-            'model' => Constants::AAT_OPENAI_VISION_MODEL,
+            'model' => Constants::AATXT_OPENAI_VISION_MODEL,
             'messages' => [
                 [
                     'role' => 'user',
@@ -45,10 +45,10 @@ class OpenAIVision extends OpenAIResponse
                     ]
                 ],
             ],
-            'max_tokens' => Constants::AAT_OPENAI_MAX_TOKENS,
+            'max_tokens' => Constants::AATXT_OPENAI_MAX_TOKENS,
         ];
 
-        $decodedBody = parent::decodedResponseBody($requestBody, Constants::AAT_OPENAI_CHAT_COMPLETION_ENDPOINT);
+        $decodedBody = parent::decodedResponseBody($requestBody, Constants::AATXT_OPENAI_CHAT_COMPLETION_ENDPOINT);
 
         return $this->cleanString($decodedBody['choices'][0]['message']['content']);
     }
