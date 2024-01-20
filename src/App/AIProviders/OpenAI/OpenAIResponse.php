@@ -1,10 +1,10 @@
 <?php
-namespace ValerioMonti\AutoAltText\App\AIProviders\OpenAI;
+namespace AATXT\App\AIProviders\OpenAI;
 
-use ValerioMonti\AutoAltText\App\Admin\PluginOptions;
-use ValerioMonti\AutoAltText\App\AIProviders\AIProviderInterface;
-use ValerioMonti\AutoAltText\App\Exceptions\OpenAI\OpenAIException;
-use ValerioMonti\AutoAltText\Config\Constants;
+use AATXT\App\Admin\PluginOptions;
+use AATXT\App\AIProviders\AIProviderInterface;
+use AATXT\App\Exceptions\OpenAI\OpenAIException;
+use AATXT\Config\Constants;
 
 abstract class OpenAIResponse implements AIProviderInterface
 {

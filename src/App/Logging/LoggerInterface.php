@@ -1,5 +1,5 @@
 <?php
-namespace ValerioMonti\AutoAltText\App\Logging;
+namespace AATXT\App\Logging;
 
 interface LoggerInterface {
     public function writeImageLog(int $imageId, string $errorMessage): void;

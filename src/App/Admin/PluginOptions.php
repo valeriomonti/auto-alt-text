@@ -1,14 +1,14 @@
 <?php
 
-namespace ValerioMonti\AutoAltText\App\Admin;
+namespace AATXT\App\Admin;
 
 use OpenAI;
-use ValerioMonti\AutoAltText\App\AIProviders\Azure\AzureTranslator;
-use ValerioMonti\AutoAltText\App\Exceptions\Azure\AzureTranslateInstanceException;
-use ValerioMonti\AutoAltText\App\Logging\FileLogger;
-use ValerioMonti\AutoAltText\App\Utilities\AssetsManager;
-use ValerioMonti\AutoAltText\App\Utilities\Encryption;
-use ValerioMonti\AutoAltText\Config\Constants;
+use AATXT\App\AIProviders\Azure\AzureTranslator;
+use AATXT\App\Exceptions\Azure\AzureTranslateInstanceException;
+use AATXT\App\Logging\FileLogger;
+use AATXT\App\Utilities\AssetsManager;
+use AATXT\App\Utilities\Encryption;
+use AATXT\Config\Constants;
 
 class PluginOptions
 {

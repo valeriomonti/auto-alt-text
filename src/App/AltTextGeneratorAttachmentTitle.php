@@ -1,7 +1,7 @@
 <?php
-namespace Valeriomonti\AutoAltText\App;
+namespace AATXT\App;
 
-use ValerioMonti\AutoAltText\App\AltTextGeneratorInterface;
+use AATXT\App\AltTextGeneratorInterface;
 
 class AltTextGeneratorAttachmentTitle implements AltTextGeneratorInterface
 {

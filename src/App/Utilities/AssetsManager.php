@@ -1,6 +1,6 @@
 <?php
 
-namespace ValerioMonti\AutoAltText\App\Utilities;
+namespace AATXT\App\Utilities;
 
 final class AssetsManager
 {

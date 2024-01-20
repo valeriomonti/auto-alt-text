@@ -1,5 +1,5 @@
 <?php
-namespace ValerioMonti\AutoAltText\App\Exceptions\OpenAI;
+namespace AATXT\App\Exceptions\OpenAI;
 
 use Exception;
 

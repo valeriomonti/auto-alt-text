@@ -1,16 +1,16 @@
 <?php
 
-namespace ValerioMonti\AutoAltText\App;
+namespace AATXT\App;
 
 use Composer\Installers\Plugin;
 use OpenAI;
-use ValerioMonti\AutoAltText\App\AIProviders\AIProviderInterface;
-use ValerioMonti\AutoAltText\App\AIProviders\OpenAI\OpenAIChatCompletionResponse;
-use ValerioMonti\AutoAltText\App\AIProviders\OpenAI\OpenAITextCompletionResponse;
-use ValerioMonti\AutoAltText\App\AltTextGeneratorInterface;
-use ValerioMonti\AutoAltText\App\Admin\PluginOptions;
-use ValerioMonti\AutoAltText\App\Logging\FileLogger;
-use ValerioMonti\AutoAltText\Config\Constants;
+use AATXT\App\AIProviders\AIProviderInterface;
+use AATXT\App\AIProviders\OpenAI\OpenAIChatCompletionResponse;
+use AATXT\App\AIProviders\OpenAI\OpenAITextCompletionResponse;
+use AATXT\App\AltTextGeneratorInterface;
+use AATXT\App\Admin\PluginOptions;
+use AATXT\App\Logging\FileLogger;
+use AATXT\Config\Constants;
 use OpenAI\Exceptions\ErrorException;
 
 class AltTextGeneratorAi implements AltTextGeneratorInterface

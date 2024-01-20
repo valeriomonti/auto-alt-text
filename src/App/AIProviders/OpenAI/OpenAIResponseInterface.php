@@ -1,5 +1,5 @@
 <?php
-namespace ValerioMonti\AutoAltText\App\AIProviders\OpenAI;
+namespace AATXT\App\AIProviders\OpenAI;
 use OpenAI\Client;
 
 interface OpenAIResponseInterface

@@ -1,12 +1,12 @@
 <?php
 
-namespace ValerioMonti\AutoAltText\App\AIProviders\Azure;
+namespace AATXT\App\AIProviders\Azure;
 
-use ValerioMonti\AutoAltText\App\Admin\PluginOptions;
-use ValerioMonti\AutoAltText\App\AIProviders\AIProviderInterface;
-use ValerioMonti\AutoAltText\App\Exceptions\Azure\AzureComputerVisionException;
-use ValerioMonti\AutoAltText\App\Exceptions\Azure\AzureTranslateInstanceException;
-use ValerioMonti\AutoAltText\Config\Constants;
+use AATXT\App\Admin\PluginOptions;
+use AATXT\App\AIProviders\AIProviderInterface;
+use AATXT\App\Exceptions\Azure\AzureComputerVisionException;
+use AATXT\App\Exceptions\Azure\AzureTranslateInstanceException;
+use AATXT\Config\Constants;
 
 class AzureComputerVisionCaptionsResponse implements AIProviderInterface
 {

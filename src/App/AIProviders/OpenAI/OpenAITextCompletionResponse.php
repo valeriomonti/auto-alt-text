@@ -1,11 +1,11 @@
 <?php
-namespace ValerioMonti\AutoAltText\App\AIProviders\OpenAI;
+namespace AATXT\App\AIProviders\OpenAI;
 
 use OpenAI;
 use OpenAI\Client;
-use ValerioMonti\AutoAltText\App\Admin\PluginOptions;
-use ValerioMonti\AutoAltText\App\Exceptions\OpenAI\OpenAIException;
-use ValerioMonti\AutoAltText\Config\Constants;
+use AATXT\App\Admin\PluginOptions;
+use AATXT\App\Exceptions\OpenAI\OpenAIException;
+use AATXT\Config\Constants;
 
 class OpenAITextCompletionResponse extends OpenAIResponse
 {

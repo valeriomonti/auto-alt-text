@@ -1,8 +1,8 @@
 <?php
 
-namespace ValerioMonti\AutoAltText\App\Logging;
+namespace AATXT\App\Logging;
 
-use ValerioMonti\AutoAltText\Config\Constants;
+use AATXT\Config\Constants;
 
 class LogCleaner
 {

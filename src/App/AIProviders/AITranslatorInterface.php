@@ -1,6 +1,6 @@
 <?php
 
-namespace ValerioMonti\AutoAltText\App\AIProviders;
+namespace AATXT\App\AIProviders;
 
 interface AITranslatorInterface
 {

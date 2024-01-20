@@ -14,8 +14,8 @@
  * Namespace:       AutoAltText
  */
 
-use ValerioMonti\AutoAltText\App\Setup;
-use ValerioMonti\AutoAltText\Config\Constants;
+use AATXT\App\Setup;
+use AATXT\Config\Constants;
 
 if ( ! defined( 'ABSPATH' ) ) {
     exit; // Exit if accessed directly.

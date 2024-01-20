@@ -1,6 +1,6 @@
 <?php
 
-namespace ValerioMonti\AutoAltText\Config;
+namespace AATXT\Config;
 
 class Constants
 {

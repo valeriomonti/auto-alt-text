@@ -1,10 +1,10 @@
 <?php
 
-namespace ValerioMonti\AutoAltText\App\Logging;
+namespace AATXT\App\Logging;
 
 use Exception;
-use ValerioMonti\AutoAltText\App\Utilities\Encryption;
-use ValerioMonti\AutoAltText\Config\Constants;
+use AATXT\App\Utilities\Encryption;
+use AATXT\Config\Constants;
 
 class FileLogger implements LoggerInterface
 {

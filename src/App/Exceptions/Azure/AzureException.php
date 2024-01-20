@@ -1,5 +1,5 @@
 <?php
-namespace ValerioMonti\AutoAltText\App\Exceptions\Azure;
+namespace AATXT\App\Exceptions\Azure;
 
 use Exception;
 

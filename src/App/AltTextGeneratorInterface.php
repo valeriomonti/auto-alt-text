@@ -1,5 +1,5 @@
 <?php
-namespace ValerioMonti\AutoAltText\App;
+namespace AATXT\App;
 
 interface AltTextGeneratorInterface
 {

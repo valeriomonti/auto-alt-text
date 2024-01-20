@@ -1,13 +1,14 @@
 <?php
 
-namespace ValerioMonti\AutoAltText\App\AIProviders\Azure;
+namespace AATXT\App\AIProviders\Azure;
 
-use ValerioMonti\AutoAltText\App\Admin\PluginOptions;
-use ValerioMonti\AutoAltText\App\AIProviders\AITranslatorInterface;
-use ValerioMonti\AutoAltText\App\Exceptions\Azure\AzureTranslateInstanceException;
+use AATXT\App\Admin\PluginOptions;
+use AATXT\App\AIProviders\AITranslatorInterface;
+use AATXT\App\Exceptions\Azure\AzureTranslateInstanceException;
 
 class AzureTranslator implements AITranslatorInterface
 {
+
     private function __construct()
     {
     }
