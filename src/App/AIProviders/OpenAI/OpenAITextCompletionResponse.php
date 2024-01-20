@@ -32,11 +32,11 @@ class OpenAITextCompletionResponse extends OpenAIResponse
         $requestBody = [
             'model' => $model,
             'prompt' => $prompt,
-            'max_tokens' => Constants::AAT_OPENAI_MAX_TOKENS,
-            'temperature' => Constants::AAT_OPENAI_TEXT_COMPLETION_TEMPERATURE,
+            'max_tokens' => Constants::AATXT_OPENAI_MAX_TOKENS,
+            'temperature' => Constants::AATXT_OPENAI_TEXT_COMPLETION_TEMPERATURE,
         ];
 
-        $decodedBody = parent::decodedResponseBody($requestBody, Constants::AAT_OPENAI_TEXT_COMPLETION_ENDPOINT);
+        $decodedBody = parent::decodedResponseBody($requestBody, Constants::AATXT_OPENAI_TEXT_COMPLETION_ENDPOINT);
 
         return $this->cleanString($decodedBody['choices'][0]['text']);
     }

@@ -11,7 +11,7 @@
  * License:         GPL v3
  * Requires PHP:    7.4
  * Requires WP:     6.0
- * Namespace:       AutoAltText
+ * Namespace:       AATXT
  */
 
 use AATXT\App\Setup;
@@ -21,10 +21,10 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit; // Exit if accessed directly.
 }
 
-define('AUTO_ALT_TEXT_ABSPATH', dirname(__FILE__));
-define('AUTO_ALT_TEXT_URL', plugin_dir_url(__FILE__));
-define('AUTO_ALT_TEXT_LANGUAGES_RELATIVE_PATH', dirname( plugin_basename( __FILE__ ) ) . '/languages/');
+define('AATXT_ABSPATH', dirname(__FILE__));
+define('AATXT_URL', plugin_dir_url(__FILE__));
+define('AATXT_LANGUAGES_RELATIVE_PATH', dirname( plugin_basename( __FILE__ ) ) . '/languages/');
 
-require AUTO_ALT_TEXT_ABSPATH . '/vendor/autoload.php';
+require AATXT_ABSPATH . '/vendor/autoload.php';
 
 Setup::register();

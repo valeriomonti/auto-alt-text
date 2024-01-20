@@ -6,7 +6,6 @@ use OpenAI\Exceptions\ErrorException;
 use AATXT\App\Admin\PluginOptions;
 use AATXT\App\AIProviders\Azure\AzureComputerVisionCaptionsResponse;
 use AATXT\App\AIProviders\OpenAI\OpenAIChatCompletionResponse;
-use AATXT\App\AIProviders\OpenAI\OpenAITextCompletionResponse;
 use AATXT\App\AIProviders\OpenAI\OpenAIVision;
 use AATXT\App\Exceptions\Azure\AzureException;
 use AATXT\App\Exceptions\OpenAI\OpenAIException;
@@ -70,7 +69,7 @@ class Setup
      */
     public static function loadTextDomain(): void
     {
-        load_plugin_textdomain('auto-alt-text', false, AUTO_ALT_TEXT_LANGUAGES_RELATIVE_PATH);
+        load_plugin_textdomain('auto-alt-text', false, AATXT_LANGUAGES_RELATIVE_PATH);
     }
 
     /**
@@ -87,7 +86,7 @@ class Setup
         $altText = '';
 
         switch (PluginOptions::typology()) {
-            case Constants::AAT_OPTION_TYPOLOGY_CHOICE_AZURE:
+            case Constants::AATXT_OPTION_TYPOLOGY_CHOICE_AZURE:
                 // If Azure is selected as alt text generating typology
                 try {
                     $altText = (AltTextGeneratorAi::make(AzureComputerVisionCaptionsResponse::make()))->altText($postId);
@@ -95,13 +94,13 @@ class Setup
                     (FileLogger::make(Encryption::make()))->writeImageLog($postId, "Azure - " . $e->getMessage());
                 }
                 break;
-            case Constants::AAT_OPTION_TYPOLOGY_CHOICE_OPENAI:
+            case Constants::AATXT_OPTION_TYPOLOGY_CHOICE_OPENAI:
                 // If OpenAI is selected as alt text generating typology
                 try {
                     $altText = (AltTextGeneratorAi::make(OpenAIVision::make()))->altText($postId);
                 } catch (OpenAIException $e) {
                     //If vision model fails, try with a fallback model
-                    $errorMessage = "OpenAI - " . Constants::AAT_OPENAI_VISION_MODEL . ' - ' . $e->getMessage();
+                    $errorMessage = "OpenAI - " . Constants::AATXT_OPENAI_VISION_MODEL . ' - ' . $e->getMessage();
                     (FileLogger::make(Encryption::make()))->writeImageLog($postId, $errorMessage);
                     try {
                         $altText = (AltTextGeneratorAi::make(OpenAIChatCompletionResponse::make()))->altText($postId);
@@ -111,7 +110,7 @@ class Setup
                     }
                 }
                 break;
-            case Constants::AAT_OPTION_TYPOLOGY_CHOICE_ARTICLE_TITLE:
+            case Constants::AATXT_OPTION_TYPOLOGY_CHOICE_ARTICLE_TITLE:
                 // If Article title is selected as alt text generating typology
                 $parentId = wp_get_post_parent_id($postId);
                 if ($parentId) {
@@ -121,7 +120,7 @@ class Setup
                     $altText = (AltTextGeneratorAttachmentTitle::make())->altText($postId);
                 }
                 break;
-            case Constants::AAT_OPTION_TYPOLOGY_CHOICE_ATTACHMENT_TITLE:
+            case Constants::AATXT_OPTION_TYPOLOGY_CHOICE_ATTACHMENT_TITLE:
                 // If Attachment title is selected as alt text generating typology
                 $altText = (AltTextGeneratorAttachmentTitle::make())->altText($postId);
                 break;

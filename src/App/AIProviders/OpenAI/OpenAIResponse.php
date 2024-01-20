@@ -58,7 +58,7 @@ abstract class OpenAIResponse implements AIProviderInterface
      */
     protected function prompt(): string
     {
-        return PluginOptions::prompt() ?: Constants::AAT_OPENAI_DEFAULT_PROMPT;
+        return PluginOptions::prompt() ?: Constants::AATXT_OPENAI_DEFAULT_PROMPT;
     }
 
     /**
@@ -68,8 +68,8 @@ abstract class OpenAIResponse implements AIProviderInterface
      */
     protected function fallbackPrompt(string $imageUrl): string
     {
-        $prompt = PluginOptions::fallbackPrompt() ?: Constants::AAT_OPENAI_DEFAULT_FALLBACK_PROMPT;
-        return str_replace(Constants::AAT_IMAGE_URL_TAG, $imageUrl, $prompt);
+        $prompt = PluginOptions::fallbackPrompt() ?: Constants::AATXT_OPENAI_DEFAULT_FALLBACK_PROMPT;
+        return str_replace(Constants::AATXT_IMAGE_URL_TAG, $imageUrl, $prompt);
     }
 
     /**

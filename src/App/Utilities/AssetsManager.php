@@ -15,7 +15,7 @@ final class AssetsManager
 
     public function getAssetUrl(string $filename, bool $isStyle = false): string
     {
-        $manifestPath = AUTO_ALT_TEXT_ABSPATH . '/dist/.vite/manifest.json';
+        $manifestPath = AATXT_ABSPATH . '/dist/.vite/manifest.json';
 
         if (!file_exists($manifestPath)) {
             return '';
@@ -30,7 +30,7 @@ final class AssetsManager
         }
         $file = $isStyle && isset($entry['css']) ? $entry['css'][0] : $entry['file'];
 
-        return AUTO_ALT_TEXT_URL . 'dist/' . $file;
+        return AATXT_URL . 'dist/' . $file;
     }
 
 }

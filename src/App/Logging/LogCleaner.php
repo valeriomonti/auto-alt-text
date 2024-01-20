@@ -22,11 +22,11 @@ class LogCleaner
             self::$instance = new self();
         }
 
-        if (!wp_next_scheduled(Constants::AAT_LOGS_CLEANUP_EVENT)) {
-            wp_schedule_event(time(), 'daily', Constants::AAT_LOGS_CLEANUP_EVENT);
+        if (!wp_next_scheduled(Constants::AATXT_LOGS_CLEANUP_EVENT)) {
+            wp_schedule_event(time(), 'daily', Constants::AATXT_LOGS_CLEANUP_EVENT);
         }
 
-        add_action(Constants::AAT_LOGS_CLEANUP_EVENT, [self::$instance, 'cleanupOldLogs']);
+        add_action(Constants::AATXT_LOGS_CLEANUP_EVENT, [self::$instance, 'cleanupOldLogs']);
     }
 
     /**
@@ -35,12 +35,12 @@ class LogCleaner
      */
     public static function cleanupOldLogs(): void
     {
-        $logDir = trailingslashit(wp_upload_dir()['basedir']) . Constants::AAT_PLUGIN_SLUG;
+        $logDir = trailingslashit(wp_upload_dir()['basedir']) . Constants::AATXT_PLUGIN_SLUG;
 
         if (is_dir($logDir)) {
             $files = glob(trailingslashit($logDir) . '*.log');
             $now = time();
-            $days = Constants::AAT_LOG_RETENTION_DAYS;
+            $days = Constants::AATXT_LOG_RETENTION_DAYS;
 
             foreach ($files as $file) {
                 if (is_file($file)) {

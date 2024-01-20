@@ -37,9 +37,9 @@ class PluginOptions
         add_action('admin_init', [self::$instance, 'setupPluginOptions']);
 
         // Encrypt API Keys on update
-        add_action('pre_update_option_' . Constants::AAT_OPTION_FIELD_API_KEY_AZURE_COMPUTER_VISION, [self::$instance, 'encryptDataOnUpdate'], 10, 3);
-        add_action('pre_update_option_' . Constants::AAT_OPTION_FIELD_API_KEY_AZURE_TRANSLATE_INSTANCE, [self::$instance, 'encryptDataOnUpdate'], 10, 3);
-        add_action('pre_update_option_' . Constants::AAT_OPTION_FIELD_API_KEY_OPENAI, [self::$instance, 'encryptDataOnUpdate'], 10, 3);
+        add_action('pre_update_option_' . Constants::AATXT_OPTION_FIELD_API_KEY_AZURE_COMPUTER_VISION, [self::$instance, 'encryptDataOnUpdate'], 10, 3);
+        add_action('pre_update_option_' . Constants::AATXT_OPTION_FIELD_API_KEY_AZURE_TRANSLATE_INSTANCE, [self::$instance, 'encryptDataOnUpdate'], 10, 3);
+        add_action('pre_update_option_' . Constants::AATXT_OPTION_FIELD_API_KEY_OPENAI, [self::$instance, 'encryptDataOnUpdate'], 10, 3);
     }
 
     /**
@@ -62,17 +62,17 @@ class PluginOptions
     public static function enqueueAdminScripts(): void
     {
         $screen = get_current_screen();
-        $isMainOptionsPage = $screen->id === 'toplevel_page_' . Constants::AAT_PLUGIN_OPTIONS_PAGE_SLUG;
+        $isMainOptionsPage = $screen->id === 'toplevel_page_' . Constants::AATXT_PLUGIN_OPTIONS_PAGE_SLUG;
 
-        if ($isMainOptionsPage || strpos($screen->id, Constants::AAT_PLUGIN_SLUG . '_') !== false) {
+        if ($isMainOptionsPage || strpos($screen->id, Constants::AATXT_PLUGIN_SLUG . '_') !== false) {
 
             $adminCss = self::$assetsManager->getAssetUrl('resources/js/admin.js', true);
 
-            wp_enqueue_style(Constants::AAT_PLUGIN_OPTIONS_PAGE_SLUG, $adminCss, [], false);
+            wp_enqueue_style(Constants::AATXT_PLUGIN_OPTIONS_PAGE_SLUG, $adminCss, [], false);
 
             if ($isMainOptionsPage) {
                 $adminJs = self::$assetsManager->getAssetUrl('resources/js/admin.js', false);
-                wp_enqueue_script(Constants::AAT_PLUGIN_OPTIONS_PAGE_SLUG, $adminJs, [], false);
+                wp_enqueue_script(Constants::AATXT_PLUGIN_OPTIONS_PAGE_SLUG, $adminJs, [], false);
             }
 
         }
@@ -84,8 +84,8 @@ class PluginOptions
      */
     public static function addOptionsPageToTheMenu(): void
     {
-        add_menu_page('Auto Alt Text Options', 'Auto Alt Text', 'manage_options', Constants::AAT_PLUGIN_OPTIONS_PAGE_SLUG, [self::$instance, 'optionsMainPage'], null, 99);
-        add_submenu_page(Constants::AAT_PLUGIN_OPTIONS_PAGE_SLUG, 'Error Log', 'Error log', 'manage_options', Constants::AAT_PLUGIN_OPTION_LOG_PAGE_SLUG, [self::$instance, 'logOptionsPage']);
+        add_menu_page('Auto Alt Text Options', 'Auto Alt Text', 'manage_options', Constants::AATXT_PLUGIN_OPTIONS_PAGE_SLUG, [self::$instance, 'optionsMainPage'], null, 99);
+        add_submenu_page(Constants::AATXT_PLUGIN_OPTIONS_PAGE_SLUG, 'Error Log', 'Error log', 'manage_options', Constants::AATXT_PLUGIN_OPTION_LOG_PAGE_SLUG, [self::$instance, 'logOptionsPage']);
     }
 
     /**
@@ -95,7 +95,7 @@ class PluginOptions
     public static function logOptionsPage(): void
     {
         $uploadDir = wp_upload_dir();
-        $logDir = trailingslashit($uploadDir['basedir']) . Constants::AAT_PLUGIN_SLUG;
+        $logDir = trailingslashit($uploadDir['basedir']) . Constants::AATXT_PLUGIN_SLUG;
         ?>
         <div class="wrap">
             <h1><?php esc_html_e('Auto Alt Text Error Log', 'auto-alt-text') ?></h1>
@@ -103,7 +103,7 @@ class PluginOptions
                 <p><?php esc_html_e("On this page you can view the last daily error log generated. The logs from previous days are saved in the folder", 'auto-alt-text'); ?>
                     <strong><?php echo esc_html($logDir); ?></strong></p>
                 <?php
-                $hash = get_option(Constants::AAT_LOG_ASH);
+                $hash = get_option(Constants::AATXT_LOG_ASH);
                 $logFile = trailingslashit($logDir) . date('Y-m-d') . '-' . $hash . '.log';
 
                 if (!file_exists($logFile)) {
@@ -156,7 +156,7 @@ class PluginOptions
                 <p><?php esc_html_e("Once all the necessary data for the chosen generation method has been entered, the alt texts will be created automatically upon uploading each image.", 'auto-alt-text'); ?></p>
                 <p>
                     <strong><?php esc_html_e('Pay attention please:', 'auto-alt-text') ?></strong> <?php esc_html_e("if the alt text for an image is not generated, check the logs on the", 'auto-alt-text'); ?>
-                    <a href="<?php esc_url(menu_page_url(Constants::AAT_PLUGIN_OPTION_LOG_PAGE_SLUG, true)); ?>"><?php esc_html_e('designated page.', 'auto-alt-text') ?></a>
+                    <a href="<?php esc_url(menu_page_url(Constants::AATXT_PLUGIN_OPTION_LOG_PAGE_SLUG, true)); ?>"><?php esc_html_e('designated page.', 'auto-alt-text') ?></a>
                 </p>
             </div>
             <form method="post" action="options.php" class="aat-options">
@@ -164,17 +164,17 @@ class PluginOptions
                 settings_fields('auto_alt_text_options');
 
                 echo '<div>';
-                echo '<label for="' . Constants::AAT_OPTION_FIELD_TYPOLOGY . '">' . esc_html__('Generation method', 'auto-alt-text') . '</label>';
+                echo '<label for="' . Constants::AATXT_OPTION_FIELD_TYPOLOGY . '">' . esc_html__('Generation method', 'auto-alt-text') . '</label>';
                 echo '<p class="description">' . esc_html__("Which method do you want to use to generate the alt text for the images?", 'auto-alt-text') . '</p>';
-                $typology = get_option(Constants::AAT_OPTION_FIELD_TYPOLOGY);
+                $typology = get_option(Constants::AATXT_OPTION_FIELD_TYPOLOGY);
                 ?>
-                <select name="<?php echo esc_attr(Constants::AAT_OPTION_FIELD_TYPOLOGY); ?>"
-                        id="<?php echo esc_attr(Constants::AAT_OPTION_FIELD_TYPOLOGY); ?>">
-                    <option value="<?php echo esc_attr(Constants::AAT_OPTION_TYPOLOGY_DEACTIVATED); ?>"<?php echo esc_attr(self::selected($typology, Constants::AAT_OPTION_TYPOLOGY_DEACTIVATED)); ?>><?php esc_html_e("Deactivated", 'auto-alt-text'); ?></option>
-                    <option value="<?php echo esc_attr(Constants::AAT_OPTION_TYPOLOGY_CHOICE_AZURE); ?>"<?php echo esc_attr(self::selected($typology, Constants::AAT_OPTION_TYPOLOGY_CHOICE_AZURE)); ?>><?php esc_html_e("Azure's APIs", 'auto-alt-text'); ?></option>
-                    <option value="<?php echo esc_attr(Constants::AAT_OPTION_TYPOLOGY_CHOICE_OPENAI); ?>"<?php echo esc_attr(self::selected($typology, Constants::AAT_OPTION_TYPOLOGY_CHOICE_OPENAI)); ?>><?php esc_html_e("OpenAI's APIs", 'auto-alt-text'); ?></option>
-                    <option value="<?php echo esc_attr(Constants::AAT_OPTION_TYPOLOGY_CHOICE_ARTICLE_TITLE); ?>"<?php echo esc_attr(self::selected($typology, Constants::AAT_OPTION_TYPOLOGY_CHOICE_ARTICLE_TITLE)); ?>><?php esc_html_e("Title of the article (not AI)", 'auto-alt-text'); ?></option>
-                    <option value="<?php echo esc_attr(Constants::AAT_OPTION_TYPOLOGY_CHOICE_ATTACHMENT_TITLE); ?>"<?php echo esc_attr(self::selected($typology, Constants::AAT_OPTION_TYPOLOGY_CHOICE_ATTACHMENT_TITLE)); ?>><?php esc_html_e("Title of the attachment (not AI)", 'auto-alt-text'); ?></option>
+                <select name="<?php echo esc_attr(Constants::AATXT_OPTION_FIELD_TYPOLOGY); ?>"
+                        id="<?php echo esc_attr(Constants::AATXT_OPTION_FIELD_TYPOLOGY); ?>">
+                    <option value="<?php echo esc_attr(Constants::AATXT_OPTION_TYPOLOGY_DEACTIVATED); ?>"<?php echo esc_attr(self::selected($typology, Constants::AATXT_OPTION_TYPOLOGY_DEACTIVATED)); ?>><?php esc_html_e("Deactivated", 'auto-alt-text'); ?></option>
+                    <option value="<?php echo esc_attr(Constants::AATXT_OPTION_TYPOLOGY_CHOICE_AZURE); ?>"<?php echo esc_attr(self::selected($typology, Constants::AATXT_OPTION_TYPOLOGY_CHOICE_AZURE)); ?>><?php esc_html_e("Azure's APIs", 'auto-alt-text'); ?></option>
+                    <option value="<?php echo esc_attr(Constants::AATXT_OPTION_TYPOLOGY_CHOICE_OPENAI); ?>"<?php echo esc_attr(self::selected($typology, Constants::AATXT_OPTION_TYPOLOGY_CHOICE_OPENAI)); ?>><?php esc_html_e("OpenAI's APIs", 'auto-alt-text'); ?></option>
+                    <option value="<?php echo esc_attr(Constants::AATXT_OPTION_TYPOLOGY_CHOICE_ARTICLE_TITLE); ?>"<?php echo esc_attr(self::selected($typology, Constants::AATXT_OPTION_TYPOLOGY_CHOICE_ARTICLE_TITLE)); ?>><?php esc_html_e("Title of the article (not AI)", 'auto-alt-text'); ?></option>
+                    <option value="<?php echo esc_attr(Constants::AATXT_OPTION_TYPOLOGY_CHOICE_ATTACHMENT_TITLE); ?>"<?php echo esc_attr(self::selected($typology, Constants::AATXT_OPTION_TYPOLOGY_CHOICE_ATTACHMENT_TITLE)); ?>><?php esc_html_e("Title of the attachment (not AI)", 'auto-alt-text'); ?></option>
                 </select>
                 <?php
                 echo '</div>';
@@ -190,34 +190,34 @@ class PluginOptions
                     esc_html__('As the name suggests, this model is still in a preview stage and OpenAI states:', 'auto-alt-text') . ' "<em>This is a preview model version and not suited yet for production traffic</em>".<br>' .
                     esc_html__('Therefore, it is necessary to select a fallback model in case gpt-4-preview fails.', 'auto-alt-text') . '<br>' .
                     esc_html__('The fallback models are not able to read the content of the image but will rely exclusively on the name of the image file, guessing its content.', 'auto-alt-text') . '<br>' .
-                    esc_html__('In case of errors, it is still possible to find the specific reason stated on the', 'auto-alt-text') . ' <a href="' . esc_url(menu_page_url(Constants::AAT_PLUGIN_OPTION_LOG_PAGE_SLUG, false)) . '">' . esc_html__('error log page', 'auto-alt-text') . '</a>.' .
+                    esc_html__('In case of errors, it is still possible to find the specific reason stated on the', 'auto-alt-text') . ' <a href="' . esc_url(menu_page_url(Constants::AATXT_PLUGIN_OPTION_LOG_PAGE_SLUG, false)) . '">' . esc_html__('error log page', 'auto-alt-text') . '</a>.' .
                     '</div>';
 
                 echo '<div class="plugin-option type-openai">';
-                echo '<label for="' . esc_attr(Constants::AAT_OPTION_FIELD_API_KEY_OPENAI) . '">' . esc_html__('OpenAI API Key', 'auto-alt-text') . '</label>';
+                echo '<label for="' . esc_attr(Constants::AATXT_OPTION_FIELD_API_KEY_OPENAI) . '">' . esc_html__('OpenAI API Key', 'auto-alt-text') . '</label>';
                 echo '<p class="description">' . esc_html__("Enter your API Key", 'auto-alt-text') . '</p>';
-                $apiKey = get_option(Constants::AAT_OPTION_FIELD_API_KEY_OPENAI);
-                echo '<input type="password" name="' . esc_attr(Constants::AAT_OPTION_FIELD_API_KEY_OPENAI) . '" value="' . esc_attr((Encryption::make())->decrypt($apiKey)) . '" />';
+                $apiKey = get_option(Constants::AATXT_OPTION_FIELD_API_KEY_OPENAI);
+                echo '<input type="password" name="' . esc_attr(Constants::AATXT_OPTION_FIELD_API_KEY_OPENAI) . '" value="' . esc_attr((Encryption::make())->decrypt($apiKey)) . '" />';
                 echo '</div>';
 
                 echo '<div class="plugin-option type-openai">';
-                echo '<label for="' . esc_attr(Constants::AAT_OPTION_FIELD_PROMPT_OPENAI) . '">' . esc_html__('Prompt', 'auto-alt-text') . '</label>';
+                echo '<label for="' . esc_attr(Constants::AATXT_OPTION_FIELD_PROMPT_OPENAI) . '">' . esc_html__('Prompt', 'auto-alt-text') . '</label>';
                 echo '<p class="description">' . esc_html__("Enter a specific and detailed prompt according to your needs.", 'auto-alt-text') . '</p>';
-                $defaultPrompt = sprintf(esc_html__("Act like an SEO expert and write an alt text of up to 125 characters for this image.", 'auto-alt-text'), Constants::AAT_IMAGE_URL_TAG);
-                $prompt = get_option(Constants::AAT_OPTION_FIELD_PROMPT_OPENAI) ?: $defaultPrompt;
-                echo '<textarea name="' . esc_attr(Constants::AAT_OPTION_FIELD_PROMPT_OPENAI) . '" rows="5" cols="50">' . esc_textarea($prompt) . '</textarea>';
+                $defaultPrompt = sprintf(esc_html__("Act like an SEO expert and write an alt text of up to 125 characters for this image.", 'auto-alt-text'), Constants::AATXT_IMAGE_URL_TAG);
+                $prompt = get_option(Constants::AATXT_OPTION_FIELD_PROMPT_OPENAI) ?: $defaultPrompt;
+                echo '<textarea name="' . esc_attr(Constants::AATXT_OPTION_FIELD_PROMPT_OPENAI) . '" rows="5" cols="50">' . esc_textarea($prompt) . '</textarea>';
                 echo '</div>';
 
                 echo '<div class="plugin-option type-openai">';
-                echo '<label for="' . esc_attr(Constants::AAT_OPTION_FIELD_FALLBACK_MODEL_OPENAI) . '">' . esc_html__('Fallback OpenAi Model', 'auto-alt-text') . '</label>';
+                echo '<label for="' . esc_attr(Constants::AATXT_OPTION_FIELD_FALLBACK_MODEL_OPENAI) . '">' . esc_html__('Fallback OpenAi Model', 'auto-alt-text') . '</label>';
                 echo '<p class="description">' . esc_html__("Choose the alternative OpenAI model you want to use to generate the alt text when the gpt-4-vision-preview model fails.", 'auto-alt-text') . '</p>';
-                $modelSaved = get_option(Constants::AAT_OPTION_FIELD_FALLBACK_MODEL_OPENAI);
+                $modelSaved = get_option(Constants::AATXT_OPTION_FIELD_FALLBACK_MODEL_OPENAI);
                 ?>
 
-                <select name="<?php echo esc_attr(Constants::AAT_OPTION_FIELD_FALLBACK_MODEL_OPENAI); ?>"
-                        id="<?php echo esc_attr(Constants::AAT_OPTION_FIELD_FALLBACK_MODEL_OPENAI); ?>">
+                <select name="<?php echo esc_attr(Constants::AATXT_OPTION_FIELD_FALLBACK_MODEL_OPENAI); ?>"
+                        id="<?php echo esc_attr(Constants::AATXT_OPTION_FIELD_FALLBACK_MODEL_OPENAI); ?>">
                     <?php
-                    foreach (Constants::AAT_OPENAI_MODELS as $modelName) :
+                    foreach (Constants::AATXT_OPENAI_MODELS as $modelName) :
                         ?>
                         <option value="<?php echo esc_attr($modelName); ?>" <?php echo self::isModelSelected($modelSaved, $modelName) ? 'selected="selected"' : ''; ?>><?php echo esc_html($modelName); ?></option>
                     <?php
@@ -229,27 +229,27 @@ class PluginOptions
                 echo '</div>';
 
                 echo '<div class="plugin-option type-openai">';
-                echo '<label for="' . esc_attr(Constants::AAT_OPTION_FIELD_FALLBACK_PROMPT_OPENAI) . '">' . esc_html__('Fallback Prompt', 'auto-alt-text') . '</label>';
+                echo '<label for="' . esc_attr(Constants::AATXT_OPTION_FIELD_FALLBACK_PROMPT_OPENAI) . '">' . esc_html__('Fallback Prompt', 'auto-alt-text') . '</label>';
                 echo '<p class="description">' . esc_html__("Enter a specific and detailed prompt according to your needs.", 'auto-alt-text') . '</p>';
-                $defaultPrompt = sprintf(esc_html__("Act like an SEO expert and write an English alt text for this image %s, using a maximum of 125 characters. Just return the text without any additional comments.", 'auto-alt-text'), Constants::AAT_IMAGE_URL_TAG);
-                $fallbackPrompt = get_option(Constants::AAT_OPTION_FIELD_FALLBACK_PROMPT_OPENAI) ?: $defaultPrompt;
-                echo '<textarea name="' . esc_attr(Constants::AAT_OPTION_FIELD_FALLBACK_PROMPT_OPENAI) . '" rows="5" cols="50">' . esc_textarea($fallbackPrompt) . '</textarea>';
+                $defaultPrompt = sprintf(esc_html__("Act like an SEO expert and write an English alt text for this image %s, using a maximum of 125 characters. Just return the text without any additional comments.", 'auto-alt-text'), Constants::AATXT_IMAGE_URL_TAG);
+                $fallbackPrompt = get_option(Constants::AATXT_OPTION_FIELD_FALLBACK_PROMPT_OPENAI) ?: $defaultPrompt;
+                echo '<textarea name="' . esc_attr(Constants::AATXT_OPTION_FIELD_FALLBACK_PROMPT_OPENAI) . '" rows="5" cols="50">' . esc_textarea($fallbackPrompt) . '</textarea>';
                 echo '</div>';
 
                 echo '<div class="plugin-option type-azure">' . esc_html__("Fill out the following fields to leverage Azure's computer vision services to generate the Alt texts.", 'auto-alt-text') . '</div>';
 
                 echo '<div class="plugin-option type-azure">';
-                echo '<label for="' . esc_attr(Constants::AAT_OPTION_FIELD_API_KEY_AZURE_COMPUTER_VISION) . '">' . esc_html__('Azure Computer Vision API Key', 'auto-alt-text') . '</label>';
+                echo '<label for="' . esc_attr(Constants::AATXT_OPTION_FIELD_API_KEY_AZURE_COMPUTER_VISION) . '">' . esc_html__('Azure Computer Vision API Key', 'auto-alt-text') . '</label>';
                 echo '<p class="description">' . esc_html__("Enter the API key for the Computer Vision service of your Azure account.", 'auto-alt-text') . '</p>';
-                $apiKey = get_option(Constants::AAT_OPTION_FIELD_API_KEY_AZURE_COMPUTER_VISION);
-                echo '<input type="password" name="' . esc_attr(Constants::AAT_OPTION_FIELD_API_KEY_AZURE_COMPUTER_VISION) . '" value="' . esc_attr((Encryption::make())->decrypt($apiKey)) . '" />';
+                $apiKey = get_option(Constants::AATXT_OPTION_FIELD_API_KEY_AZURE_COMPUTER_VISION);
+                echo '<input type="password" name="' . esc_attr(Constants::AATXT_OPTION_FIELD_API_KEY_AZURE_COMPUTER_VISION) . '" value="' . esc_attr((Encryption::make())->decrypt($apiKey)) . '" />';
                 echo '</div>';
 
                 echo '<div class="plugin-option type-azure">';
-                echo '<label for="' . esc_attr(Constants::AAT_OPTION_FIELD_ENDPOINT_AZURE_COMPUTER_VISION) . '">' . esc_html__('Azure Computer Vision Endpoint', 'auto-alt-text') . '</label>';
+                echo '<label for="' . esc_attr(Constants::AATXT_OPTION_FIELD_ENDPOINT_AZURE_COMPUTER_VISION) . '">' . esc_html__('Azure Computer Vision Endpoint', 'auto-alt-text') . '</label>';
                 echo '<p class="description">' . esc_html__("Enter the endpoint of the Computer Vision service.", 'auto-alt-text') . ' (es. https://computer-vision-france-central.cognitiveservices.azure.com/)</p>';
-                $endpoint = get_option(Constants::AAT_OPTION_FIELD_ENDPOINT_AZURE_COMPUTER_VISION);
-                echo '<input type="text" name="' . esc_attr(Constants::AAT_OPTION_FIELD_ENDPOINT_AZURE_COMPUTER_VISION) . '" value="' . esc_attr($endpoint) . '" />';
+                $endpoint = get_option(Constants::AATXT_OPTION_FIELD_ENDPOINT_AZURE_COMPUTER_VISION);
+                echo '<input type="text" name="' . esc_attr(Constants::AATXT_OPTION_FIELD_ENDPOINT_AZURE_COMPUTER_VISION) . '" value="' . esc_attr($endpoint) . '" />';
                 echo '</div>';
 
                 echo '<div class="plugin-option type-azure">' .
@@ -260,31 +260,31 @@ class PluginOptions
                     '</div>';
 
                 echo '<div class="plugin-option type-azure">';
-                echo '<label for="' . esc_attr(Constants::AAT_OPTION_FIELD_API_KEY_AZURE_TRANSLATE_INSTANCE) . '">' . esc_html__('Azure Translate Instance API Key', 'auto-alt-text') . '</label>';
+                echo '<label for="' . esc_attr(Constants::AATXT_OPTION_FIELD_API_KEY_AZURE_TRANSLATE_INSTANCE) . '">' . esc_html__('Azure Translate Instance API Key', 'auto-alt-text') . '</label>';
                 echo '<p class="description">' . esc_html__("Enter your API key for the Azure Translate Instance service.", 'auto-alt-text') . '</p>';
-                $translationApiKey = get_option(Constants::AAT_OPTION_FIELD_API_KEY_AZURE_TRANSLATE_INSTANCE);
-                echo '<input type="password" name="' . esc_attr(Constants::AAT_OPTION_FIELD_API_KEY_AZURE_TRANSLATE_INSTANCE) . '" value="' . esc_attr((Encryption::make())->decrypt($translationApiKey)) . '" class="notRequired" />';
+                $translationApiKey = get_option(Constants::AATXT_OPTION_FIELD_API_KEY_AZURE_TRANSLATE_INSTANCE);
+                echo '<input type="password" name="' . esc_attr(Constants::AATXT_OPTION_FIELD_API_KEY_AZURE_TRANSLATE_INSTANCE) . '" value="' . esc_attr((Encryption::make())->decrypt($translationApiKey)) . '" class="notRequired" />';
                 echo '</div>';
 
                 echo '<div class="plugin-option type-azure">';
-                echo '<label for="' . esc_attr(Constants::AAT_OPTION_FIELD_ENDPOINT_AZURE_TRANSLATE_INSTANCE) . '">' . esc_html__('Azure Translate Instance Endpoint', 'auto-alt-text') . '</label>';
+                echo '<label for="' . esc_attr(Constants::AATXT_OPTION_FIELD_ENDPOINT_AZURE_TRANSLATE_INSTANCE) . '">' . esc_html__('Azure Translate Instance Endpoint', 'auto-alt-text') . '</label>';
                 echo '<p class="description">' . esc_html__("Enter the endpoint of the Translate Instance service", 'auto-alt-text') . ' (es. https://api.cognitive.microsofttranslator.com/)</p>';
-                $translationEndpoint = get_option(Constants::AAT_OPTION_FIELD_ENDPOINT_AZURE_TRANSLATE_INSTANCE);
-                echo '<input type="text" name="' . esc_attr(Constants::AAT_OPTION_FIELD_ENDPOINT_AZURE_TRANSLATE_INSTANCE) . '" value="' . esc_attr($translationEndpoint) . '" class="notRequired" />';
+                $translationEndpoint = get_option(Constants::AATXT_OPTION_FIELD_ENDPOINT_AZURE_TRANSLATE_INSTANCE);
+                echo '<input type="text" name="' . esc_attr(Constants::AATXT_OPTION_FIELD_ENDPOINT_AZURE_TRANSLATE_INSTANCE) . '" value="' . esc_attr($translationEndpoint) . '" class="notRequired" />';
                 echo '</div>';
 
                 echo '<div class="plugin-option type-azure">';
-                echo '<label for="' . esc_attr(Constants::AAT_OPTION_FIELD_REGION_AZURE_TRANSLATE_INSTANCE) . '">' . esc_html__('Azure Translate Instance Region', 'auto-alt-text') . '</label>';
+                echo '<label for="' . esc_attr(Constants::AATXT_OPTION_FIELD_REGION_AZURE_TRANSLATE_INSTANCE) . '">' . esc_html__('Azure Translate Instance Region', 'auto-alt-text') . '</label>';
                 echo '<p class="description">' . esc_html__("Enter the region of the Azure Translate Instance service.", 'auto-alt-text') . ' (es. westeurope)</p>';
-                $translationRegion = get_option(Constants::AAT_OPTION_FIELD_REGION_AZURE_TRANSLATE_INSTANCE);
-                echo '<input type="text" name="' . esc_attr(Constants::AAT_OPTION_FIELD_REGION_AZURE_TRANSLATE_INSTANCE) . '" value="' . esc_attr($translationRegion) . '" class="notRequired" />';
+                $translationRegion = get_option(Constants::AATXT_OPTION_FIELD_REGION_AZURE_TRANSLATE_INSTANCE);
+                echo '<input type="text" name="' . esc_attr(Constants::AATXT_OPTION_FIELD_REGION_AZURE_TRANSLATE_INSTANCE) . '" value="' . esc_attr($translationRegion) . '" class="notRequired" />';
                 echo '</div>';
 
                 if ($translationApiKey && $translationEndpoint && $translationRegion):
                     echo '<div class="plugin-option type-azure">';
-                    echo '<label for="' . esc_attr(Constants::AAT_OPTION_FIELD_LANGUAGE_AZURE_TRANSLATE_INSTANCE) . '">' . esc_html__('Alt Text Language', 'auto-alt-text') . '</label>';
+                    echo '<label for="' . esc_attr(Constants::AATXT_OPTION_FIELD_LANGUAGE_AZURE_TRANSLATE_INSTANCE) . '">' . esc_html__('Alt Text Language', 'auto-alt-text') . '</label>';
                     echo '<p class="description">' . esc_html__("Select the language in which the alt text should be written.", 'auto-alt-text') . '</p>';
-                    $currentLanguage = get_option(Constants::AAT_OPTION_FIELD_LANGUAGE_AZURE_TRANSLATE_INSTANCE);
+                    $currentLanguage = get_option(Constants::AATXT_OPTION_FIELD_LANGUAGE_AZURE_TRANSLATE_INSTANCE);
 
                     try {
                         $supportedLanguages = (AzureTranslator::make())->supportedLanguages();
@@ -300,8 +300,8 @@ class PluginOptions
                     }
 
                     ?>
-                    <select name="<?php echo esc_attr(Constants::AAT_OPTION_FIELD_LANGUAGE_AZURE_TRANSLATE_INSTANCE); ?>"
-                            id="<?php echo esc_attr(Constants::AAT_OPTION_FIELD_LANGUAGE_AZURE_TRANSLATE_INSTANCE); ?>">
+                    <select name="<?php echo esc_attr(Constants::AATXT_OPTION_FIELD_LANGUAGE_AZURE_TRANSLATE_INSTANCE); ?>"
+                            id="<?php echo esc_attr(Constants::AATXT_OPTION_FIELD_LANGUAGE_AZURE_TRANSLATE_INSTANCE); ?>">
                         <?php
                         foreach ($supportedLanguages as $key => $language):
                             ?>
@@ -344,17 +344,17 @@ class PluginOptions
      */
     public static function setupPluginOptions(): void
     {
-        register_setting('auto_alt_text_options', Constants::AAT_OPTION_FIELD_API_KEY_OPENAI);
-        register_setting('auto_alt_text_options', Constants::AAT_OPTION_FIELD_PROMPT_OPENAI, [self::class, 'sanitizeTextArea']);
-        register_setting('auto_alt_text_options', Constants::AAT_OPTION_FIELD_TYPOLOGY, [self::class, 'sanitizeText']);
-        register_setting('auto_alt_text_options', Constants::AAT_OPTION_FIELD_FALLBACK_MODEL_OPENAI, [self::class, 'sanitizeText']);
-        register_setting('auto_alt_text_options', Constants::AAT_OPTION_FIELD_FALLBACK_PROMPT_OPENAI, [self::class, 'sanitizeTextArea']);
-        register_setting('auto_alt_text_options', Constants::AAT_OPTION_FIELD_API_KEY_AZURE_COMPUTER_VISION);
-        register_setting('auto_alt_text_options', Constants::AAT_OPTION_FIELD_ENDPOINT_AZURE_COMPUTER_VISION, [self::class, 'sanitizeUrl']);
-        register_setting('auto_alt_text_options', Constants::AAT_OPTION_FIELD_API_KEY_AZURE_TRANSLATE_INSTANCE);
-        register_setting('auto_alt_text_options', Constants::AAT_OPTION_FIELD_ENDPOINT_AZURE_TRANSLATE_INSTANCE, [self::class, 'sanitizeUrl']);
-        register_setting('auto_alt_text_options', Constants::AAT_OPTION_FIELD_REGION_AZURE_TRANSLATE_INSTANCE, [self::class, 'sanitizeText']);
-        register_setting('auto_alt_text_options', Constants::AAT_OPTION_FIELD_LANGUAGE_AZURE_TRANSLATE_INSTANCE, [self::class, 'sanitizeText']);
+        register_setting('auto_alt_text_options', Constants::AATXT_OPTION_FIELD_API_KEY_OPENAI);
+        register_setting('auto_alt_text_options', Constants::AATXT_OPTION_FIELD_PROMPT_OPENAI, [self::class, 'sanitizeTextArea']);
+        register_setting('auto_alt_text_options', Constants::AATXT_OPTION_FIELD_TYPOLOGY, [self::class, 'sanitizeText']);
+        register_setting('auto_alt_text_options', Constants::AATXT_OPTION_FIELD_FALLBACK_MODEL_OPENAI, [self::class, 'sanitizeText']);
+        register_setting('auto_alt_text_options', Constants::AATXT_OPTION_FIELD_FALLBACK_PROMPT_OPENAI, [self::class, 'sanitizeTextArea']);
+        register_setting('auto_alt_text_options', Constants::AATXT_OPTION_FIELD_API_KEY_AZURE_COMPUTER_VISION);
+        register_setting('auto_alt_text_options', Constants::AATXT_OPTION_FIELD_ENDPOINT_AZURE_COMPUTER_VISION, [self::class, 'sanitizeUrl']);
+        register_setting('auto_alt_text_options', Constants::AATXT_OPTION_FIELD_API_KEY_AZURE_TRANSLATE_INSTANCE);
+        register_setting('auto_alt_text_options', Constants::AATXT_OPTION_FIELD_ENDPOINT_AZURE_TRANSLATE_INSTANCE, [self::class, 'sanitizeUrl']);
+        register_setting('auto_alt_text_options', Constants::AATXT_OPTION_FIELD_REGION_AZURE_TRANSLATE_INSTANCE, [self::class, 'sanitizeText']);
+        register_setting('auto_alt_text_options', Constants::AATXT_OPTION_FIELD_LANGUAGE_AZURE_TRANSLATE_INSTANCE, [self::class, 'sanitizeText']);
     }
 
     /**
@@ -366,7 +366,7 @@ class PluginOptions
     public static function isModelSelected(string $modelSaved, string $currentModel): bool
     {
         if (empty($modelSaved)) {
-            return Constants::AAT_OPENAI_DEFAULT_MODEL == $currentModel;
+            return Constants::AATXT_OPENAI_DEFAULT_MODEL == $currentModel;
         }
 
         return $modelSaved == $currentModel;
@@ -377,7 +377,7 @@ class PluginOptions
      */
     public static function typology(): string
     {
-        return get_option(Constants::AAT_OPTION_FIELD_TYPOLOGY);
+        return get_option(Constants::AATXT_OPTION_FIELD_TYPOLOGY);
     }
 
     /**
@@ -385,7 +385,7 @@ class PluginOptions
      */
     public static function prompt(): string
     {
-        return get_option(Constants::AAT_OPTION_FIELD_PROMPT_OPENAI);
+        return get_option(Constants::AATXT_OPTION_FIELD_PROMPT_OPENAI);
     }
 
     /**
@@ -393,7 +393,7 @@ class PluginOptions
      */
     public static function apiKeyOpenAI(): string
     {
-        $apiKey = get_option(Constants::AAT_OPTION_FIELD_API_KEY_OPENAI);
+        $apiKey = get_option(Constants::AATXT_OPTION_FIELD_API_KEY_OPENAI);
         return (Encryption::make())->decrypt($apiKey);
     }
 
@@ -402,7 +402,7 @@ class PluginOptions
      */
     public static function apiKeyAzureComputerVision(): string
     {
-        $apiKey = get_option(Constants::AAT_OPTION_FIELD_API_KEY_AZURE_COMPUTER_VISION);
+        $apiKey = get_option(Constants::AATXT_OPTION_FIELD_API_KEY_AZURE_COMPUTER_VISION);
         return (Encryption::make())->decrypt($apiKey);
     }
 
@@ -411,7 +411,7 @@ class PluginOptions
      */
     public static function endpointAzureComputerVision(): string
     {
-        return get_option(Constants::AAT_OPTION_FIELD_ENDPOINT_AZURE_COMPUTER_VISION);
+        return get_option(Constants::AATXT_OPTION_FIELD_ENDPOINT_AZURE_COMPUTER_VISION);
     }
 
     /**
@@ -419,7 +419,7 @@ class PluginOptions
      */
     public static function apiKeyAzureTranslateInstance(): string
     {
-        $apiKey = get_option(Constants::AAT_OPTION_FIELD_API_KEY_AZURE_TRANSLATE_INSTANCE);
+        $apiKey = get_option(Constants::AATXT_OPTION_FIELD_API_KEY_AZURE_TRANSLATE_INSTANCE);
         return (Encryption::make())->decrypt($apiKey);
     }
 
@@ -428,7 +428,7 @@ class PluginOptions
      */
     public static function endpointAzureTranslateInstance(): string
     {
-        return get_option(Constants::AAT_OPTION_FIELD_ENDPOINT_AZURE_TRANSLATE_INSTANCE);
+        return get_option(Constants::AATXT_OPTION_FIELD_ENDPOINT_AZURE_TRANSLATE_INSTANCE);
     }
 
     /**
@@ -436,7 +436,7 @@ class PluginOptions
      */
     public static function regionAzureTranslateInstance(): string
     {
-        return get_option(Constants::AAT_OPTION_FIELD_REGION_AZURE_TRANSLATE_INSTANCE);
+        return get_option(Constants::AATXT_OPTION_FIELD_REGION_AZURE_TRANSLATE_INSTANCE);
     }
 
     /**
@@ -444,7 +444,7 @@ class PluginOptions
      */
     public static function languageAzureTranslateInstance(): string
     {
-        return get_option(Constants::AAT_OPTION_FIELD_LANGUAGE_AZURE_TRANSLATE_INSTANCE) ?: 'en';
+        return get_option(Constants::AATXT_OPTION_FIELD_LANGUAGE_AZURE_TRANSLATE_INSTANCE) ?: 'en';
     }
 
     /**
@@ -452,7 +452,7 @@ class PluginOptions
      */
     public static function model(): string
     {
-        return get_option(Constants::AAT_OPTION_FIELD_FALLBACK_MODEL_OPENAI);
+        return get_option(Constants::AATXT_OPTION_FIELD_FALLBACK_MODEL_OPENAI);
     }
 
     /**
@@ -460,7 +460,7 @@ class PluginOptions
      */
     public static function fallbackPrompt(): string
     {
-        return get_option(Constants::AAT_OPTION_FIELD_FALLBACK_PROMPT_OPENAI);
+        return get_option(Constants::AATXT_OPTION_FIELD_FALLBACK_PROMPT_OPENAI);
     }
 
     public static function sanitizeUrl($input): string

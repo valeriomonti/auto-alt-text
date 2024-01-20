@@ -63,7 +63,7 @@ class AzureComputerVisionCaptionsResponse implements AIProviderInterface
         $selectedLanguage = PluginOptions::languageAzureTranslateInstance();
         
         // If the default language (en) is selected it is not necessary a translation
-        if ($selectedLanguage == Constants::AAT_AZURE_DEFAULT_LANGUAGE) {
+        if ($selectedLanguage == Constants::AATXT_AZURE_DEFAULT_LANGUAGE) {
             return $altText;
         }
 

@@ -2,7 +2,6 @@
 
 namespace AATXT\App\Logging;
 
-use Exception;
 use AATXT\App\Utilities\Encryption;
 use AATXT\Config\Constants;
 
@@ -33,14 +32,14 @@ class FileLogger implements LoggerInterface
         //generate a hash based on salt and date
         $hash = md5($salt . date('Y-m-d'));
 
-        $savedHash = get_option(Constants::AAT_LOG_ASH);
+        $savedHash = get_option(Constants::AATXT_LOG_ASH);
         if ($savedHash !== $hash) {
-            update_option(Constants::AAT_LOG_ASH, $hash);
+            update_option(Constants::AATXT_LOG_ASH, $hash);
         }
 
         $errorMessage = "[" . date('Y-m-d h:i:s') . "][ERROR][IMAGE_ID:" . $imageId . "] " . $errorMessage . "\n";
         $uploadDir = wp_upload_dir();
-        $logDir = trailingslashit($uploadDir['basedir']) . Constants::AAT_PLUGIN_SLUG;
+        $logDir = trailingslashit($uploadDir['basedir']) . Constants::AATXT_PLUGIN_SLUG;
         if (!file_exists($logDir)) {
             wp_mkdir_p($logDir);
         }
