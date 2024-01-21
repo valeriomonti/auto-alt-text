@@ -2,7 +2,7 @@ import '../css/admin.css';
 
 document.addEventListener('DOMContentLoaded', function() {
 
-    const typologyField = document.getElementById('aat_typology');
+    const typologyField = document.getElementById('aatxt_typology');
     const filterFields = (typology) => {
         let optionFields = document.querySelectorAll('.plugin-option');
 

@@ -68,11 +68,11 @@ class PluginOptions
 
             $adminCss = self::$assetsManager->getAssetUrl('resources/js/admin.js', true);
 
-            wp_enqueue_style(Constants::AATXT_PLUGIN_OPTIONS_PAGE_SLUG, $adminCss, [], false);
+            wp_enqueue_style(Constants::AATXT_PLUGIN_ASSETS_HANDLE, $adminCss, [], false);
 
             if ($isMainOptionsPage) {
                 $adminJs = self::$assetsManager->getAssetUrl('resources/js/admin.js', false);
-                wp_enqueue_script(Constants::AATXT_PLUGIN_OPTIONS_PAGE_SLUG, $adminJs, [], false);
+                wp_enqueue_script(Constants::AATXT_PLUGIN_ASSETS_HANDLE, $adminJs, [], false);
             }
 
         }
