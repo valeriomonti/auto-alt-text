@@ -41,4 +41,5 @@ class Constants
     const AATXT_LOG_ASH = 'aatxt_log_ash';
     const AATXT_LOG_RETENTION_DAYS = 7;
     const AATXT_LOGS_CLEANUP_EVENT = 'aatxt_logs_cleanup_event';
+    const AATXT_LOG_TABLE_NAME = 'aatxt_logs';
 }

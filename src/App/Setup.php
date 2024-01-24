@@ -39,12 +39,51 @@ class Setup
         //Enable automatic clean for the plugin error log
         LogCleaner::register();
 
+        register_activation_hook(AATXT_FILE_ABSPATH, [self::$instance, 'activatePlugin']);
+        register_deactivation_hook(AATXT_FILE_ABSPATH, [self::$instance, 'deactivatePlugin']);
+
         // When attachment is uploaded, create alt text
         add_action('add_attachment', [self::$instance, 'addAltTextOnUpload']);
         // When plugin is loaded, load text domain
         add_action('plugins_loaded', [self::$instance, 'loadTextDomain']);
 
         add_filter('plugin_action_links_auto-alt-text/auto-alt-text.php', [self::$instance, 'settingsLink']);
+    }
+
+    /**
+     * Create a Logs table on plugin activation
+     */
+    public static function activatePlugin(): void
+    {
+        global $wpdb;
+        $tableName = $wpdb->prefix . Constants::AATXT_LOG_TABLE_NAME;
+
+        if ($wpdb->get_var("SHOW TABLES LIKE '{$tableName}'") != $tableName) {
+            $charset_collate = $wpdb->get_charset_collate();
+
+            $sql = "CREATE TABLE $tableName (
+                id mediumint(9) NOT NULL AUTO_INCREMENT,
+                time datetime DEFAULT '0000-00-00 00:00:00' NOT NULL,
+                image_id mediumint(9) NOT NULL,
+                error_message text NOT NULL,
+                PRIMARY KEY  (id)
+            ) $charset_collate;";
+
+            require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
+            dbDelta($sql);
+        }
+    }
+
+    /**
+     * Drop Logs table on plugin deactivation
+     */
+    public static function deactivatePlugin(): void
+    {
+        global $wpdb;
+        $tableName = $wpdb->prefix . Constants::AATXT_LOG_TABLE_NAME;
+
+        $sql = "DROP TABLE IF EXISTS $tableName;";
+        $wpdb->query($sql);
     }
 
     /**

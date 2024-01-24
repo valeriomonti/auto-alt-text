@@ -20,7 +20,7 @@ use AATXT\Config\Constants;
 if ( ! defined( 'ABSPATH' ) ) {
     exit; // Exit if accessed directly.
 }
-
+define('AATXT_FILE_ABSPATH', __FILE__);
 define('AATXT_ABSPATH', dirname(__FILE__));
 define('AATXT_URL', plugin_dir_url(__FILE__));
 define('AATXT_LANGUAGES_RELATIVE_PATH', dirname( plugin_basename( __FILE__ ) ) . '/languages/');
