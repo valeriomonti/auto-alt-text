@@ -2,6 +2,7 @@
 
 namespace AATXT\App;
 
+use AATXT\App\Logging\DBLogger;
 use OpenAI\Exceptions\ErrorException;
 use AATXT\App\Admin\PluginOptions;
 use AATXT\App\AIProviders\Azure\AzureComputerVisionCaptionsResponse;
@@ -9,7 +10,6 @@ use AATXT\App\AIProviders\OpenAI\OpenAIChatCompletionResponse;
 use AATXT\App\AIProviders\OpenAI\OpenAIVision;
 use AATXT\App\Exceptions\Azure\AzureException;
 use AATXT\App\Exceptions\OpenAI\OpenAIException;
-use AATXT\App\Logging\FileLogger;
 use AATXT\App\Logging\LogCleaner;
 use AATXT\App\Utilities\Encryption;
 use AATXT\Config\Constants;
@@ -130,7 +130,7 @@ class Setup
                 try {
                     $altText = (AltTextGeneratorAi::make(AzureComputerVisionCaptionsResponse::make()))->altText($postId);
                 } catch (AzureException $e) {
-                    (FileLogger::make(Encryption::make()))->writeImageLog($postId, "Azure - " . $e->getMessage());
+                    (DBLogger::make())->writeImageLog($postId, "Azure - " . $e->getMessage());
                 }
                 break;
             case Constants::AATXT_OPTION_TYPOLOGY_CHOICE_OPENAI:
@@ -140,12 +140,12 @@ class Setup
                 } catch (OpenAIException $e) {
                     //If vision model fails, try with a fallback model
                     $errorMessage = "OpenAI - " . Constants::AATXT_OPENAI_VISION_MODEL . ' - ' . $e->getMessage();
-                    (FileLogger::make(Encryption::make()))->writeImageLog($postId, $errorMessage);
+                    (DBLogger::make())->writeImageLog($postId, $errorMessage);
                     try {
                         $altText = (AltTextGeneratorAi::make(OpenAIChatCompletionResponse::make()))->altText($postId);
                     } catch (OpenAIException $e) {
                         $errorMessage = "OpenAI - " . $e->getMessage();
-                        (FileLogger::make(Encryption::make()))->writeImageLog($postId, $errorMessage);
+                        (DBLogger::make())->writeImageLog($postId, $errorMessage);
                     }
                 }
                 break;

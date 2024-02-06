@@ -9,7 +9,6 @@ use AATXT\App\AIProviders\OpenAI\OpenAIChatCompletionResponse;
 use AATXT\App\AIProviders\OpenAI\OpenAITextCompletionResponse;
 use AATXT\App\AltTextGeneratorInterface;
 use AATXT\App\Admin\PluginOptions;
-use AATXT\App\Logging\FileLogger;
 use AATXT\Config\Constants;
 use OpenAI\Exceptions\ErrorException;
 
