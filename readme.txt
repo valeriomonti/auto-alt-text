@@ -3,7 +3,7 @@ Contributors: valeriomonti
 Tags: alt text, alt tag, alt text generation, alt tag generation, alt text AI, alt tag AI
 Requires at least: 6.0
 Tested up to: 6.4.1
-Stable tag: 1.1.1
+Stable tag: 1.2.2
 Requires PHP: 7.4
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
@@ -77,7 +77,8 @@ Once the plugin is configured, each time an image is uploaded to the media libra
 **Notice**: If you choose one of the methods that involves the use of external APIs, the upload times for images in the media library might increase because it requires sending a request to the APIs, waiting for the external server to process, and waiting for a response.
 
 ### Logging
-In case of an error in the API call, the image will still be uploaded but without alt text as usual.
+If the generation of the alt text via AI is set, in case of errors, to avoid blocking the editorial work, the image is loaded anyway but without the alt text being compiled.
+
 When a call to the Azure or OpenAI API fails, a record containing the error message is saved in a custom database table.
 In this case, the cause of the error can be seen on the Auto Alt Text -> Error log page.
 
@@ -123,9 +124,15 @@ If you wish to obtain the most accurate description possible of the image, you s
 4. Title of the attachment options page
 
 == Changelog ==
+= 1.2.2 =
+- Add Database log management
+- Escape all output
+- Add AATXT_ prefix
+- Update Vite dependencies
+- Remove file log management
 
 = 1.0.0 =
-Plugin released
+- Plugin released
 
 == Upgrade Notice ==
-Plugin released
+- Plugin released

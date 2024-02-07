@@ -81,6 +81,6 @@ In case of an error in the API call, the image will still be uploaded but withou
 ### Logging
 If the generation of the alt text via AI is set, in case of errors, to avoid blocking the editorial work, the image is loaded anyway but without the alt text being compiled.
 
+When a call to the Azure or OpenAI API fails, a record containing the error message is saved in a custom database table.
 In this case, the cause of the error can be seen on the Auto Alt Text -> Error log page.
 
-The logs are saved in the "auto-alt-text" folder located in the WordPress's uploads folder.
