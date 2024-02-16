@@ -3,7 +3,7 @@
 /**
  * Plugin Name:     Auto Alt Text
  * Description:     This plugin allows you to automatically generate an Alt Text for images uploaded into the media library via AI..
- * Version:         1.2.2
+ * Version:         1.2.3
  * Author:          Valerio Monti
  * Author URI:      https://www.vmweb.it
  * Text Domain:     auto-alt-text
@@ -15,7 +15,6 @@
  */
 
 use AATXT\App\Setup;
-use AATXT\Config\Constants;
 
 if ( ! defined( 'ABSPATH' ) ) {
     exit; // Exit if accessed directly.
