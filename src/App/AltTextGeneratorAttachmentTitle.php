@@ -1,8 +1,6 @@
 <?php
 namespace AATXT\App;
 
-use AATXT\App\AltTextGeneratorInterface;
-
 class AltTextGeneratorAttachmentTitle implements AltTextGeneratorInterface
 {
 

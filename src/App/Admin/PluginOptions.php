@@ -3,7 +3,6 @@
 namespace AATXT\App\Admin;
 
 use AATXT\App\Logging\DBLogger;
-use OpenAI;
 use AATXT\App\AIProviders\Azure\AzureTranslator;
 use AATXT\App\Exceptions\Azure\AzureTranslateInstanceException;
 use AATXT\App\Utilities\AssetsManager;

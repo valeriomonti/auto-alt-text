@@ -3,7 +3,6 @@
 namespace AATXT\App;
 
 use AATXT\App\Logging\DBLogger;
-use OpenAI\Exceptions\ErrorException;
 use AATXT\App\Admin\PluginOptions;
 use AATXT\App\AIProviders\Azure\AzureComputerVisionCaptionsResponse;
 use AATXT\App\AIProviders\OpenAI\OpenAIChatCompletionResponse;
@@ -11,7 +10,6 @@ use AATXT\App\AIProviders\OpenAI\OpenAIVision;
 use AATXT\App\Exceptions\Azure\AzureException;
 use AATXT\App\Exceptions\OpenAI\OpenAIException;
 use AATXT\App\Logging\LogCleaner;
-use AATXT\App\Utilities\Encryption;
 use AATXT\Config\Constants;
 use WpOrg\Requests\Exception;
 

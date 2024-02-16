@@ -2,15 +2,7 @@
 
 namespace AATXT\App;
 
-use Composer\Installers\Plugin;
-use OpenAI;
 use AATXT\App\AIProviders\AIProviderInterface;
-use AATXT\App\AIProviders\OpenAI\OpenAIChatCompletionResponse;
-use AATXT\App\AIProviders\OpenAI\OpenAITextCompletionResponse;
-use AATXT\App\AltTextGeneratorInterface;
-use AATXT\App\Admin\PluginOptions;
-use AATXT\Config\Constants;
-use OpenAI\Exceptions\ErrorException;
 
 class AltTextGeneratorAi implements AltTextGeneratorInterface
 {

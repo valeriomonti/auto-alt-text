@@ -5,7 +5,6 @@ namespace AATXT\App\AIProviders\OpenAI;
 use OpenAI;
 use OpenAI\Client;
 use OpenAI\Exceptions\ErrorException;
-use AATXT\App\Admin\PluginOptions;
 use AATXT\App\Exceptions\OpenAI\OpenAIException;
 use AATXT\Config\Constants;
 
