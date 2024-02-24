@@ -157,7 +157,7 @@ class PluginOptions
                 settings_fields('auto_alt_text_options');
 
                 echo '<div>';
-                echo '<label for="' . Constants::AATXT_OPTION_FIELD_TYPOLOGY . '">' . esc_html__('Generation method', 'auto-alt-text') . '</label>';
+                echo '<label for="' .  esc_attr(Constants::AATXT_OPTION_FIELD_TYPOLOGY) . '">' . esc_html__('Generation method', 'auto-alt-text') . '</label>';
                 echo '<p class="description">' . esc_html__("Which method do you want to use to generate the alt text for the images?", 'auto-alt-text') . '</p>';
                 $typology = get_option(Constants::AATXT_OPTION_FIELD_TYPOLOGY);
                 ?>
