@@ -25,15 +25,15 @@ class DBLogger implements LoggerInterface
     public function writeImageLog(int $imageId, string $errorMessage): void
     {
         global $wpdb;
-        $tableName = $wpdb->prefix . Constants::AATXT_LOG_TABLE_NAME;
+        $tableCheckQuery = $wpdb->prepare("SHOW TABLES LIKE %s", $wpdb->prefix . 'aatxt_logs');
 
-        if($wpdb->get_var("SHOW TABLES LIKE '{$tableName}'") != $tableName) {
+        if($wpdb->get_var($tableCheckQuery) != $wpdb->prefix . 'aatxt_logs') {
             return;
         }
 
         $currentDateTime = current_time('mysql');
         $wpdb->insert(
-            $tableName,
+            $wpdb->prefix . 'aatxt_logs',
             [
                 'time' => $currentDateTime,
                 'image_id' => $imageId,
@@ -50,9 +50,8 @@ class DBLogger implements LoggerInterface
     public function getImageLog(): string
     {
         global $wpdb;
-        $tableName = $wpdb->prefix . Constants::AATXT_LOG_TABLE_NAME;
-
-        $logs = $wpdb->get_results("SELECT * FROM $tableName ORDER BY time DESC", ARRAY_A);
+        $query = $wpdb->prepare("SELECT * FROM %s ORDER BY time DESC", $wpdb->prefix . 'aatxt_logs');
+        $logs = $wpdb->get_results($query, ARRAY_A);
 
         $output = "";
 

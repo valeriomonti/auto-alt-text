@@ -54,12 +54,12 @@ class Setup
     public static function activatePlugin(): void
     {
         global $wpdb;
-        $tableName = $wpdb->prefix . Constants::AATXT_LOG_TABLE_NAME;
+        $tableCheckQuery = $wpdb->prepare("SHOW TABLES LIKE %s", $wpdb->prefix . 'aatxt_logs');
 
-        if ($wpdb->get_var("SHOW TABLES LIKE '{$tableName}'") != $tableName) {
+        if ($wpdb->get_var($tableCheckQuery) != $wpdb->prefix . 'aatxt_logs') {
             $charset_collate = $wpdb->get_charset_collate();
 
-            $sql = "CREATE TABLE $tableName (
+            $sql = "CREATE TABLE {$wpdb->prefix}aatxt_logs (
                 id mediumint(9) NOT NULL AUTO_INCREMENT,
                 time datetime DEFAULT '0000-00-00 00:00:00' NOT NULL,
                 image_id mediumint(9) NOT NULL,
@@ -78,9 +78,7 @@ class Setup
     public static function deactivatePlugin(): void
     {
         global $wpdb;
-        $tableName = $wpdb->prefix . Constants::AATXT_LOG_TABLE_NAME;
-
-        $sql = "DROP TABLE IF EXISTS $tableName;";
+        $sql = "DROP TABLE IF EXISTS {$wpdb->prefix}aatxt_logs;";
         $wpdb->query($sql);
     }
 

@@ -38,8 +38,6 @@ class Constants
     const AATXT_OPENAI_TEXT_COMPLETION_TEMPERATURE = 0.6;
     const AATXT_OPENAI_CHAT_COMPLETION_ENDPOINT = 'https://api.openai.com/v1/chat/completions';
     const AATXT_OPENAI_TEXT_COMPLETION_ENDPOINT = 'https://api.openai.com/v1/completions';
-    const AATXT_LOG_ASH = 'aatxt_log_ash';
     const AATXT_LOG_RETENTION_DAYS = 7;
     const AATXT_LOGS_CLEANUP_EVENT = 'aatxt_logs_cleanup_event';
-    const AATXT_LOG_TABLE_NAME = 'aatxt_logs';
 }
