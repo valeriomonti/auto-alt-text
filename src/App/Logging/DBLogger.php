@@ -50,10 +50,14 @@ class DBLogger implements LoggerInterface
     public function getImageLog(): string
     {
         global $wpdb;
-        $query = $wpdb->prepare("SELECT * FROM %s ORDER BY time DESC", $wpdb->prefix . 'aatxt_logs');
+        $output = "";
+
+        $query = "SELECT * FROM {$wpdb->prefix}aatxt_logs ORDER BY time DESC";
         $logs = $wpdb->get_results($query, ARRAY_A);
 
-        $output = "";
+        if(empty($logs)) {
+            return $output;
+        }
 
         foreach ($logs as $log) {
             $output .= sprintf("[%s] - Image ID: %d - Error: %s\n",
