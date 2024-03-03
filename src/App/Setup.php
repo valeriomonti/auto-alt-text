@@ -9,7 +9,6 @@ use AATXT\App\AIProviders\OpenAI\OpenAIChatCompletionResponse;
 use AATXT\App\AIProviders\OpenAI\OpenAIVision;
 use AATXT\App\Exceptions\Azure\AzureException;
 use AATXT\App\Exceptions\OpenAI\OpenAIException;
-use AATXT\App\Logging\LogCleaner;
 use AATXT\Config\Constants;
 use WpOrg\Requests\Exception;
 
@@ -34,8 +33,6 @@ class Setup
 
         //Register plugin options pages
         PluginOptions::register();
-        //Enable automatic clean for the plugin error log
-        LogCleaner::register();
 
         register_activation_hook(AATXT_FILE_ABSPATH, [self::$instance, 'activatePlugin']);
         register_deactivation_hook(AATXT_FILE_ABSPATH, [self::$instance, 'deactivatePlugin']);
