@@ -4,7 +4,6 @@ namespace AATXT\App\Logging;
 
 class DBLogger implements LoggerInterface
 {
-
     private function __construct()
     {
 
@@ -24,10 +23,9 @@ class DBLogger implements LoggerInterface
     public function writeImageLog(int $imageId, string $errorMessage): void
     {
         global $wpdb;
-        $tableCheckQuery = $wpdb->prepare("SHOW TABLES LIKE %s", $wpdb->prefix . 'aatxt_logs');
 
-        if($wpdb->get_var($tableCheckQuery) != $wpdb->prefix . 'aatxt_logs') {
-            return;
+        if(!$this->logTableExists()) {
+            $this->createLogTable();
         }
 
         $currentDateTime = current_time('mysql');
@@ -51,6 +49,10 @@ class DBLogger implements LoggerInterface
         global $wpdb;
         $output = "";
 
+        if(!$this->logTableExists()) {
+            return $output;
+        }
+
         $query = "SELECT * FROM {$wpdb->prefix}aatxt_logs ORDER BY time DESC";
         $logs = $wpdb->get_results($query, ARRAY_A);
 
@@ -67,6 +69,19 @@ class DBLogger implements LoggerInterface
     }
 
     /**
+     * Check if Log table exists
+     * @return bool
+     */
+    private function logTableExists(): bool
+    {
+        global $wpdb;
+        $tableCheckQuery = $wpdb->prepare("SHOW TABLES LIKE %s", $wpdb->prefix . 'aatxt_logs');
+
+        return $wpdb->get_var($tableCheckQuery) == $wpdb->prefix . 'aatxt_logs';
+    }
+
+    /**
+     * Create the Log table
      * @return void
      */
     public function createLogTable(): void
@@ -91,6 +106,7 @@ class DBLogger implements LoggerInterface
     }
 
     /**
+     * Dropt the Log table
      * @return void
      */
     public function dropLogTable(): void
