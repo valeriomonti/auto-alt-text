@@ -3,7 +3,7 @@ Contributors: valeriomonti
 Tags: alt text, alt tag, alt text generation, alt tag generation, alt text AI, alt tag AI
 Requires at least: 6.0
 Tested up to: 6.4.1
-Stable tag: 1.2.3
+Stable tag: 1.2.4
 Requires PHP: 7.4
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
@@ -124,6 +124,10 @@ If you wish to obtain the most accurate description possible of the image, you s
 4. Title of the attachment options page
 
 == Changelog ==
+= 1.2.4 =
+- Code refactoring
+- DB security improvements
+
 = 1.2.3 =
 - Code refactoring
 
