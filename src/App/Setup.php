@@ -53,23 +53,7 @@ class Setup
      */
     public static function activatePlugin(): void
     {
-        global $wpdb;
-        $tableCheckQuery = $wpdb->prepare("SHOW TABLES LIKE %s", $wpdb->prefix . 'aatxt_logs');
-
-        if ($wpdb->get_var($tableCheckQuery) != $wpdb->prefix . 'aatxt_logs') {
-            $charset_collate = $wpdb->get_charset_collate();
-
-            $sql = "CREATE TABLE {$wpdb->prefix}aatxt_logs (
-                id mediumint(9) NOT NULL AUTO_INCREMENT,
-                time datetime DEFAULT '0000-00-00 00:00:00' NOT NULL,
-                image_id mediumint(9) NOT NULL,
-                error_message text NOT NULL,
-                PRIMARY KEY  (id)
-            ) $charset_collate;";
-
-            require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
-            dbDelta($sql);
-        }
+        DBLogger::make()->createLogTable();
     }
 
     /**
@@ -77,9 +61,7 @@ class Setup
      */
     public static function deactivatePlugin(): void
     {
-        global $wpdb;
-        $sql = "DROP TABLE IF EXISTS {$wpdb->prefix}aatxt_logs;";
-        $wpdb->query($sql);
+        DBLogger::make()->dropLogTable();
     }
 
     /**

@@ -1,7 +1,6 @@
 <?php
 
 namespace AATXT\App\Logging;
-use AATXT\Config\Constants;
 
 class DBLogger implements LoggerInterface
 {
@@ -65,6 +64,40 @@ class DBLogger implements LoggerInterface
         }
 
         return $output;
+    }
+
+    /**
+     * @return void
+     */
+    public function createLogTable(): void
+    {
+        global $wpdb;
+        $tableCheckQuery = $wpdb->prepare("SHOW TABLES LIKE %s", $wpdb->prefix . 'aatxt_logs');
+
+        if ($wpdb->get_var($tableCheckQuery) != $wpdb->prefix . 'aatxt_logs') {
+            $charset_collate = $wpdb->get_charset_collate();
+
+            $sql = "CREATE TABLE {$wpdb->prefix}aatxt_logs (
+                id mediumint(9) NOT NULL AUTO_INCREMENT,
+                time datetime DEFAULT '0000-00-00 00:00:00' NOT NULL,
+                image_id mediumint(9) NOT NULL,
+                error_message text NOT NULL,
+                PRIMARY KEY  (id)
+            ) $charset_collate;";
+
+            require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
+            dbDelta($sql);
+        }
+    }
+
+    /**
+     * @return void
+     */
+    public function dropLogTable(): void
+    {
+        global $wpdb;
+        $sql = "DROP TABLE IF EXISTS {$wpdb->prefix}aatxt_logs;";
+        $wpdb->query($sql);
     }
 
 }
