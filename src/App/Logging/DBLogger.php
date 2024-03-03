@@ -28,13 +28,15 @@ class DBLogger implements LoggerInterface
             $this->createLogTable();
         }
 
+        $sanitizedErrorMessage = sanitize_text_field($errorMessage);
+
         $currentDateTime = current_time('mysql');
         $wpdb->insert(
             $wpdb->prefix . 'aatxt_logs',
             [
                 'time' => $currentDateTime,
                 'image_id' => $imageId,
-                'error_message' => $errorMessage
+                'error_message' => $sanitizedErrorMessage
             ],
             ['%s', '%d', '%s']
         );
