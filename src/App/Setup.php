@@ -19,6 +19,7 @@ class Setup
 
     private function __construct()
     {
+        //
     }
 
     /**
@@ -38,11 +39,62 @@ class Setup
         register_deactivation_hook(AATXT_FILE_ABSPATH, [self::$instance, 'deactivatePlugin']);
 
         // When attachment is uploaded, create alt text
-        add_action('add_attachment', [self::$instance, 'addAltTextOnUpload']);
+        add_action('add_attachment', [self::$instance, 'addAltText']);
         // When plugin is loaded, load text domain
         add_action('plugins_loaded', [self::$instance, 'loadTextDomain']);
-
+        // Add settings link to the plugin in the plugins listing
         add_filter('plugin_action_links_auto-alt-text/auto-alt-text.php', [self::$instance, 'settingsLink']);
+        // Register bulk action for media library
+        add_filter('bulk_actions-upload', [self::$instance, 'registerBulkAction']);
+        // Handle alt text generation bulk action for media library
+        add_action('load-upload.php', [self::$instance, 'handleAltTextBulkAction']);
+        // Display a notice after alt text generation bulk action
+        add_action('admin_notices', [self::$instance, 'altTextBulkActionAdminNotice']);
+    }
+
+    /**
+     * Register bulk action for media library
+     */
+    public static function registerBulkAction(array $actions): array
+    {
+        $actions['auto_alt_text'] = esc_attr__('Generate Alt Text', 'auto-alt-text');
+        return $actions;
+    }
+
+    /**
+     * Handle alt text generation bulk action for media library
+     */
+    public static function handleAltTextBulkAction()
+    {
+        $wpListTable = _get_list_table('WP_Media_List_Table');
+        $action = $wpListTable->current_action();
+
+        if ($action === 'auto_alt_text') {
+            // Recupera l'elenco degli ID dei media selezionati
+            $mediaIds = isset($_REQUEST['media']) ? $_REQUEST['media'] : array();
+
+            // Imposta l'alt text per ogni media selezionato
+            foreach ($mediaIds as $mediaId) {
+                self::addAltText($mediaId);
+            }
+
+            // Redirect alla pagina della media library con un messaggio di successo
+            $sendback = add_query_arg(array('updated' => count($mediaIds), 'auto_alt_text' => '1'), admin_url('upload.php'));
+            wp_redirect($sendback);
+            exit();
+        }
+    }
+
+    /**
+     * Display a notice after alt text generation bulk action
+     */
+    public static function altTextBulkActionAdminNotice()
+    {
+        if (isset($_REQUEST['auto_alt_text'])) {
+            $count = intval($_REQUEST['updated']);
+            printf('<div id="message" class="updated notice is-dismissible"><p>' .
+                esc_attr(_n('Alt text set for %s media item.', 'Alt text set for %s media items.', $count, 'auto-alt-text')) . '</p></div>', $count);
+        }
     }
 
     /**
@@ -87,11 +139,10 @@ class Setup
     }
 
     /**
-     *
      * @param int $postId
      * @return void
      */
-    public static function addAltTextOnUpload(int $postId): void
+    public static function addAltText(int $postId): void
     {
         if (!wp_attachment_is_image($postId)) {
             return;
