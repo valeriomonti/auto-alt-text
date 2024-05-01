@@ -66,6 +66,7 @@ class Setup
      */
     public static function handleAltTextBulkAction()
     {
+        $mediaUpdated = 0;
         $wpListTable = _get_list_table('WP_Media_List_Table');
         $action = $wpListTable->current_action();
 
@@ -75,11 +76,24 @@ class Setup
 
             // Imposta l'alt text per ogni media selezionato
             foreach ($mediaIds as $mediaId) {
-                self::addAltText($mediaId);
+                $altText = self::altText($mediaId);
+                if (!empty($altText)) {
+                    update_post_meta($mediaId, '_wp_attachment_image_alt', $altText);
+                    $mediaUpdated++;
+                }
             }
 
+            $callBackData = [
+                'mediaSelected' => count($mediaIds),
+                'mediaUpdated' => $mediaUpdated,
+                'auto_alt_text' => '1',
+            ];
+
             // Redirect alla pagina della media library con un messaggio di successo
-            $sendback = add_query_arg(array('updated' => count($mediaIds), 'auto_alt_text' => '1'), admin_url('upload.php'));
+            $sendback = add_query_arg(
+                $callBackData,
+                admin_url('upload.php')
+            );
             wp_redirect($sendback);
             exit();
         }
@@ -91,9 +105,16 @@ class Setup
     public static function altTextBulkActionAdminNotice()
     {
         if (isset($_REQUEST['auto_alt_text'])) {
-            $count = intval($_REQUEST['updated']);
-            printf('<div id="message" class="updated notice is-dismissible"><p>' .
-                esc_attr(_n('Alt text set for %s media item.', 'Alt text set for %s media items.', $count, 'auto-alt-text')) . '</p></div>', $count);
+            $mediaSelected = intval($_REQUEST['mediaSelected']);
+            $mediaUpdated = intval($_REQUEST['mediaUpdated']);
+
+            if ($mediaUpdated === 0) {
+                printf('<div id="message" class="notice notice-error is-dismissible"><p>' . esc_attr__('No Alt text has been set', 'auto-alt-text') . '</p></div>');
+            } elseif ($mediaSelected === $mediaUpdated) {
+                printf('<div id="message" class="updated notice is-dismissible"><p>' . esc_attr__('Alt text has been set for %s media.', 'auto-alt-text') . '</p></div>', $mediaUpdated);
+            } else {
+                printf('<div id="message" class="notice notice-warning is-dismissible"><p>' . esc_attr__('Alt text has been set for %s of %s media', 'auto-alt-text') . '</p></div>', $mediaUpdated, $mediaSelected);
+            }
         }
     }
 
@@ -140,16 +161,15 @@ class Setup
 
     /**
      * @param int $postId
-     * @return void
+     * @return string
      */
-    public static function addAltText(int $postId): void
+    public static function altText(int $postId): string
     {
         if (!wp_attachment_is_image($postId)) {
-            return;
+            return '';
         }
 
         $altText = '';
-
         switch (PluginOptions::typology()) {
             case Constants::AATXT_OPTION_TYPOLOGY_CHOICE_AZURE:
                 // If Azure is selected as alt text generating typology
@@ -190,7 +210,21 @@ class Setup
                 $altText = (AltTextGeneratorAttachmentTitle::make())->altText($postId);
                 break;
             default:
-                return;
+                return '';
+        }
+
+        return $altText;
+    }
+
+    /**
+     * @param int $postId
+     * @return void
+     */
+    public static function addAltText(int $postId): void
+    {
+        $altText = self::altText($postId);
+        if (empty($altText)) {
+            return;
         }
 
         update_post_meta($postId, '_wp_attachment_image_alt', $altText);
