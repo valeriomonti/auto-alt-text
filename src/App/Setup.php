@@ -108,12 +108,14 @@ class Setup
             $mediaSelected = intval($_REQUEST['mediaSelected']);
             $mediaUpdated = intval($_REQUEST['mediaUpdated']);
 
+            $errorLogDisclaimer = __('Take a look at the', 'auto-alt-text') . ' <a href="' . esc_url(menu_page_url(Constants::AATXT_PLUGIN_OPTION_LOG_PAGE_SLUG, false)) . '">' . __('error log', 'auto-alt-text') . '</a>.';
+
             if ($mediaUpdated === 0) {
-                printf('<div id="message" class="notice notice-error is-dismissible"><p>' . esc_attr__('No Alt text has been set', 'auto-alt-text') . '</p></div>');
+                printf('<div id="message" class="notice notice-error is-dismissible"><p>' . esc_attr__('No Alt Text has been set.', 'auto-alt-text') . ' %s</p></div>', $errorLogDisclaimer);
             } elseif ($mediaSelected === $mediaUpdated) {
-                printf('<div id="message" class="updated notice is-dismissible"><p>' . esc_attr__('Alt text has been set for %s media.', 'auto-alt-text') . '</p></div>', $mediaUpdated);
+                printf('<div id="message" class="updated notice is-dismissible"><p>' . esc_attr__('The Alt Text has been set for %s media.', 'auto-alt-text') . '</p></div>', $mediaUpdated);
             } else {
-                printf('<div id="message" class="notice notice-warning is-dismissible"><p>' . esc_attr__('Alt text has been set for %s of %s media', 'auto-alt-text') . '</p></div>', $mediaUpdated, $mediaSelected);
+                printf('<div id="message" class="notice notice-warning is-dismissible"><p>' . esc_attr__('The Alt Text has been set for %s of %s media.', 'auto-alt-text') . ' %s</p></div>', $mediaUpdated, $mediaSelected, $errorLogDisclaimer);
             }
         }
     }
