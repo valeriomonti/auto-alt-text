@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [v1.3.0] - 2024-05-02
+
+### Changed
+- Implement bulk alt text generation for images already in the media library
+
 ## [v1.2.4] - 2024-03-03
 
 ### Changed

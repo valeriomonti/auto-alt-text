@@ -3,7 +3,7 @@ Contributors: valeriomonti
 Tags: alt text, alt tag, alt text generation, alt tag generation, alt text AI, alt tag AI
 Requires at least: 6.0
 Tested up to: 6.5
-Stable tag: 1.2.4
+Stable tag: 1.3.0
 Requires PHP: 7.4
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
@@ -73,6 +73,8 @@ For this generation method, there are no options to set as the alt text will be 
 
 ## Functioning
 Once the plugin is configured, each time an image is uploaded to the media library, an alt text will be automatically set based on the selected generation method.
+
+For images already in the media library, bulk alt text can be created. Open the Media Library in the "list" view, select the images for which to generate the alt text, and choose the "Generate alt text" bulk action. (Depending on the number of images chosen and their weight, this may take some time.)
 
 **Notice**: If you choose one of the methods that involves the use of external APIs, the upload times for images in the media library might increase because it requires sending a request to the APIs, waiting for the external server to process, and waiting for a response.
 

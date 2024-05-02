@@ -74,6 +74,8 @@ For this generation method, there are no options to set as the alt text will be 
 ## Functioning
 Once the plugin is configured, each time an image is uploaded to the media library, an alt text will be automatically set based on the selected generation method.
 
+For images already in the media library, bulk alt text can be created. Open the Media Library in the "list" view, select the images for which to generate the alt text, and choose the "Generate alt text" bulk action. (Depending on the number of images chosen and their weight, this may take some time.)
+
 **Notice**: If you choose one of the methods that involves the use of external APIs, the upload times for images in the media library might increase because it requires sending a request to the APIs, waiting for the external server to process, and waiting for a response.
 
 In case of an error in the API call, the image will still be uploaded but without alt text as usual. In this case, the cause of the error can be seen on the Auto Alt Text -> Error log page.
