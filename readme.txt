@@ -126,6 +126,11 @@ If you wish to obtain the most accurate description possible of the image, you s
 4. Title of the attachment options page
 
 == Changelog ==
+= 1.3.0 =
+- Implement bulk alt text generation for images already in the media library
+- Update Vite package
+- Implement github actions for automatic release
+
 = 1.2.4 =
 - Code refactoring
 - DB security improvements
@@ -137,7 +142,7 @@ If you wish to obtain the most accurate description possible of the image, you s
 - Add Database log management
 - Escape all output
 - Add AATXT_ prefix
-- Update Vite dependencies
+- Update Vite package
 - Remove file log management
 
 = 1.0.0 =

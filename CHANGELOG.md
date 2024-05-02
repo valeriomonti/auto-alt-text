@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Changed
 - Implement bulk alt text generation for images already in the media library
+- Update Vite package
+- Implement github actions for automatic release
 
 ## [v1.2.4] - 2024-03-03
 
