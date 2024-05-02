@@ -12,7 +12,7 @@
     "vite-plugin-manifest": "^0.0.1"
   },
   "dependencies": {
-    "vite": "^5.0.12"
+    "vite": "^5.2.11"
   },
   "volta": {
     "node": "18.19.0"
