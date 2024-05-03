@@ -4,8 +4,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Auto Alt Text 1.0.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/auto-alt-text\n"
-"POT-Creation-Date: 2024-05-02T12:41:14+00:00\n"
-"PO-Revision-Date: 2024-05-02 14:46+0200\n"
+"POT-Creation-Date: 2024-05-03T20:44:45+00:00\n"
+"PO-Revision-Date: 2024-05-03 22:48+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: it_IT\n"
@@ -79,7 +79,7 @@ msgstr ""
 msgid "The following methods are available to generate the alt text:"
 msgstr "Per generare l’alt text sono disponibili i seguenti metodi:"
 
-#: src/App/Admin/PluginOptions.php:137 src/App/Admin/PluginOptions.php:167
+#: src/App/Admin/PluginOptions.php:137 src/App/Admin/PluginOptions.php:168
 msgid "Azure's APIs"
 msgstr "API di Azure"
 
@@ -91,7 +91,7 @@ msgstr ""
 "l’immagine verrà analizzata dai servizi di AI forniti da Azure e verrà "
 "generato un alt text nella lingua che preferisci;"
 
-#: src/App/Admin/PluginOptions.php:140 src/App/Admin/PluginOptions.php:168
+#: src/App/Admin/PluginOptions.php:140 src/App/Admin/PluginOptions.php:169
 msgid "OpenAI's APIs"
 msgstr "API di OpenAI"
 
@@ -103,7 +103,7 @@ msgstr ""
 "l’immagine verrà analizzata dai servizi di AI forniti da OpenAI e verrà "
 "generato un alt text basato sul prompt che hai inserito;"
 
-#: src/App/Admin/PluginOptions.php:143 src/App/Admin/PluginOptions.php:169
+#: src/App/Admin/PluginOptions.php:143 src/App/Admin/PluginOptions.php:170
 msgid "Title of the article (not AI)"
 msgstr "Titolo dell’articolo (no AI)"
 
@@ -115,7 +115,7 @@ msgstr ""
 "se l’immagine è caricata in un articolo, il titolo dell’articolo verrà "
 "utilizzato come alt text;"
 
-#: src/App/Admin/PluginOptions.php:146 src/App/Admin/PluginOptions.php:170
+#: src/App/Admin/PluginOptions.php:146 src/App/Admin/PluginOptions.php:171
 msgid "Title of the attachment (not AI)"
 msgstr "Titolo dell’attachment (no AI)"
 
@@ -133,38 +133,52 @@ msgstr ""
 "scelto, gli alt text verranno creati automaticamente al caricamento di ogni "
 "immagine."
 
-#: src/App/Admin/PluginOptions.php:151
+#: src/App/Admin/PluginOptions.php:150
+msgid ""
+"For images already in the media library, you can create bulk alt texts. Open "
+"the Media Library in the \"list\" view, select the images for which to "
+"generate the alt text, and choose the \"Generate alt text\" bulk action. "
+"(Depending on the number of images chosen and their weight, this may take "
+"some time.)"
+msgstr ""
+"Per le immagini già presenti nella libreria dei media, è possibile creare "
+"gli alt text massivamente. Apri la libreria nella visualizzazione “lista”, "
+"seleziona le immagini per le quali vuoi creare l’alt text e scegli l’azione "
+"“Genera alt text”. (A seconda del numero delle immagini selezionate e al "
+"loro peso, l’operazione può richiedere diverso tempo.)"
+
+#: src/App/Admin/PluginOptions.php:152
 msgid "Pay attention please:"
 msgstr "Attenzione:"
 
-#: src/App/Admin/PluginOptions.php:151
+#: src/App/Admin/PluginOptions.php:152
 msgid "if the alt text for an image is not generated, check the logs on the"
 msgstr ""
 "se l’alt text di un’immagine non viene generato, verifica il log degli "
 "errori nella"
 
-#: src/App/Admin/PluginOptions.php:152
+#: src/App/Admin/PluginOptions.php:153
 msgid "designated page."
 msgstr "relativa pagina."
 
-#: src/App/Admin/PluginOptions.php:160
+#: src/App/Admin/PluginOptions.php:161
 msgid "Generation method"
 msgstr "Metodo di generazione"
 
-#: src/App/Admin/PluginOptions.php:161
+#: src/App/Admin/PluginOptions.php:162
 msgid ""
 "Which method do you want to use to generate the alt text for the images?"
 msgstr "Quale metodo vuoi utilizzare per generare l’alt text delle immagini?"
 
-#: src/App/Admin/PluginOptions.php:166
+#: src/App/Admin/PluginOptions.php:167
 msgid "Deactivated"
 msgstr "Disattivato"
 
-#: src/App/Admin/PluginOptions.php:175 src/App/Admin/PluginOptions.php:181
+#: src/App/Admin/PluginOptions.php:176 src/App/Admin/PluginOptions.php:182
 msgid "Notice"
 msgstr "Avviso"
 
-#: src/App/Admin/PluginOptions.php:176
+#: src/App/Admin/PluginOptions.php:177
 msgid ""
 "If you try to insert an image into a post that has not yet been saved as a "
 "draft or published, the plugin cannot generate an alt text based on the "
@@ -174,7 +188,7 @@ msgstr ""
 "in bozza o pubblicato, il plugin non può generare un alt text basato sul "
 "titolo del post in quanto il titolo stesso non è ancora stato salvato."
 
-#: src/App/Admin/PluginOptions.php:177
+#: src/App/Admin/PluginOptions.php:178
 msgid ""
 "Therefore, the alt text \"Auto draft\" will be inserted. To avoid this "
 "behavior, save the article draft first and then upload the image."
@@ -183,7 +197,7 @@ msgstr ""
 "comportamento, salvare la bozza dell’articolo e solo in seguito caricare "
 "l’immagine"
 
-#: src/App/Admin/PluginOptions.php:182
+#: src/App/Admin/PluginOptions.php:183
 msgid ""
 "This plugin leverages the new \"gpt-4-vision-preview\" model from OpenAI to "
 "identify the content of the image."
@@ -191,7 +205,7 @@ msgstr ""
 "Questo plugin sfrutta il nuovo modello “gpt-4-vision-preview” di OpenAI per "
 "identificare il contenuto dell’immagine."
 
-#: src/App/Admin/PluginOptions.php:183
+#: src/App/Admin/PluginOptions.php:184
 msgid ""
 "As the name suggests, this model is still in a preview stage and OpenAI "
 "states:"
@@ -199,7 +213,7 @@ msgstr ""
 "Tale modello, come dice il nome, è ancora in fase di preview e OpenAI "
 "afferma:"
 
-#: src/App/Admin/PluginOptions.php:184
+#: src/App/Admin/PluginOptions.php:185
 msgid ""
 "Therefore, it is necessary to select a fallback model in case gpt-4-preview "
 "fails."
@@ -207,7 +221,7 @@ msgstr ""
 "Pertanto è necessario selezionare un modello di fallback in caso gpt-4-"
 "preview fallisca."
 
-#: src/App/Admin/PluginOptions.php:185
+#: src/App/Admin/PluginOptions.php:186
 msgid ""
 "The fallback models are not able to read the content of the image but will "
 "rely exclusively on the name of the image file, guessing its content."
@@ -216,7 +230,7 @@ msgstr ""
 "dell’immagine ma si baseranno esclusivamente sul nome del file dell’immagine "
 "ipotizzandone il contenuto."
 
-#: src/App/Admin/PluginOptions.php:186
+#: src/App/Admin/PluginOptions.php:187
 msgid ""
 "In case of errors, it is still possible to find the specific reason stated "
 "on the"
@@ -224,27 +238,27 @@ msgstr ""
 "Nel caso di errori è comunque possibile trovarne la motivazione specificata "
 "nella"
 
-#: src/App/Admin/PluginOptions.php:186
+#: src/App/Admin/PluginOptions.php:187
 msgid "error log page"
 msgstr "pagina dell’error log"
 
-#: src/App/Admin/PluginOptions.php:190
+#: src/App/Admin/PluginOptions.php:191
 msgid "OpenAI API Key"
 msgstr "Chiave API di OpenAI"
 
-#: src/App/Admin/PluginOptions.php:191
+#: src/App/Admin/PluginOptions.php:192
 msgid "Enter your API Key"
 msgstr "Inserisci la tua chiave API"
 
-#: src/App/Admin/PluginOptions.php:197
+#: src/App/Admin/PluginOptions.php:198
 msgid "Prompt"
 msgstr "Prompt"
 
-#: src/App/Admin/PluginOptions.php:198 src/App/Admin/PluginOptions.php:226
+#: src/App/Admin/PluginOptions.php:199 src/App/Admin/PluginOptions.php:227
 msgid "Enter a specific and detailed prompt according to your needs."
 msgstr "Inserisci un prompt specifico e dettagliato in base alle tue esigenze."
 
-#: src/App/Admin/PluginOptions.php:199
+#: src/App/Admin/PluginOptions.php:200
 msgid ""
 "Act like an SEO expert and write an alt text of up to 125 characters for "
 "this image."
@@ -252,11 +266,11 @@ msgstr ""
 "Agisci come un esperto SEO e scrivi un alt text lungo al massimo 125 "
 "caratteri per questa immagine."
 
-#: src/App/Admin/PluginOptions.php:205
+#: src/App/Admin/PluginOptions.php:206
 msgid "Fallback OpenAi Model"
 msgstr "Modello OpenAI di fallback"
 
-#: src/App/Admin/PluginOptions.php:206
+#: src/App/Admin/PluginOptions.php:207
 msgid ""
 "Choose the alternative OpenAI model you want to use to generate the alt text "
 "when the gpt-4-vision-preview model fails."
@@ -264,11 +278,11 @@ msgstr ""
 "Scegli un modello di OpenAI alternativo che vuoi utilizzare per generare "
 "l’alt text in caso in cui il modello gpt-4-vision-preview fallisca."
 
-#: src/App/Admin/PluginOptions.php:225
+#: src/App/Admin/PluginOptions.php:226
 msgid "Fallback Prompt"
 msgstr "Prompt di fallback"
 
-#: src/App/Admin/PluginOptions.php:227
+#: src/App/Admin/PluginOptions.php:228
 msgid ""
 "Act like an SEO expert and write an English alt text for this image %s, "
 "using a maximum of 125 characters. Just return the text without any "
@@ -278,7 +292,7 @@ msgstr ""
 "immagine %s, usando al massimo 125 caratteri. Restituisci solo il testo "
 "senza alcun commento aggiuntivo."
 
-#: src/App/Admin/PluginOptions.php:232
+#: src/App/Admin/PluginOptions.php:233
 msgid ""
 "Fill out the following fields to leverage Azure's computer vision services "
 "to generate the Alt texts."
@@ -286,29 +300,29 @@ msgstr ""
 "Compila i seguenti campi per sfruttare i servizi di computer vision di Azure "
 "per generare gli Alt text."
 
-#: src/App/Admin/PluginOptions.php:235
+#: src/App/Admin/PluginOptions.php:236
 msgid "Azure Computer Vision API Key"
 msgstr "Chiave API Computer Vision di Azure"
 
-#: src/App/Admin/PluginOptions.php:236
+#: src/App/Admin/PluginOptions.php:237
 msgid ""
 "Enter the API key for the Computer Vision service of your Azure account."
 msgstr ""
 "Inserisci la chiave API del servizio Computer Vision del tuo account Azure."
 
-#: src/App/Admin/PluginOptions.php:242
+#: src/App/Admin/PluginOptions.php:243
 msgid "Azure Computer Vision Endpoint"
 msgstr "Endpoint Azure Computer Vision"
 
-#: src/App/Admin/PluginOptions.php:243
+#: src/App/Admin/PluginOptions.php:244
 msgid "Enter the endpoint of the Computer Vision service."
 msgstr "Inserisci l’endpoint del servizio di Computer Vision."
 
-#: src/App/Admin/PluginOptions.php:249
+#: src/App/Admin/PluginOptions.php:250
 msgid "The default alt text language is English."
 msgstr "Il linguaggio di default per gli alt text è l’inglese."
 
-#: src/App/Admin/PluginOptions.php:250
+#: src/App/Admin/PluginOptions.php:251
 msgid ""
 "If you want to translate into another language, enter the following data "
 "necessary for the translation API to work."
@@ -316,41 +330,41 @@ msgstr ""
 "Se vuoi tradurlo in un’altra lingua, inserisci i seguenti dati necessari per "
 "il funzionamento delle API di traduzione."
 
-#: src/App/Admin/PluginOptions.php:251
+#: src/App/Admin/PluginOptions.php:252
 msgid "After saving the changes you can select the desired language."
 msgstr ""
 "Dopo aver salvato le modifiche potrai selezionare la lingua desiderata."
 
-#: src/App/Admin/PluginOptions.php:256
+#: src/App/Admin/PluginOptions.php:257
 msgid "Azure Translate Instance API Key"
 msgstr "Chiave API Translate Instance di Azure"
 
-#: src/App/Admin/PluginOptions.php:257
+#: src/App/Admin/PluginOptions.php:258
 msgid "Enter your API key for the Azure Translate Instance service."
 msgstr ""
 "Inserisci la tua chiave API per il servizio Translate Instance di Azure."
 
-#: src/App/Admin/PluginOptions.php:263
+#: src/App/Admin/PluginOptions.php:264
 msgid "Azure Translate Instance Endpoint"
 msgstr "Endpoint Translate Instance di Azure"
 
-#: src/App/Admin/PluginOptions.php:264
+#: src/App/Admin/PluginOptions.php:265
 msgid "Enter the endpoint of the Translate Instance service"
 msgstr "Inserisci l’endpoint del servizio Translate Instance"
 
-#: src/App/Admin/PluginOptions.php:270
+#: src/App/Admin/PluginOptions.php:271
 msgid "Azure Translate Instance Region"
 msgstr "Regione Translate Instance di Azure"
 
-#: src/App/Admin/PluginOptions.php:271
+#: src/App/Admin/PluginOptions.php:272
 msgid "Enter the region of the Azure Translate Instance service."
 msgstr "Inserisci la regione del servizio Translate Instance di Azure."
 
-#: src/App/Admin/PluginOptions.php:278
+#: src/App/Admin/PluginOptions.php:279
 msgid "Alt Text Language"
 msgstr "Lingua Alt Text"
 
-#: src/App/Admin/PluginOptions.php:279
+#: src/App/Admin/PluginOptions.php:280
 msgid "Select the language in which the alt text should be written."
 msgstr "Seleziona la lingua in cui deve essere scritto l’alt text."
 

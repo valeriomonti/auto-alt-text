@@ -147,6 +147,7 @@ class PluginOptions
                     </li>
                 </ul>
                 <p><?php esc_html_e("Once all the necessary data for the chosen generation method has been entered, the alt texts will be created automatically upon uploading each image.", 'auto-alt-text'); ?></p>
+                <p><strong>New</strong>: <?php esc_html_e("For images already in the media library, you can create bulk alt texts. Open the Media Library in the \"list\" view, select the images for which to generate the alt text, and choose the \"Generate alt text\" bulk action. (Depending on the number of images chosen and their weight, this may take some time.)", 'auto-alt-text'); ?></p>
                 <p>
                     <strong><?php esc_html_e('Pay attention please:', 'auto-alt-text') ?></strong> <?php esc_html_e("if the alt text for an image is not generated, check the logs on the", 'auto-alt-text'); ?>
                     <a href="<?php esc_url(menu_page_url(Constants::AATXT_PLUGIN_OPTION_LOG_PAGE_SLUG, true)); ?>"><?php esc_html_e('designated page.', 'auto-alt-text') ?></a>
