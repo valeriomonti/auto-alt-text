@@ -1,6 +1,6 @@
 === Auto Alt Text ===
 Contributors: valeriomonti
-Tags: alt text, alt tag, alt text generation, alt tag generation, alt text AI, alt tag AI
+Tags: alt text, alt tag, openai, azure, seo
 Requires at least: 6.0
 Tested up to: 6.5
 Stable tag: 1.3.0
