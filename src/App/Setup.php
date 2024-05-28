@@ -5,7 +5,7 @@ namespace AATXT\App;
 use AATXT\App\Logging\DBLogger;
 use AATXT\App\Admin\PluginOptions;
 use AATXT\App\AIProviders\Azure\AzureComputerVisionCaptionsResponse;
-use AATXT\App\AIProviders\OpenAI\OpenAIChatCompletionResponse;
+use AATXT\App\AIProviders\OpenAI\Fallback;
 use AATXT\App\AIProviders\OpenAI\OpenAIVision;
 use AATXT\App\Exceptions\Azure\AzureException;
 use AATXT\App\Exceptions\OpenAI\OpenAIException;
@@ -190,7 +190,7 @@ class Setup
                     $errorMessage = "OpenAI - " . Constants::AATXT_OPENAI_VISION_MODEL . ' - ' . $e->getMessage();
                     (DBLogger::make())->writeImageLog($postId, $errorMessage);
                     try {
-                        $altText = (AltTextGeneratorAi::make(OpenAIChatCompletionResponse::make()))->altText($postId);
+                        $altText = (AltTextGeneratorAi::make(Fallback::make()))->altText($postId);
                     } catch (OpenAIException $e) {
                         $errorMessage = "OpenAI - " . $e->getMessage();
                         (DBLogger::make())->writeImageLog($postId, $errorMessage);

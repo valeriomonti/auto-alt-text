@@ -62,17 +62,6 @@ abstract class OpenAIResponse implements AIProviderInterface
     }
 
     /**
-     * Compute the fallback prompt based on the template saved in the options and the imageUrl passed
-     * @param string $imageUrl
-     * @return string
-     */
-    protected function fallbackPrompt(string $imageUrl): string
-    {
-        $prompt = PluginOptions::fallbackPrompt() ?: Constants::AATXT_OPENAI_DEFAULT_FALLBACK_PROMPT;
-        return str_replace(Constants::AATXT_IMAGE_URL_TAG, $imageUrl, $prompt);
-    }
-
-    /**
      * @param string $text
      * @return string
      */
@@ -85,5 +74,30 @@ abstract class OpenAIResponse implements AIProviderInterface
         );
 
         return trim(preg_replace($patterns, '', $text));
+    }
+
+    protected function prepareRequestBody(string $model, string $prompt, string $imageUrl): array
+    {
+        return [
+            'model' => Constants::AATXT_OPENAI_VISION_MODEL,
+            'messages' => [
+                [
+                    'role' => 'user',
+                    'content' => [
+                        [
+                            "type" => "text",
+                            "text" => $prompt
+                        ],
+                        [
+                            "type" => "image_url",
+                            "image_url" => [
+                                "url" => $imageUrl
+                            ]
+                        ]
+                    ]
+                ],
+            ],
+            'max_tokens' => Constants::AATXT_OPENAI_MAX_TOKENS,
+        ];
     }
 }

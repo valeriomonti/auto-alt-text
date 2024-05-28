@@ -8,9 +8,9 @@ use AATXT\App\Admin\PluginOptions;
 use AATXT\App\Exceptions\OpenAI\OpenAIException;
 use AATXT\Config\Constants;
 
-class OpenAIChatCompletionResponse extends OpenAIResponse
+class Fallback extends OpenAIResponse
 {
-    public static function make(): OpenAIChatCompletionResponse
+    public static function make(): Fallback
     {
         return new self();
     }
@@ -23,22 +23,9 @@ class OpenAIChatCompletionResponse extends OpenAIResponse
      */
     public function response(string $imageUrl): string
     {
-        $model = PluginOptions::model();
-        $prompt = parent::fallbackPrompt($imageUrl);
-
-        $requestBody = [
-            'model' => $model,
-            'messages' => [
-                [
-                    'role' => 'user',
-                    'content' => $prompt
-                ],
-            ],
-            'max_tokens' => Constants::AATXT_OPENAI_MAX_TOKENS,
-        ];
-
+        $prompt = parent::prompt();
+        $requestBody = parent::prepareRequestBody(Constants::AATXT_OPENAI_FALLBACK_MODEL, $prompt, $imageUrl);
         $decodedBody = parent::decodedResponseBody($requestBody, Constants::AATXT_OPENAI_CHAT_COMPLETION_ENDPOINT);
-
         return $this->cleanString($decodedBody['choices'][0]['message']['content']);
     }
 }

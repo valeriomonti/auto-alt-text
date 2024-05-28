@@ -27,15 +27,13 @@ class Constants
     const AATXT_OPTION_FIELD_LANGUAGE_AZURE_TRANSLATE_INSTANCE = 'aatxt_language_azure_translate_instance';
     const AATXT_IMAGE_URL_TAG = '%imageUrl%';
     const AATXT_OPENAI_DEFAULT_PROMPT = "Act like an SEO expert and write an English alt text of up to 125 characters for this image.";
-    const AATXT_OPENAI_DEFAULT_FALLBACK_PROMPT = "Act like an SEO expert and write an English alt text for an image whit this url %imageUrl%, using a maximum of 125 characters. Just return the text without any additional comments.";
-    const AATXT_OPENAI_DEFAULT_MODEL = "gpt-3.5-turbo";
+    const AATXT_OPENAI_DEFAULT_MODEL = "gpt-4-turbo";
     const AATXT_OPENAI_MODELS = [
+        "gpt-4-turbo",
         "gpt-4",
-        "gpt-3.5-turbo",
     ];
-    const AATXT_OPENAI_VISION_MODEL = 'gpt-4-vision-preview';
+    const AATXT_OPENAI_VISION_MODEL = 'gpt-4o';
+    const AATXT_OPENAI_FALLBACK_MODEL = 'gpt-4-turbo';
     const AATXT_OPENAI_MAX_TOKENS = 70;
-    const AATXT_OPENAI_TEXT_COMPLETION_TEMPERATURE = 0.6;
     const AATXT_OPENAI_CHAT_COMPLETION_ENDPOINT = 'https://api.openai.com/v1/chat/completions';
-    const AATXT_OPENAI_TEXT_COMPLETION_ENDPOINT = 'https://api.openai.com/v1/completions';
 }
