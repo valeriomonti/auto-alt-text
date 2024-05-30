@@ -29,6 +29,7 @@ abstract class OpenAIResponse implements AIProviderInterface
 
         $args = [
             'headers' => $headers,
+            'timeout' => 90,
             'body'    => json_encode($requestBody),
             'method'  => 'POST',
             'data_format' => 'body',
