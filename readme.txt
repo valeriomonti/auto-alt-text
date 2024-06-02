@@ -3,7 +3,7 @@ Contributors: valeriomonti
 Tags: alt text, alt tag, openai, azure, seo
 Requires at least: 6.0
 Tested up to: 6.5
-Stable tag: 1.3.0
+Stable tag: 2.0.0
 Requires PHP: 7.4
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
@@ -120,6 +120,13 @@ If you wish to obtain the most accurate description possible of the image, you s
 4. Title of the attachment options page
 
 == Changelog ==
+
+= 2.0.0 =
+- Set a maximum timeout of 90 seconds for OpenAI requests
+- Implement the gpt-4o model for generating alt text
+- Implement gpt-4-turbo template for fallback alt text generation
+- Remove gpt-4 and gpt-3.5 templates as fallback options
+
 = 1.3.0 =
 - Implement bulk alt text generation for images already in the media library
 - Update Vite package
