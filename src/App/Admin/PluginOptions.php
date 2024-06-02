@@ -107,7 +107,7 @@ class PluginOptions
                 if ($logs) {
                     echo '<textarea id="error-log" name="error-log" readonly>' . esc_textarea($logs) . '</textarea>';
                 } else {
-                    echo '<p>' . esc_html__('There is no log file yet!', 'auto-alt-text') . '</p>';
+                    echo '<p>' . esc_html__('There is no error log yet!', 'auto-alt-text') . '</p>';
                 }
 
                 ?>
@@ -181,9 +181,8 @@ class PluginOptions
 
                 echo '<div class="plugin-option type-openai"><strong>' . esc_html__('Notice', 'auto-alt-text') . '</strong>: ' .
                     esc_html__('This plugin leverages the new "gpt-4o" model from OpenAI to identify the content of the image.', 'auto-alt-text') . ' ' .
-                    esc_html__('Sometimes it may happen that the “gpt-4o” model fails to generate correct alt text for the image.', 'auto-alt-text') . ' ' .
-
-                    esc_html__('Therefore, it is necessary to select a fallback model in case gpt-4o fails.', 'auto-alt-text') . '<br>' .
+                    esc_html__('Rarely it may happen that the “gpt-4o” model fails to generate correct alt text for the image.', 'auto-alt-text') . ' ' .
+                    esc_html__('In these cases, the call to the api will be re-performed using the gpt-4-turbo model as fallback.', 'auto-alt-text') . '<br>' .
                     esc_html__('In case of errors, it is still possible to find the specific reason stated on the', 'auto-alt-text') . ' <a href="' . esc_url(menu_page_url(Constants::AATXT_PLUGIN_OPTION_LOG_PAGE_SLUG, false)) . '">' . esc_html__('error log page', 'auto-alt-text') . '</a>.' .
                     '</div>';
 
