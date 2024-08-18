@@ -12,6 +12,7 @@ export default defineConfig({
         rollupOptions: {
             input: {
                 admin: path.resolve(__dirname, 'resources/js/admin.js'),
+                "media-library": path.resolve(__dirname, 'resources/js/media-library.js'),
             },
             output: {
             }

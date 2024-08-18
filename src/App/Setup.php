@@ -2,6 +2,7 @@
 
 namespace AATXT\App;
 
+use AATXT\App\Admin\MediaLibrary;
 use AATXT\App\Logging\DBLogger;
 use AATXT\App\Admin\PluginOptions;
 use AATXT\App\AIProviders\Azure\AzureComputerVisionCaptionsResponse;
@@ -34,6 +35,8 @@ class Setup
 
         //Register plugin options pages
         PluginOptions::register();
+        //Register medial library hooks
+        MediaLibrary::register();
 
         register_activation_hook(AATXT_FILE_ABSPATH, [self::$instance, 'activatePlugin']);
         register_deactivation_hook(AATXT_FILE_ABSPATH, [self::$instance, 'deactivatePlugin']);

@@ -2,7 +2,7 @@
 Contributors: valeriomonti
 Tags: alt text, alt tag, openai, azure, seo
 Requires at least: 6.0
-Tested up to: 6.5
+Tested up to: 6.6.1
 Stable tag: 2.0.0
 Requires PHP: 7.4
 License: GPLv3
@@ -70,6 +70,8 @@ Once the plugin is configured, each time an image is uploaded to the media libra
 
 For images already in the media library, you can create bulk alt texts. Open the Media Library in the "list" view, select the images for which to generate the alt text, and choose the "Generate alt text" bulk action. (Depending on the number of images chosen and their weight, this may take some time.)
 
+You can also generate the alt text of a single image directly from the media library. Open the Media Library in “grid” mode, choose the image for which to generate the alt text, and click the “Generate alt text” button. In no time the alt text field will be overwritten by the generated description.
+
 **Notice**: If you choose one of the methods that involves the use of external APIs, the upload times for images in the media library might increase because it requires sending a request to the APIs, waiting for the external server to process, and waiting for a response.
 
 ### Logging
@@ -120,6 +122,9 @@ If you wish to obtain the most accurate description possible of the image, you s
 4. Title of the attachment options page
 
 == Changelog ==
+
+= 2.1.0 =
+- Allow users to generate the alt text for each individual image in the media library
 
 = 2.0.0 =
 - Set a maximum timeout of 90 seconds for OpenAI requests
