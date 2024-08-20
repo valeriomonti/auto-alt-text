@@ -9,6 +9,7 @@ class Constants
     const AATXT_PLUGIN_OPTIONS_PAGE_SLUG = 'auto-alt-text-options';
     const AATXT_PLUGIN_OPTION_LOG_PAGE_SLUG = 'auto-alt-text-log';
     const AATXT_PLUGIN_ASSETS_HANDLE = 'aatxt-auto-alt-text-options';
+    const AATXT_PLUGIN_MEDIA_LIBRARY_HANDLE = 'aatxt-auto-alt-text-media-library';
     const AATXT_OPTION_FIELD_TYPOLOGY = 'aatxt_typology';
     const AATXT_OPTION_FIELD_PROMPT_OPENAI = 'aatxt_prompt_openai';
     const AATXT_OPTION_FIELD_API_KEY_OPENAI = 'aatxt_api_key_openai';
@@ -29,4 +30,5 @@ class Constants
     const AATXT_OPENAI_FALLBACK_MODEL = 'gpt-4-turbo';
     const AATXT_OPENAI_MAX_TOKENS = 70;
     const AATXT_OPENAI_CHAT_COMPLETION_ENDPOINT = 'https://api.openai.com/v1/chat/completions';
+    const AATXT_AJAX_GENERATE_ALT_TEXT_NONCE = 'generate_alt_text_nonce';
 }
