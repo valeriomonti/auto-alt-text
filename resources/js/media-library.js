@@ -24,18 +24,24 @@ document.addEventListener('DOMContentLoaded', function() {
                 .then(response => response.json())
                 .then(data => {
                     if (data.success) {
-                        let altTextField = document.querySelector('.attachment-info .setting.alt-text textarea');
-                        if (altTextField) {
-                            altTextField.value = data.data.alt_text;
+                        let uploadAltTextField = document.querySelector('.attachment-info .setting.alt-text textarea');
+
+                        if (uploadAltTextField) {
+                            uploadAltTextField.value = data.data.alt_text;
 
                             let event = new Event('change', {
                                 bubbles: true,
                                 cancelable: true,
                             });
-                            altTextField.dispatchEvent(event);
+                            uploadAltTextField.dispatchEvent(event);
 
                             if (wp && wp.media && wp.media.frame && wp.media.frame.content && wp.media.frame.content.get) {
                                 wp.media.frame.content.get().save();
+                            }
+                        } else {
+                            let attachmentAltTextField = document.getElementById('attachment_alt');
+                            if (attachmentAltTextField) {
+                                attachmentAltTextField.value = data.data.alt_text;
                             }
                         }
                     } else {

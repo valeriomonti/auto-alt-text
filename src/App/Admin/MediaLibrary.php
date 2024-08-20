@@ -60,12 +60,11 @@ class MediaLibrary
     public static function enqueue(): void
     {
         $screen = get_current_screen();
-
-        if ($screen && $screen->id === 'upload' && $screen->base === 'upload') {
+        if ($screen && ( ($screen->id === 'upload' && $screen->base === 'upload') || ($screen->id === 'attachment'))  ) {
             $mediaLibraryJs = self::$assetsManager->getAssetUrl('resources/js/media-library.js', false);
-            wp_enqueue_script(Constants::AATXT_PLUGIN_ASSETS_HANDLE, $mediaLibraryJs, [], false);
+            wp_enqueue_script(Constants::AATXT_PLUGIN_MEDIA_LIBRARY_HANDLE, $mediaLibraryJs, [], false);
 
-            wp_localize_script(Constants::AATXT_PLUGIN_ASSETS_HANDLE, 'AATXT', [
+            wp_localize_script(Constants::AATXT_PLUGIN_MEDIA_LIBRARY_HANDLE, 'AATXT', [
                 'altTextNonce' => wp_create_nonce(Constants::AATXT_AJAX_GENERATE_ALT_TEXT_NONCE),
             ]);
         }
