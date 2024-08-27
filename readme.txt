@@ -3,7 +3,7 @@ Contributors: valeriomonti
 Tags: alt text, alt tag, openai, azure, seo
 Requires at least: 6.0
 Tested up to: 6.6.1
-Stable tag: 2.0.0
+Stable tag: 2.1.0
 Requires PHP: 7.4
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
