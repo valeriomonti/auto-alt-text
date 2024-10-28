@@ -19,7 +19,7 @@ class Constants
     const AATXT_OPTION_FIELD_MODEL_OPENAI_OPTIONS = [
         self::AATXT_GPT4O => 'GPT-4o',
         self::AATXT_GPT4O_MINI => 'GPT-4o Mini',
-        self::AATXT_O1_MINI => 'O1 Mini',
+        self::AATXT_O1_MINI => 'o1 Mini',
     ];
     const AATXT_OPTION_FIELD_PROMPT_OPENAI = 'aatxt_prompt_openai';
     const AATXT_OPTION_FIELD_API_KEY_OPENAI = 'aatxt_api_key_openai';

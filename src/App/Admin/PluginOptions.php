@@ -180,7 +180,7 @@ class PluginOptions
                     esc_html__('Therefore, the alt text "Auto draft" will be inserted. To avoid this behavior, save the article draft first and then upload the image.', 'auto-alt-text') .
                     '</div>';
 
-                $openaiModel = self::modelOpenAI();
+                $openaiModel = self::openAiModel();
 
                 echo '<div class="plugin-option type-openai">';
                 echo '<label for="' .  esc_attr(Constants::AATXT_OPTION_FIELD_MODEL_OPENAI) . '">' . esc_html__('Model', 'auto-alt-text') . '</label>';
@@ -341,7 +341,7 @@ class PluginOptions
         return get_option(Constants::AATXT_OPTION_FIELD_TYPOLOGY);
     }
 
-    public static function modelOpenAI(): string
+    public static function openAiModel(): string
     {
         return get_option(Constants::AATXT_OPTION_FIELD_MODEL_OPENAI) ?: Constants::AATXT_GPT4O;
     }

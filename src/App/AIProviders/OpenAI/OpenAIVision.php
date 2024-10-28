@@ -2,6 +2,7 @@
 
 namespace AATXT\App\AIProviders\OpenAI;
 
+use AATXT\App\Admin\PluginOptions;
 use OpenAI;
 use OpenAI\Client;
 use OpenAI\Exceptions\ErrorException;
@@ -24,7 +25,7 @@ class OpenAIVision extends OpenAIResponse
     public function response(string $imageUrl): string
     {
         $prompt = parent::prompt();
-        $requestBody = parent::prepareRequestBody(Constants::AATXT_OPENAI_VISION_MODEL, $prompt, $imageUrl);
+        $requestBody = parent::prepareRequestBody(PluginOptions::openAiModel(), $prompt, $imageUrl);
         $decodedBody = parent::decodedResponseBody($requestBody, Constants::AATXT_OPENAI_CHAT_COMPLETION_ENDPOINT);
         return $this->cleanString($decodedBody['choices'][0]['message']['content']);
     }
