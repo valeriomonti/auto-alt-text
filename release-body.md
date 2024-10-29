@@ -1,4 +1,4 @@
-## [v2.1.0] - 2024-08-19
+## [v2.2.0] - 2024-10-28
 
 ### Changed
-- Allow users to generate the alt text for each individual image in the media library
+- Allow users to select the preferred Openai model for generating alt text

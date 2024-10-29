@@ -2,16 +2,16 @@
 # This file is distributed under the GPL v3.
 msgid ""
 msgstr ""
-"Project-Id-Version: Auto Alt Text 1.3.0\n"
+"Project-Id-Version: Auto Alt Text 2.2.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/auto-alt-text\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2024-06-02T21:39:31+00:00\n"
+"POT-Creation-Date: 2024-10-29T13:35:13+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"X-Generator: WP-CLI 2.10.0\n"
+"X-Generator: WP-CLI 2.11.0\n"
 "X-Domain: auto-alt-text\n"
 
 #. Plugin Name of the plugin
@@ -32,6 +32,11 @@ msgstr ""
 #. Author URI of the plugin
 #: auto-alt-text.php
 msgid "https://www.vmweb.it"
+msgstr ""
+
+#: src/App/Admin/MediaLibrary.php:79
+#: src/App/Setup.php:63
+msgid "Generate Alt Text"
 msgstr ""
 
 #: src/App/Admin/PluginOptions.php:98
@@ -63,6 +68,7 @@ msgid "The following methods are available to generate the alt text:"
 msgstr ""
 
 #: src/App/Admin/PluginOptions.php:137
+#: src/App/Admin/PluginOptions.php:170
 msgid "OpenAI's APIs"
 msgstr ""
 
@@ -71,7 +77,7 @@ msgid "the image will be analyzed by the AI services provided by OpenAI and an a
 msgstr ""
 
 #: src/App/Admin/PluginOptions.php:140
-#: src/App/Admin/PluginOptions.php:169
+#: src/App/Admin/PluginOptions.php:171
 msgid "Azure's APIs"
 msgstr ""
 
@@ -80,7 +86,7 @@ msgid "the image will be analyzed by the AI services provided by Azure and an al
 msgstr ""
 
 #: src/App/Admin/PluginOptions.php:143
-#: src/App/Admin/PluginOptions.php:170
+#: src/App/Admin/PluginOptions.php:172
 msgid "Title of the article (not AI)"
 msgstr ""
 
@@ -89,7 +95,7 @@ msgid "if the image is uploaded within an article, the title of the article will
 msgstr ""
 
 #: src/App/Admin/PluginOptions.php:146
-#: src/App/Admin/PluginOptions.php:171
+#: src/App/Admin/PluginOptions.php:173
 msgid "Title of the attachment (not AI)"
 msgstr ""
 
@@ -125,128 +131,124 @@ msgstr ""
 msgid "Which method do you want to use to generate the alt text for the images?"
 msgstr ""
 
-#: src/App/Admin/PluginOptions.php:167
+#: src/App/Admin/PluginOptions.php:169
 msgid "Deactivated"
 msgstr ""
 
-#: src/App/Admin/PluginOptions.php:168
-msgid "OpenAI's APIs (gpt-4o)"
-msgstr ""
-
-#: src/App/Admin/PluginOptions.php:176
-#: src/App/Admin/PluginOptions.php:182
+#: src/App/Admin/PluginOptions.php:178
+#: src/App/Admin/PluginOptions.php:195
 msgid "Notice"
 msgstr ""
 
-#: src/App/Admin/PluginOptions.php:177
+#: src/App/Admin/PluginOptions.php:179
 msgid "If you try to insert an image into a post that has not yet been saved as a draft or published, the plugin cannot generate an alt text based on the post's title since the title itself has not yet been saved."
 msgstr ""
 
-#: src/App/Admin/PluginOptions.php:178
+#: src/App/Admin/PluginOptions.php:180
 msgid "Therefore, the alt text \"Auto draft\" will be inserted. To avoid this behavior, save the article draft first and then upload the image."
 msgstr ""
 
-#: src/App/Admin/PluginOptions.php:183
-msgid "This plugin leverages the new \"gpt-4o\" model from OpenAI to identify the content of the image."
-msgstr ""
-
-#: src/App/Admin/PluginOptions.php:184
-msgid "Rarely it may happen that the “gpt-4o” model fails to generate correct alt text for the image."
-msgstr ""
-
-#: src/App/Admin/PluginOptions.php:185
-msgid "In these cases, the call to the api will be re-performed using the gpt-4-turbo model as fallback."
-msgstr ""
-
 #: src/App/Admin/PluginOptions.php:186
-msgid "In case of errors, it is still possible to find the specific reason stated on the"
+msgid "Model"
 msgstr ""
 
-#: src/App/Admin/PluginOptions.php:186
-msgid "error log page"
-msgstr ""
-
-#: src/App/Admin/PluginOptions.php:190
-msgid "OpenAI API Key"
-msgstr ""
-
-#: src/App/Admin/PluginOptions.php:191
-msgid "Enter your API Key"
+#: src/App/Admin/PluginOptions.php:196
+msgid "Rarely it may happen that the chosen model fails to generate correct alt text for the image."
 msgstr ""
 
 #: src/App/Admin/PluginOptions.php:197
-msgid "Prompt"
+msgid "In these cases, the call to the api will be re-performed using the gpt-4o-mini model as fallback."
 msgstr ""
 
 #: src/App/Admin/PluginOptions.php:198
+msgid "In case of errors, it is still possible to find the specific reason stated on the"
+msgstr ""
+
+#: src/App/Admin/PluginOptions.php:198
+msgid "error log page"
+msgstr ""
+
+#: src/App/Admin/PluginOptions.php:202
+msgid "OpenAI API Key"
+msgstr ""
+
+#: src/App/Admin/PluginOptions.php:203
+msgid "Enter your API Key"
+msgstr ""
+
+#: src/App/Admin/PluginOptions.php:209
+msgid "Prompt"
+msgstr ""
+
+#: src/App/Admin/PluginOptions.php:210
 msgid "Enter a specific and detailed prompt according to your needs."
 msgstr ""
 
-#: src/App/Admin/PluginOptions.php:199
+#: src/App/Admin/PluginOptions.php:211
 msgid "Act like an SEO expert and write an alt text of up to 125 characters for this image."
 msgstr ""
 
-#: src/App/Admin/PluginOptions.php:204
+#: src/App/Admin/PluginOptions.php:216
 msgid "Fill out the following fields to leverage Azure's computer vision services to generate the Alt texts."
 msgstr ""
 
-#: src/App/Admin/PluginOptions.php:207
+#: src/App/Admin/PluginOptions.php:219
 msgid "Azure Computer Vision API Key"
 msgstr ""
 
-#: src/App/Admin/PluginOptions.php:208
+#: src/App/Admin/PluginOptions.php:220
 msgid "Enter the API key for the Computer Vision service of your Azure account."
 msgstr ""
 
-#: src/App/Admin/PluginOptions.php:214
+#: src/App/Admin/PluginOptions.php:226
 msgid "Azure Computer Vision Endpoint"
 msgstr ""
 
-#: src/App/Admin/PluginOptions.php:215
+#: src/App/Admin/PluginOptions.php:227
 msgid "Enter the endpoint of the Computer Vision service."
 msgstr ""
 
-#: src/App/Admin/PluginOptions.php:221
+#: src/App/Admin/PluginOptions.php:233
 msgid "The default alt text language is English."
 msgstr ""
 
-#: src/App/Admin/PluginOptions.php:222
+#: src/App/Admin/PluginOptions.php:234
 msgid "If you want to translate into another language, enter the following data necessary for the translation API to work."
 msgstr ""
 
-#: src/App/Admin/PluginOptions.php:223
+#: src/App/Admin/PluginOptions.php:235
 msgid "After saving the changes you can select the desired language."
 msgstr ""
 
-#: src/App/Admin/PluginOptions.php:227
+#: src/App/Admin/PluginOptions.php:239
 msgid "Azure Translate Instance API Key"
 msgstr ""
 
-#: src/App/Admin/PluginOptions.php:228
+#: src/App/Admin/PluginOptions.php:240
 msgid "Enter your API key for the Azure Translate Instance service."
 msgstr ""
 
-#: src/App/Admin/PluginOptions.php:234
+#: src/App/Admin/PluginOptions.php:246
 msgid "Azure Translate Instance Endpoint"
 msgstr ""
 
-#: src/App/Admin/PluginOptions.php:235
+#: src/App/Admin/PluginOptions.php:247
 msgid "Enter the endpoint of the Translate Instance service"
 msgstr ""
 
-#: src/App/Admin/PluginOptions.php:241
+#: src/App/Admin/PluginOptions.php:253
 msgid "Azure Translate Instance Region"
 msgstr ""
 
-#: src/App/Admin/PluginOptions.php:242
+#: src/App/Admin/PluginOptions.php:254
 msgid "Enter the region of the Azure Translate Instance service."
 msgstr ""
 
-#: src/App/Admin/PluginOptions.php:249
+#: src/App/Admin/PluginOptions.php:261
 msgid "Alt Text Language"
 msgstr ""
 
-#: src/App/Admin/PluginOptions.php:250
+#: src/App/Admin/PluginOptions.php:262
 msgid "Select the language in which the alt text should be written."
 msgstr ""
 
@@ -254,30 +256,26 @@ msgstr ""
 msgid "No language retrieved: maybe the translation endpoint is wrong. Please check it out and try again."
 msgstr ""
 
-#: src/App/Setup.php:60
-msgid "Generate Alt Text"
-msgstr ""
-
-#: src/App/Setup.php:111
+#: src/App/Setup.php:114
 msgid "Take a look at the"
 msgstr ""
 
-#: src/App/Setup.php:111
+#: src/App/Setup.php:114
 msgid "error log"
 msgstr ""
 
-#: src/App/Setup.php:114
+#: src/App/Setup.php:117
 msgid "No Alt Text has been set."
 msgstr ""
 
-#: src/App/Setup.php:116
+#: src/App/Setup.php:119
 msgid "The Alt Text has been set for %s media."
 msgstr ""
 
-#: src/App/Setup.php:118
+#: src/App/Setup.php:121
 msgid "The Alt Text has been set for %s of %s media."
 msgstr ""
 
-#: src/App/Setup.php:149
+#: src/App/Setup.php:152
 msgid "Settings"
 msgstr ""

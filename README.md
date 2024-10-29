@@ -5,7 +5,7 @@ This plugin is able to use the AI of external services of OpenaAI or Azure to ge
 ## Features
 
 This plugin allows you to generate alt texts in the following ways:
-- using Openai APIs (updated to GPT-4o)
+- using Openai APIs (GPT-4o, GPT-4o Mini, o1 Mini)
 - using Azure APIs for computational vision;
 - recovering the title of the image
 - recovering the title of the article in which the image is uploaded
@@ -38,8 +38,6 @@ In your OpenAI account, retrieve the following data to enter on the options page
 - API Key
 
 Enter a prompt for generating the alt text according to your needs.
-
-When the gpt-4o model fails, the gpt-4-turbo fallback model is used to create the alt text based on the name of the image.
 
 ### Azure's APIs method
 On your Azure account, create a Computer Vision instance and retrieve the following data to enter on the options page:

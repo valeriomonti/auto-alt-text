@@ -12,7 +12,7 @@ This plugin allows you to automatically generate an Alt Text for images uploaded
 
 == Description ==
 
-This plugin implements the automatic creation of alt text for images uploaded to the media library directly at the time of upload.
+This plugin implements the automatic creation of alt text for images uploaded to the media library. The alt text is generated at the time of uploading the image and it is also possible to generate the alt text for images already present in the media library.
 
 To generate the alt text, you can choose to use the artificial intelligence of OpenAI or Azure, or decide if you simply want to copy the title of the article where the image is uploaded or the name of the image.
 
@@ -21,7 +21,7 @@ Clearly, using artificial intelligence will allow for a more accurate and useful
 ## Features
 ___
 This plugin allows you to generate alt texts in the following ways:
-- using Openai APIs (updated to GPT-4o)
+- using Openai APIs (GPT-4o, GPT-4o Mini, o1 Mini)
 - using Azure APIs for computational vision;
 - recovering the title of the image
 - recovering the title of the article in which the image is uploaded
@@ -38,8 +38,6 @@ In your OpenAI account, retrieve the following data to enter on the options page
 - API Key
 
 Enter a prompt for generating the alt text according to your needs.
-
-When the gpt-4o model fails, the gpt-4-turbo fallback model is used to create the alt text based on the name of the image.
 
 ### Azure's APIs
 On your Azure account, create a Computer Vision instance and retrieve the following data to enter on the options page:
@@ -122,6 +120,9 @@ If you wish to obtain the most accurate description possible of the image, you s
 4. Title of the attachment options page
 
 == Changelog ==
+
+= 2.2.0 =
+-Allow users to select the preferred Openai model for generating alt text
 
 = 2.1.0 =
 - Allow users to generate the alt text for each individual image in the media library

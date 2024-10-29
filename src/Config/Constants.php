@@ -37,7 +37,7 @@ class Constants
     const AATXT_IMAGE_URL_TAG = '%imageUrl%';
     const AATXT_OPENAI_DEFAULT_PROMPT = "Act like an SEO expert and write an English alt text of up to 125 characters for this image.";
     const AATXT_OPENAI_VISION_MODEL = 'gpt-4o';
-    const AATXT_OPENAI_FALLBACK_MODEL = 'gpt-4-turbo';
+    const AATXT_OPENAI_FALLBACK_MODEL = 'gpt-4o-mini';
     const AATXT_OPENAI_MAX_TOKENS = 70;
     const AATXT_OPENAI_CHAT_COMPLETION_ENDPOINT = 'https://api.openai.com/v1/chat/completions';
     const AATXT_AJAX_GENERATE_ALT_TEXT_NONCE = 'generate_alt_text_nonce';
