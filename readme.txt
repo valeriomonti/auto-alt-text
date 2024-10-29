@@ -118,6 +118,8 @@ If you wish to obtain the most accurate description possible of the image, you s
 2. OpenAI's APIs method options page
 3. Title of the article options page
 4. Title of the attachment options page
+5. Bulk alt text generation
+6. Single image alt text generation
 
 == Changelog ==
 
