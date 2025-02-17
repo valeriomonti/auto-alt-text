@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Changed
 - Allow users to select the preferred Openai model for generating alt text
+- Update npm packages
 
 ## [v2.2.0] - 2024-10-28
 
