@@ -1,4 +1,4 @@
-# Copyright (C) 2024 Valerio Monti
+# Copyright (C) 2025 Valerio Monti
 # This file is distributed under the GPL v3.
 msgid ""
 msgstr ""
@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2024-10-29T13:35:13+00:00\n"
+"POT-Creation-Date: 2025-02-15T07:37:12+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.11.0\n"
 "X-Domain: auto-alt-text\n"
@@ -250,6 +250,14 @@ msgstr ""
 
 #: src/App/Admin/PluginOptions.php:262
 msgid "Select the language in which the alt text should be written."
+msgstr ""
+
+#: src/App/Admin/PluginOptions.php:296
+msgid "Keep existing alt text"
+msgstr ""
+
+#: src/App/Admin/PluginOptions.php:297
+msgid "If checked, the existing alt text of images will not be overwritten."
 msgstr ""
 
 #: src/App/AIProviders/Azure/AzureTranslator.php:115

@@ -292,6 +292,13 @@ class PluginOptions
                     echo '</div>';
                 endif;
 
+                echo '<div class="plugin-option type-article-title type-attachment-title type-openai type-azure">';
+                echo '<label for="' . esc_attr(Constants::AATXT_OPTION_FIELD_PRESERVE_EXISTING_ALT_TEXT) . '">' . esc_html__('Keep existing alt text', 'auto-alt-text') . '</label>';
+                echo '<p class="description">' . esc_html__("If checked, the existing alt text of images will not be overwritten.", 'auto-alt-text') . '</p>';
+                $preserveAltText = get_option(Constants::AATXT_OPTION_FIELD_PRESERVE_EXISTING_ALT_TEXT);
+                echo '<input type="checkbox" name="' . esc_attr(Constants::AATXT_OPTION_FIELD_PRESERVE_EXISTING_ALT_TEXT) . '" value="1" class="notRequired" ' . checked(1, $preserveAltText, false) . ' />';
+                echo '</div>';
+
                 submit_button();
                 ?>
             </form>
@@ -330,6 +337,7 @@ class PluginOptions
         register_setting('auto_alt_text_options', Constants::AATXT_OPTION_FIELD_ENDPOINT_AZURE_TRANSLATE_INSTANCE, [self::class, 'sanitizeUrl']);
         register_setting('auto_alt_text_options', Constants::AATXT_OPTION_FIELD_REGION_AZURE_TRANSLATE_INSTANCE, [self::class, 'sanitizeText']);
         register_setting('auto_alt_text_options', Constants::AATXT_OPTION_FIELD_LANGUAGE_AZURE_TRANSLATE_INSTANCE, [self::class, 'sanitizeText']);
+        register_setting('auto_alt_text_options', Constants::AATXT_OPTION_FIELD_PRESERVE_EXISTING_ALT_TEXT);
     }
 
     /**
@@ -410,6 +418,14 @@ class PluginOptions
     public static function languageAzureTranslateInstance(): string
     {
         return get_option(Constants::AATXT_OPTION_FIELD_LANGUAGE_AZURE_TRANSLATE_INSTANCE) ?: 'en';
+    }
+
+    /**
+     * @return bool
+     */
+    public static function preserveExistingAltText(): bool
+    {
+        return get_option(Constants::AATXT_OPTION_FIELD_PRESERVE_EXISTING_ALT_TEXT);
     }
 
     public static function sanitizeUrl($input): string

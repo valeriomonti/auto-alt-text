@@ -174,7 +174,15 @@ class Setup
             return '';
         }
 
-        $altText = '';
+        if (PluginOptions::preserveExistingAltText()) {
+            $altText = get_post_meta($postId, '_wp_attachment_image_alt', TRUE);
+
+            if (!empty($altText)) {
+                return $altText;
+            }
+        }
+
+
         switch (PluginOptions::typology()) {
             case Constants::AATXT_OPTION_TYPOLOGY_CHOICE_AZURE:
                 // If Azure is selected as alt text generating typology

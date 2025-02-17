@@ -34,6 +34,7 @@ class Constants
     const AATXT_OPTION_FIELD_ENDPOINT_AZURE_TRANSLATE_INSTANCE = 'aatxt_endpoint-azure-translate-instance';
     const AATXT_OPTION_FIELD_REGION_AZURE_TRANSLATE_INSTANCE = 'aatxt_region_azure_translate_instance';
     const AATXT_OPTION_FIELD_LANGUAGE_AZURE_TRANSLATE_INSTANCE = 'aatxt_language_azure_translate_instance';
+    const AATXT_OPTION_FIELD_PRESERVE_EXISTING_ALT_TEXT = 'aatxt_preserve_existing_alt_text';
     const AATXT_IMAGE_URL_TAG = '%imageUrl%';
     const AATXT_OPENAI_DEFAULT_PROMPT = "Act like an SEO expert and write an English alt text of up to 125 characters for this image.";
     const AATXT_OPENAI_VISION_MODEL = 'gpt-4o';
