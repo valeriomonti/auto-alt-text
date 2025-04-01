@@ -174,6 +174,13 @@ class Setup
             return '';
         }
 
+        $mime = get_post_mime_type($postId);
+
+        if (!in_array($mime, Constants::AATXT_ALLOWED_MIME_TYPES, true)) {
+            (DBLogger::make())->writeImageLog($postId, "You uploaded an unsupported image. Please make sure your image has of one the following formats: ['png', 'jpeg', 'gif', 'webp']");
+            return '';
+        }
+
         if (PluginOptions::preserveExistingAltText()) {
             $altText = get_post_meta($postId, '_wp_attachment_image_alt', TRUE);
 
@@ -181,7 +188,6 @@ class Setup
                 return $altText;
             }
         }
-
 
         switch (PluginOptions::typology()) {
             case Constants::AATXT_OPTION_TYPOLOGY_CHOICE_AZURE:
