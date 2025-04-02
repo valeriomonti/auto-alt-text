@@ -165,19 +165,20 @@ class Setup
     }
 
     /**
+     * @param array<string> $allowedMimeTypes
+     */
+    private static function allowedMimeTypesList(array $allowedMimeTypes): string
+    {
+        return str_replace('image/', '' , implode(', ', $allowedMimeTypes));
+    }
+
+    /**
      * @param int $postId
      * @return string
      */
     public static function altText(int $postId): string
     {
         if (!wp_attachment_is_image($postId)) {
-            return '';
-        }
-
-        $mime = get_post_mime_type($postId);
-
-        if (!in_array($mime, Constants::AATXT_ALLOWED_MIME_TYPES, true)) {
-            (DBLogger::make())->writeImageLog($postId, "You uploaded an unsupported image. Please make sure your image has of one the following formats: ['png', 'jpeg', 'gif', 'webp']");
             return '';
         }
 
@@ -189,9 +190,15 @@ class Setup
             }
         }
 
+        $mimeType = get_post_mime_type($postId);
+
         switch (PluginOptions::typology()) {
             case Constants::AATXT_OPTION_TYPOLOGY_CHOICE_AZURE:
-                // If Azure is selected as alt text generating typology
+                if (!in_array($mimeType, Constants::AATXT_AZURE_ALLOWED_MIME_TYPES, true)) {
+                    $formats = self::allowedMimeTypesList(Constants::AATXT_AZURE_ALLOWED_MIME_TYPES);
+                    (DBLogger::make())->writeImageLog($postId, "You uploaded an unsupported image. Please make sure your image has of one the following formats: $formats");
+                    return '';
+                }
                 try {
                     $altText = (AltTextGeneratorAi::make(AzureComputerVisionCaptionsResponse::make()))->altText($postId);
                 } catch (AzureException $e) {
@@ -199,7 +206,11 @@ class Setup
                 }
                 break;
             case Constants::AATXT_OPTION_TYPOLOGY_CHOICE_OPENAI:
-                // If OpenAI is selected as alt text generating typology
+                if (!in_array($mimeType, Constants::AATXT_OPENAI_ALLOWED_MIME_TYPES, true)) {
+                    $formats = self::allowedMimeTypesList(Constants::AATXT_OPENAI_ALLOWED_MIME_TYPES);
+                    (DBLogger::make())->writeImageLog($postId, "You uploaded an unsupported image. Please make sure your image has of one the following formats: $formats");
+                    return '';
+                }
                 try {
                     $altText = (AltTextGeneratorAi::make(OpenAIVision::make()))->altText($postId);
                 } catch (OpenAIException $e) {

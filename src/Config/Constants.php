@@ -42,7 +42,13 @@ class Constants
     const AATXT_OPENAI_MAX_TOKENS = 70;
     const AATXT_OPENAI_CHAT_COMPLETION_ENDPOINT = 'https://api.openai.com/v1/chat/completions';
     const AATXT_AJAX_GENERATE_ALT_TEXT_NONCE = 'generate_alt_text_nonce';
-    const AATXT_ALLOWED_MIME_TYPES = [
+    const AATXT_OPENAI_ALLOWED_MIME_TYPES = [
+        'image/png',
+        'image/jpeg',
+        'image/gif',
+        'image/webp',
+    ];
+    const AATXT_AZURE_ALLOWED_MIME_TYPES = [
         'image/png',
         'image/jpeg',
         'image/gif',
