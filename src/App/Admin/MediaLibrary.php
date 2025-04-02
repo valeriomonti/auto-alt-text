@@ -72,8 +72,23 @@ class MediaLibrary
 
     public static function addGenerateAltTextButton(array $form_fields, \WP_Post $post): array
     {
+        if (!wp_attachment_is_image($post->ID)) {
+            return $form_fields;
+        }
+
+        $mimeType = get_post_mime_type($post->ID);
+        $altTextGenerationTypology = PluginOptions::typology();
+
+        if($altTextGenerationTypology === Constants::AATXT_OPTION_TYPOLOGY_CHOICE_OPENAI && !in_array($mimeType, Constants::AATXT_OPENAI_ALLOWED_MIME_TYPES, true)) {
+            return $form_fields;
+        }
+
+        if($altTextGenerationTypology === Constants::AATXT_OPTION_TYPOLOGY_CHOICE_AZURE && !in_array($mimeType, Constants::AATXT_AZURE_ALLOWED_MIME_TYPES, true)) {
+            return $form_fields;
+        }
+
         $form_fields['generate_alt_text'] = array(
-            'label' => '',
+            'label' => get_post_mime_type($post->ID),
             'input' => 'html',
             'html' => '<button type="button" class="button" id="generate-alt-text-button" data-post-id="' . $post->ID . '">'
                 . esc_html__('Generate Alt Text', 'auto-alt-text') .
