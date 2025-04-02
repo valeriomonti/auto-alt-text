@@ -1,4 +1,6 @@
-## [v2.3.1] - 2025-02-18
+## [v2.3.2] - 2025-04-02
 
 ### Changed
-- Tested up to WordPress 6.7.2
+- Avoid generating alt text for not supported mime types
+- Hide the 'Generate Alt Text' button in media library for unsupported mime types
+- Update npm packages

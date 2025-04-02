@@ -3,7 +3,7 @@ Contributors: valeriomonti
 Tags: alt text, alt tag, openai, azure, seo
 Requires at least: 6.0
 Tested up to: 6.7.2
-Stable tag: 2.3.1
+Stable tag: 2.3.2
 Requires PHP: 7.4
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
@@ -122,6 +122,11 @@ If you wish to obtain the most accurate description possible of the image, you s
 6. Single image alt text generation
 
 == Changelog ==
+= 2.3.2 =
+- Avoid generating alt text for not supported mime types
+- Hide the 'Generate Alt Text' button in media library for unsupported mime types
+- Update npm packages
+
 = 2.3.1 =
 - Tested up to WordPress 6.7.2
 
