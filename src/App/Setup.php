@@ -243,7 +243,7 @@ class Setup
                 return '';
         }
 
-        return $altText;
+        return $altText ?? '';
     }
 
     /**

@@ -1,6 +1,4 @@
-## [v2.3.2] - 2025-04-02
+## [v2.3.3] - 2025-04-08
 
 ### Changed
-- Avoid generating alt text for not supported mime types
-- Hide the 'Generate Alt Text' button in media library for unsupported mime types
-- Update npm packages
+- Fix a return type error in the alt text generation
