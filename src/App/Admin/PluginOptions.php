@@ -122,6 +122,21 @@ class PluginOptions
      */
     public static function optionsMainPage(): void
     {
+        $rawApiKey = get_option(Constants::AATXT_OPTION_FIELD_API_KEY_OPENAI);
+        $decrypted = Encryption::make()->decrypt((string)$rawApiKey);
+
+        // If the API Key is not empty and decryption failed, show an error message
+        if ($rawApiKey && $decrypted === '') {
+            add_settings_error(
+                'auto_alt_text_options',
+                'decrypt_failed',
+                esc_html__('There was a problem with the encryption of your API Key for alt text generation. Please re-enter the key and save.','auto-alt-text'),
+                'error'
+            );
+        }
+
+        settings_errors('auto_alt_text_options');
+
         ?>
         <div class="wrap">
             <h1><?php esc_html_e('Auto Alt Text Options', 'auto-alt-text') ?></h1>

@@ -54,31 +54,29 @@ final class Encryption
      */
     public function decrypt(string $rawValue): string
     {
-        if (empty($rawValue)) {
+        if (empty($rawValue) || ! extension_loaded('openssl')) {
             return '';
         }
 
-        /** @noinspection DuplicatedCode */
-        if (!extension_loaded('openssl')) {
-            return $rawValue;
+        try {
+            $decoded = base64_decode($rawValue, true);
+            $method = 'aes-256-ctr';
+            $ivLength = openssl_cipher_iv_length($method);
+            $iv = substr($decoded, 0, $ivLength);
+            $cipherText = substr($decoded, $ivLength);
+            $decrypted = openssl_decrypt($cipherText, $method, $this->key, 0, $iv);
+
+            // If decryption fails or the salt is not present, return an empty string
+            if ( ! $decrypted || substr($decrypted, -strlen($this->salt)) !== $this->salt) {
+                return '';
+            }
+
+            return substr($decrypted, 0, -strlen($this->salt));
+        } catch (\Throwable $e) {
+            throw new RuntimeException('Decryption failed.');
         }
-
-        $rawValue = base64_decode($rawValue, true);
-
-        $method = 'aes-256-ctr';
-        $ivLength = openssl_cipher_iv_length($method);
-        $iv = substr($rawValue, 0, $ivLength);
-
-        $rawValue = substr($rawValue, $ivLength);
-
-        $value = openssl_decrypt($rawValue, $method, $this->key, 0, $iv);
-
-        if (!$value || substr($value, -strlen($this->salt)) !== $this->salt) {
-            throw new RuntimeException('Encryption failed.');
-        }
-
-        return substr($value, 0, -strlen($this->salt));
     }
+
 
     /**
      * Get key from WordPress Authentication Unique Keys and Salts
