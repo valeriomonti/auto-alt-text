@@ -33,7 +33,8 @@ class PluginOptions
 
         add_action('admin_enqueue_scripts', [self::$instance, 'enqueueAdminScripts'], 1);
         add_action('admin_menu', [self::$instance, 'addOptionsPageToTheMenu']);
-        add_action('admin_init', [self::$instance, 'setupPluginOptions']);
+        add_action('admin_init', [self::$instance, 'setupPluginOptions'], 10);
+        add_action('admin_init', [self::$instance, 'migrateEncryptionKeys'], 9);
 
         // Encrypt API Keys on update
         add_action('pre_update_option_' . Constants::AATXT_OPTION_FIELD_API_KEY_AZURE_COMPUTER_VISION, [self::$instance, 'encryptDataOnUpdate'], 10, 3);
@@ -41,13 +42,29 @@ class PluginOptions
         add_action('pre_update_option_' . Constants::AATXT_OPTION_FIELD_API_KEY_OPENAI, [self::$instance, 'encryptDataOnUpdate'], 10, 3);
     }
 
+    public function migrateEncryptionKeys(): void
+    {
+        if ( ! defined('AAT_ENCRYPTION_KEY') || ! defined('AAT_ENCRYPTION_SALT') ) {
+            return;
+        }
+
+        update_option(Constants::AATXT_LEGACY_ENCRYPTION_MIGRATION_DONE, '0');
+
+        if ( get_option(Constants::AATXT_LEGACY_ENCRYPTION_MIGRATION_DONE) ) {
+            return;
+        }
+
+        Encryption::make()->migrateLegacyApiKeys();
+
+        update_option(Constants::AATXT_LEGACY_ENCRYPTION_MIGRATION_DONE, '1');
+    }
+
     /**
      * Encrypt data
      * @param ?string $newValue
-     * @param ?string $oldValue
      * @return ?string
      */
-    public function encryptDataOnUpdate(?string $newValue, ?string $oldValue): ?string
+    public function encryptDataOnUpdate(?string $newValue): ?string
     {
         if (!empty($newValue)) {
             $newValue = (Encryption::make())->encrypt($newValue);
@@ -457,5 +474,4 @@ class PluginOptions
     {
         return sanitize_textarea_field($input);
     }
-
 }

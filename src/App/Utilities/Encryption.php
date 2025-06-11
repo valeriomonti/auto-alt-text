@@ -2,6 +2,7 @@
 
 namespace AATXT\App\Utilities;
 
+use AATXT\Config\Constants;
 use RuntimeException;
 
 final class Encryption
@@ -48,6 +49,9 @@ final class Encryption
         return base64_encode($iv . $raw_value);
     }
 
+    /**
+     * Attempts to decrypt a raw value using the provided key and salt.
+     **/
     private function attemptDecrypt(string $rawValue, string $key, string $salt): string
     {
         $decoded   = base64_decode($rawValue, true);
@@ -65,6 +69,7 @@ final class Encryption
     }
 
     /**
+     * Decrypts a raw value trying with the plugin key and salt first, then falling back to the logged-in key and salt.
      * @param string $rawValue
      * @return string|bool
      */
@@ -99,7 +104,7 @@ final class Encryption
         if ( defined( 'AAT_ENCRYPTION_KEY' ) && '' !== AAT_ENCRYPTION_KEY ) {
             return AAT_ENCRYPTION_KEY;
         }
-
+        // If the constant is not defined, use the WordPress constants LOGGED_IN_KEY and LOGGED_IN_SALT
         if (defined('LOGGED_IN_KEY') && '' !== LOGGED_IN_KEY) {
             return LOGGED_IN_KEY;
         }
@@ -108,18 +113,51 @@ final class Encryption
         return 'warning-not-logged-in-key-constant-defined';
     }
 
-
     public function getSalt(): string
     {
         if ( defined( 'AAT_ENCRYPTION_SALT' ) && '' !== AAT_ENCRYPTION_SALT ) {
             return AAT_ENCRYPTION_SALT;
         }
-
+        // If the constant is not defined, use the WordPress constants LOGGED_IN_KEY and LOGGED_IN_SALT
         if (defined('LOGGED_IN_SALT') && '' !== LOGGED_IN_SALT) {
             return LOGGED_IN_SALT;
         }
 
         // If this is reached, you're either not on a live site or have a serious security issue.
         return 'warning-not-logged-in-salt-constant-defined';
+    }
+
+    /**
+     * Migrate legacy API keys from the old encryption method to the new one.
+     * This is necessary for backward compatibility with older versions of the plugin.
+     */
+    public function migrateLegacyApiKeys(): void
+    {
+        $fields = [
+            Constants::AATXT_OPTION_FIELD_API_KEY_OPENAI,
+            Constants::AATXT_OPTION_FIELD_API_KEY_AZURE_COMPUTER_VISION,
+            Constants::AATXT_OPTION_FIELD_API_KEY_AZURE_TRANSLATE_INSTANCE,
+        ];
+
+        foreach ($fields as $optionName) {
+            $raw = get_option($optionName);
+            if (empty($raw)) {
+                continue;
+            }
+
+            if (! defined('LOGGED_IN_KEY') || ! defined('LOGGED_IN_SALT')) {
+                continue;
+            }
+            // Try to decrypt options using the old method with the WordPress constants LOGGED_IN_KEY and LOGGED_IN_SALT
+            $plain = $this->attemptDecrypt($raw, LOGGED_IN_KEY, LOGGED_IN_SALT);
+
+            if ($plain === '') {
+                // Decryption failed, cause the option is encrypted with the new method or the old method failed
+                continue;
+            }
+
+            //Resave the option as plain because the action "encryptDataOnUpdate" will encrypt before saving in the database
+            update_option($optionName, $plain);
+        }
     }
 }
