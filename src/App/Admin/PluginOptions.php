@@ -39,7 +39,46 @@ class PluginOptions
         add_action('pre_update_option_' . Constants::AATXT_OPTION_FIELD_API_KEY_AZURE_COMPUTER_VISION, [self::$instance, 'encryptDataOnUpdate'], 10, 3);
         add_action('pre_update_option_' . Constants::AATXT_OPTION_FIELD_API_KEY_AZURE_TRANSLATE_INSTANCE, [self::$instance, 'encryptDataOnUpdate'], 10, 3);
         add_action('pre_update_option_' . Constants::AATXT_OPTION_FIELD_API_KEY_OPENAI, [self::$instance, 'encryptDataOnUpdate'], 10, 3);
+
+        add_action('admin_notices', [self::$instance, 'encryptionErrorNotice']);
     }
+
+    /**
+     * Show an error notice if the encryption of the API Key fails
+     * @return void
+     */
+    public function encryptionErrorNotice(): void
+    {
+        $raw       = get_option(Constants::AATXT_OPTION_FIELD_API_KEY_OPENAI);
+        $decrypted = Encryption::make()->decrypt((string) $raw);
+
+        if ($raw && $decrypted === '') {
+            $screen = get_current_screen();
+            $settingsScreenId = 'toplevel_page_' . Constants::AATXT_PLUGIN_OPTIONS_PAGE_SLUG;
+            $showLink = ! ( $screen && $screen->id === $settingsScreenId );
+
+            $settingsUrl = esc_url( menu_page_url(Constants::AATXT_PLUGIN_OPTIONS_PAGE_SLUG, false) );
+
+            echo '<div class="notice notice-error is-dismissible">';
+            echo '<p>';
+            // Titolo in grassetto
+            echo '<strong>' . esc_html__('Auto Alt Text', 'auto-alt-text') . ':</strong> ';
+            // Messaggio di errore
+            echo esc_html__(
+                'There was a problem with the encryption of your API Key for alt text generation. Please re-enter the key and save.',
+                'auto-alt-text'
+            );
+            // Link condizionale
+            if ($showLink) {
+                echo ' <a href="' . $settingsUrl . '">'
+                    . esc_html__('Go to settings page', 'auto-alt-text')
+                    . '</a>.';
+            }
+            echo '</p>';
+            echo '</div>';
+        }
+    }
+
 
     /**
      * Encrypt data
@@ -122,21 +161,6 @@ class PluginOptions
      */
     public static function optionsMainPage(): void
     {
-        $rawApiKey = get_option(Constants::AATXT_OPTION_FIELD_API_KEY_OPENAI);
-        $decrypted = Encryption::make()->decrypt((string)$rawApiKey);
-
-        // If the API Key is not empty and decryption failed, show an error message
-        if ($rawApiKey && $decrypted === '') {
-            add_settings_error(
-                'auto_alt_text_options',
-                'decrypt_failed',
-                esc_html__('There was a problem with the encryption of your API Key for alt text generation. Please re-enter the key and save.','auto-alt-text'),
-                'error'
-            );
-        }
-
-        settings_errors('auto_alt_text_options');
-
         ?>
         <div class="wrap">
             <h1><?php esc_html_e('Auto Alt Text Options', 'auto-alt-text') ?></h1>
