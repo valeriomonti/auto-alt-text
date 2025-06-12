@@ -71,7 +71,7 @@ final class Encryption
     /**
      * Decrypts a raw value trying with the plugin key and salt first, then falling back to the logged-in key and salt.
      * @param string $rawValue
-     * @return string|bool
+     * @return string
      */
     public function decrypt(string $rawValue): string
     {
@@ -101,8 +101,8 @@ final class Encryption
 
     private function getKey(): string
     {
-        if ( defined( 'AAT_ENCRYPTION_KEY' ) && '' !== AAT_ENCRYPTION_KEY ) {
-            return AAT_ENCRYPTION_KEY;
+        if ( defined( 'AATXT_ENCRYPTION_KEY' ) && '' !== AATXT_ENCRYPTION_KEY ) {
+            return AATXT_ENCRYPTION_KEY;
         }
         // If the constant is not defined, use the WordPress constants LOGGED_IN_KEY and LOGGED_IN_SALT
         if (defined('LOGGED_IN_KEY') && '' !== LOGGED_IN_KEY) {
@@ -115,8 +115,8 @@ final class Encryption
 
     public function getSalt(): string
     {
-        if ( defined( 'AAT_ENCRYPTION_SALT' ) && '' !== AAT_ENCRYPTION_SALT ) {
-            return AAT_ENCRYPTION_SALT;
+        if ( defined( 'AATXT_ENCRYPTION_SALT' ) && '' !== AATXT_ENCRYPTION_SALT ) {
+            return AATXT_ENCRYPTION_SALT;
         }
         // If the constant is not defined, use the WordPress constants LOGGED_IN_KEY and LOGGED_IN_SALT
         if (defined('LOGGED_IN_SALT') && '' !== LOGGED_IN_SALT) {

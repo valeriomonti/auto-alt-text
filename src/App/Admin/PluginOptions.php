@@ -31,6 +31,14 @@ class PluginOptions
 
         self::$assetsManager = AssetsManager::make();
 
+        if (
+            ! defined('AATXT_ENCRYPTION_KEY')
+            || ! defined('AATXT_ENCRYPTION_SALT')
+            && self::isOptionsPage()
+        ) {
+            add_action('admin_notices', [self::$instance, 'showEncryptionConstantsNotice']);
+        }
+
         add_action('admin_enqueue_scripts', [self::$instance, 'enqueueAdminScripts'], 1);
         add_action('admin_menu', [self::$instance, 'addOptionsPageToTheMenu']);
         add_action('admin_init', [self::$instance, 'setupPluginOptions'], 10);
@@ -42,9 +50,57 @@ class PluginOptions
         add_action('pre_update_option_' . Constants::AATXT_OPTION_FIELD_API_KEY_OPENAI, [self::$instance, 'encryptDataOnUpdate'], 10, 3);
     }
 
+    /**
+     * Ritorna true se siamo sulla “Auto Alt Text” options page.
+     */
+    private static function isOptionsPage(): bool
+    {
+        $screen = get_current_screen();
+        return $screen
+            && $screen->id === 'toplevel_page_' . Constants::AATXT_PLUGIN_OPTIONS_PAGE_SLUG;
+    }
+
+    /**
+     * Stampa un admin notice contenente i define da aggiungere
+     * al wp-config.php.
+     */
+    public function showEncryptionConstantsNotice(): void
+    {
+        // solo admin
+        if (! current_user_can('manage_options')) {
+            return;
+        }
+
+        // Genera due stringhe randomiche consigliate
+        $suggestedKey  = bin2hex(random_bytes(32));
+        $suggestedSalt = bin2hex(random_bytes(32));
+
+        // Costruisci il markup
+        ?>
+        <div class="notice notice-warning is-dismissible">
+            <p>
+                <?php esc_html_e(
+                    "To strengthen the security of your API key, define two custom constants in wp-config.php:",
+                    'auto-alt-text'
+                ); ?>
+            </p>
+<pre style="background:#f5f5f5; padding:10px; border-radius:4px;">
+define( 'AATXT_ENCRYPTION_KEY',  '<?php echo esc_html( $suggestedKey ); ?>' );
+define( 'AATXT_ENCRYPTION_SALT', '<?php echo esc_html( $suggestedSalt ); ?>' );
+</pre>
+            <p>
+                <?php esc_html_e(
+                    "Copy and paste these lines immediately **before** the line \"/* That's all, stop editing! Happy publishing. */\" in wp-config.php",
+                    'auto-alt-text'
+                ); ?>
+            </p>
+        </div>
+        <?php
+    }
+
     public function migrateEncryptionKeys(): void
     {
-        if ( ! defined('AAT_ENCRYPTION_KEY') || ! defined('AAT_ENCRYPTION_SALT') ) {
+        if ( ! defined('AATXT_ENCRYPTION_KEY') || ! defined('AATXT_ENCRYPTION_SALT') ) {
             return;
         }
 
