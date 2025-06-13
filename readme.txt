@@ -3,7 +3,7 @@ Contributors: valeriomonti
 Tags: alt text, alt tag, openai, azure, seo
 Requires at least: 6.0
 Tested up to: 6.7.2
-Stable tag: 2.3.3
+Stable tag: 2.3.4
 Requires PHP: 7.4
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
@@ -122,6 +122,9 @@ If you wish to obtain the most accurate description possible of the image, you s
 6. Single image alt text generation
 
 == Changelog ==
+= 2.3.4 =
+- Displays an error message in the administration area if the WordPress salt keys were changed after the OpenAI API key was set. The message asks the user to enter the OpenAI API key again.
+
 = 2.3.3 =
 - Fix a return type error in the alt text generation
 

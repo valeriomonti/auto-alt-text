@@ -3,7 +3,7 @@
 /**
  * Plugin Name:     Auto Alt Text
  * Description:     This plugin allows you to automatically generate an Alt Text for images uploaded into the media library via AI..
- * Version:         2.3.3
+ * Version:         2.3.4
  * Author:          Valerio Monti
  * Author URI:      https://www.vmweb.it
  * Text Domain:     auto-alt-text
