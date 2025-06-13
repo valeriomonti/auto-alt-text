@@ -124,6 +124,7 @@ If you wish to obtain the most accurate description possible of the image, you s
 == Changelog ==
 = 2.3.4 =
 - Displays an error message in the administration area if the WordPress salt keys were changed after the OpenAI API key was set. The message asks the user to enter the OpenAI API key again.
+- Update npm packages
 
 = 2.3.3 =
 - Fix a return type error in the alt text generation
