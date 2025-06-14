@@ -1,6 +1,6 @@
 === Auto Alt Text ===
 Contributors: valeriomonti
-Tags: alt text, alt tag, openai, azure, seo
+Tags: alt text, alt tag, accessibility, openai, seo
 Requires at least: 6.0
 Tested up to: 6.7.2
 Stable tag: 2.3.4
@@ -95,6 +95,17 @@ This plugin does not collect any information from your Azure account. The data t
 
 For accurate information on privacy and conditions of use, please directly consult the [privacy policy](https://privacy.microsoft.com/en-us/privacystatement) and [terms and conditions](https://azure.microsoft.com/en-us/support/legal/) on the official website. It is also advisable to check the costs and usage statistics of the API service on the Microsoft Azure's website.
 
+## Encryption Constants
+
+We **strongly recommend** defining the new plugin-specific constants in your `wp-config.php`:
+
+`define( 'AAT_ENCRYPTION_KEY',  'a_random_string_of_at_least_64_characters' );`
+`define( 'AAT_ENCRYPTION_SALT', 'another_random_string_of_at_least_64_characters' );`
+
+You will find these two define(...) lines already generated for you on the Auto Alt Text » Options page – simply copy & paste them before the `/* That's all, stop editing! Happy publishing. */` line in your `wp-config.php`.
+
+If you choose not to add them, the plugin will continue to work normally, but it will fall back to using your WordPress `LOGGED_IN_KEY` / `LOGGED_IN_SALT`, which may break if those salts are ever changed.
+
 ## Disclaimer
 Auto Alt Text is a plugin that helps users automatically generate Alt Texts of their images using AI services such as OpenAI's ChatGPT or Microsoft Azure.
 Users need their own API key and must follow the rules set by the AI service they choose.
@@ -111,6 +122,27 @@ No, but if you want to leverage the capabilities of AI, you must have an Azure o
 
 = Which generation method should I choose to obtain an accurate description of the image? =
 If you wish to obtain the most accurate description possible of the image, you should use the "OpenAI's APIs" or "Azure's APIs" method.
+
+= Why do I see the error “There was a problem with the encryption of your API Key for alt text generation. Please re-enter the key and save”? =
+
+This message appears because the plugin was unable to decrypt your stored API Key. In most cases this happens when the cryptographic “salt” or “key” it originally used to encrypt your API Key has changed since you first saved it.
+
+**Common causes**
+- You (or another plugin) have changed the WordPress authentication salts (`LOGGED_IN_KEY` / `LOGGED_IN_SALT`) in your `wp-config.php` after saving the API Key.
+- You haven’t defined the recommended plugin-specific constants (`AAT_ENCRYPTION_KEY` / `AAT_ENCRYPTION_SALT`) in your `wp-config.php`, so the plugin fell back to the WordPress salts.
+
+**How to fix**
+1. Go to **Auto Alt Text » Options** in your WordPress admin.
+2. Re-enter your API Key in the appropriate field and click **Save Changes**.
+3. _(Recommended)_ Prevent this issue in the future by adding these lines **before** the `/* That's all, stop editing! Happy publishing. */` comment in your `wp-config.php`:
+   ```
+   define( 'AAT_ENCRYPTION_KEY',  'a_random_string_of_at_least_64_characters' );
+   define( 'AAT_ENCRYPTION_SALT', 'another_random_string_of_at_least_64_characters' );
+   ```
+
+This ensures the plugin uses stable, plugin-specific values for encryption and won’t break if WordPress salts are ever changed again.
+
+Once you’ve re-entered your API Key (and, if desired, added the constants), hit Save Changes — the plugin will re-encrypt your key correctly and the error will disappear
 
 == Screenshots ==
 
