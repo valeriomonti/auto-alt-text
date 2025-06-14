@@ -31,9 +31,18 @@ class PluginOptions
 
         self::$assetsManager = AssetsManager::make();
 
+        if (
+            ! defined('AATXT_ENCRYPTION_KEY')
+            || ! defined('AATXT_ENCRYPTION_SALT')
+            && self::isOptionsPage()
+        ) {
+            add_action('admin_notices', [self::$instance, 'showEncryptionConstantsNotice']);
+        }
+
         add_action('admin_enqueue_scripts', [self::$instance, 'enqueueAdminScripts'], 1);
         add_action('admin_menu', [self::$instance, 'addOptionsPageToTheMenu']);
-        add_action('admin_init', [self::$instance, 'setupPluginOptions']);
+        add_action('admin_init', [self::$instance, 'setupPluginOptions'], 10);
+        add_action('admin_init', [self::$instance, 'migrateEncryptionKeys'], 9);
 
         // Encrypt API Keys on update
         add_action('pre_update_option_' . Constants::AATXT_OPTION_FIELD_API_KEY_AZURE_COMPUTER_VISION, [self::$instance, 'encryptDataOnUpdate'], 10, 3);
@@ -61,14 +70,14 @@ class PluginOptions
 
             echo '<div class="notice notice-error is-dismissible">';
             echo '<p>';
-            // Titolo in grassetto
+
             echo '<strong>' . esc_html__('Auto Alt Text', 'auto-alt-text') . ':</strong> ';
-            // Messaggio di errore
+
             echo esc_html__(
                 'There was a problem with the encryption of your API Key for alt text generation. Please re-enter the key and save.',
                 'auto-alt-text'
             );
-            // Link condizionale
+
             if ($showLink) {
                 echo ' <a href="' . $settingsUrl . '">'
                     . esc_html__('Go to settings page', 'auto-alt-text')
@@ -79,14 +88,78 @@ class PluginOptions
         }
     }
 
+    /*
+     * Ritorna true se siamo sulla “Auto Alt Text” options page.
+     */
+    private static function isOptionsPage(): bool
+    {
+        $screen = get_current_screen();
+        return $screen
+            && $screen->id === 'toplevel_page_' . Constants::AATXT_PLUGIN_OPTIONS_PAGE_SLUG;
+    }
+
+    /**
+     * Stampa un admin notice contenente i define da aggiungere
+     * al wp-config.php.
+     */
+    public function showEncryptionConstantsNotice(): void
+    {
+        // solo admin
+        if (! current_user_can('manage_options')) {
+            return;
+        }
+
+        // Genera due stringhe randomiche consigliate
+        $suggestedKey  = bin2hex(random_bytes(32));
+        $suggestedSalt = bin2hex(random_bytes(32));
+
+        // Costruisci il markup
+        ?>
+        <div class="notice notice-warning is-dismissible">
+            <p>
+                <?php esc_html_e(
+                    "To strengthen the security of your API key, define two custom constants in wp-config.php:",
+                    'auto-alt-text'
+                ); ?>
+            </p>
+<pre style="background:#f5f5f5; padding:10px; border-radius:4px;">
+define('AATXT_ENCRYPTION_KEY', '<?php echo esc_html( $suggestedKey ); ?>');
+define('AATXT_ENCRYPTION_SALT', '<?php echo esc_html( $suggestedSalt ); ?>');
+</pre>
+            <p>
+                <?php esc_html_e(
+                    "Copy and paste these lines immediately before the line \"/* That's all, stop editing! Happy publishing. */\" in wp-config.php",
+                    'auto-alt-text'
+                ); ?>
+            </p>
+        </div>
+        <?php
+    }
+
+    public function migrateEncryptionKeys(): void
+    {
+        if ( ! defined('AATXT_ENCRYPTION_KEY') || ! defined('AATXT_ENCRYPTION_SALT') ) {
+            return;
+        }
+
+        update_option(Constants::AATXT_LEGACY_ENCRYPTION_MIGRATION_DONE, '0');
+
+        if ( get_option(Constants::AATXT_LEGACY_ENCRYPTION_MIGRATION_DONE) ) {
+            return;
+        }
+
+        Encryption::make()->migrateLegacyApiKeys();
+
+        update_option(Constants::AATXT_LEGACY_ENCRYPTION_MIGRATION_DONE, '1');
+    }
+
 
     /**
      * Encrypt data
      * @param ?string $newValue
-     * @param ?string $oldValue
      * @return ?string
      */
-    public function encryptDataOnUpdate(?string $newValue, ?string $oldValue): ?string
+    public function encryptDataOnUpdate(?string $newValue): ?string
     {
         if (!empty($newValue)) {
             $newValue = (Encryption::make())->encrypt($newValue);
@@ -481,5 +554,4 @@ class PluginOptions
     {
         return sanitize_textarea_field($input);
     }
-
 }
