@@ -1,9 +1,10 @@
 === Auto Alt Text ===
 Contributors: valeriomonti
+Donate link: https://ko-fi.com/valeriomonti
 Tags: alt text, alt tag, accessibility, openai, seo
 Requires at least: 6.0
 Tested up to: 6.7.2
-Stable tag: 2.3.4
+Stable tag: 2.4.0
 Requires PHP: 7.4
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
@@ -154,6 +155,12 @@ Once you’ve re-entered your API Key (and, if desired, added the constants), hi
 6. Single image alt text generation
 
 == Changelog ==
+= 2.4.0 =
+- Introduce two new plugin-specific constants, `AATXT_ENCRYPTION_KEY` and `AATXT_ENCRYPTION_SALT`, allowing API keys to be encrypted independently of WordPress’s own salts.
+- Implement automatic migration of existing encrypted API keys: on upgrade, keys encrypted with the old WP salts are decrypted (if possible) and re-encrypted with the new plugin key.
+- Add an optional info notice on the Auto Alt Text options page showing the ready-to-copy `define()` statements for `wp-config.php`.
+- Maintain full backward-compatibility: if the new constants are not defined, the plugin continues to use the WordPress `LOGGED_IN_KEY`/`LOGGED_IN_SALT` fallback without interruption.
+
 = 2.3.4 =
 - Displays an error message in the administration area if the WordPress salt keys were changed after the OpenAI API key was set. The message asks the user to enter the OpenAI API key again.
 - Update npm packages

@@ -80,3 +80,14 @@ If the generation of the alt text via AI is set, in case of errors, to avoid blo
 When a call to the Azure or OpenAI API fails, a record containing the error message is saved in a custom database table.
 In this case, the cause of the error can be seen on the Auto Alt Text -> Error log page.
 
+### Encryption Constants
+
+We **strongly recommend** defining the new plugin-specific constants in your `wp-config.php`:
+
+`define( 'AAT_ENCRYPTION_KEY',  'a_random_string_of_at_least_64_characters' );`
+`define( 'AAT_ENCRYPTION_SALT', 'another_random_string_of_at_least_64_characters' );`
+
+You will find these two define(...) lines already generated for you on the Auto Alt Text » Options page – simply copy & paste them before the `/* That's all, stop editing! Happy publishing. */` line in your `wp-config.php`.
+
+If you choose not to add them, the plugin will continue to work normally, but it will fall back to using your WordPress `LOGGED_IN_KEY` / `LOGGED_IN_SALT`, which may break if those salts are ever changed.
+

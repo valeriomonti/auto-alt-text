@@ -1,6 +1,6 @@
 {
   "name": "auto-alt-text",
-  "version": "2.3.4",
+  "version": "2.4.0",
   "type": "module",
   "scripts": {
     "build": "npx vite build",
