@@ -120,8 +120,14 @@ define('AATXT_ENCRYPTION_SALT', '<?php echo esc_html( $suggestedSalt ); ?>');
 </pre>
             <p>
                 <?php esc_html_e(
-                    'Just paste them before the line “/* That\'s all, stop editing! Happy publishing. */” in wp-config.php. The plugin keeps working even without this.',
+                    'Just paste them before the line “/* That\'s all, stop editing! Happy publishing. */” in wp-config.php.',
                     'auto-alt-text'
+                ); ?>
+            </p>
+            <p>
+                <?php esc_html_e(
+                    "If you don't have the ability to edit the wp-config.php, don't worry because the plugin will still work without this change. If your site's salting keys change in the future, you will simply need to resave your API Key in the options below.",
+                    "auto-alt-text"
                 ); ?>
             </p>
         </div>

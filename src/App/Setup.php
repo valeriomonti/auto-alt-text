@@ -116,9 +116,28 @@ class Setup
             if ($mediaUpdated === 0) {
                 printf('<div id="message" class="notice notice-error is-dismissible"><p>' . esc_attr__('No Alt Text has been set.', 'auto-alt-text') . ' %s</p></div>', $errorLogDisclaimer);
             } elseif ($mediaSelected === $mediaUpdated) {
+                /**
+                 * translators:
+                 * %s = number of images processed
+                 */
                 printf('<div id="message" class="updated notice is-dismissible"><p>' . esc_attr__('The Alt Text has been set for %s media.', 'auto-alt-text') . '</p></div>', $mediaUpdated);
             } else {
-                printf('<div id="message" class="notice notice-warning is-dismissible"><p>' . esc_attr__('The Alt Text has been set for %s of %s media.', 'auto-alt-text') . ' %s</p></div>', $mediaUpdated, $mediaSelected, $errorLogDisclaimer);
+                /**
+                 * translators:
+                 *   %1$s = number of media items successfully updated
+                 *   %2$s = total number of media items selected
+                 *   %3$s = HTML disclaimer/link to the error log
+                 */
+                printf(
+                    '<div id="message" class="notice notice-warning is-dismissible"><p>%s</p></div>',
+                    sprintf(
+                    /* translators: 1 = updated count, 2 = selected count, 3 = disclaimer HTML */
+                        __( 'The Alt Text has been set for %1$s of %2$s media. %3$s', 'auto-alt-text' ),
+                        number_format_i18n( $mediaUpdated ),
+                        number_format_i18n( $mediaSelected ),
+                        wp_kses_post( $errorLogDisclaimer )
+                    )
+                );
             }
         }
     }
