@@ -12,6 +12,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 spinner.style.display = 'inline-block';
                 spinner.classList.add('is-active');
             }
+
             // AJAX Request to generate Alt Text
             let nonce = AATXT.altTextNonce;
             fetch(ajaxurl, {
@@ -39,7 +40,8 @@ document.addEventListener('DOMContentLoaded', function() {
                                 wp.media.frame.content.get().save();
                             }
                         } else {
-                            let attachmentAltTextField = document.getElementById('attachment_alt');
+                            let attachmentAltTextField = document.getElementById('attachment-details-alt-text');
+                            console.log(attachmentAltTextField);
                             if (attachmentAltTextField) {
                                 attachmentAltTextField.value = data.data.alt_text;
                             }
