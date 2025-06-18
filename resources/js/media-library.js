@@ -25,6 +25,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 .then(response => response.json())
                 .then(data => {
                     if (data.success) {
+                        //if we are in media library
                         let uploadAltTextField = document.querySelector('.attachment-info .setting.alt-text textarea');
 
                         if (uploadAltTextField) {
@@ -34,17 +35,34 @@ document.addEventListener('DOMContentLoaded', function() {
                                 bubbles: true,
                                 cancelable: true,
                             });
+
                             uploadAltTextField.dispatchEvent(event);
 
                             if (wp && wp.media && wp.media.frame && wp.media.frame.content && wp.media.frame.content.get) {
                                 wp.media.frame.content.get().save();
                             }
                         } else {
+                            // if we are in article media overlay
                             let attachmentAltTextField = document.getElementById('attachment-details-alt-text');
-                            console.log(attachmentAltTextField);
                             if (attachmentAltTextField) {
                                 attachmentAltTextField.value = data.data.alt_text;
                             }
+
+                            attachmentAltTextField.dispatchEvent(new Event('change', { bubbles: true }));
+
+                            if (
+                                window.wp &&
+                                wp.media &&
+                                wp.media.frame &&
+                                wp.media.frame.content &&
+                                typeof wp.media.frame.content.get === 'function'
+                            ) {
+                                const content = wp.media.frame.content.get();
+                                if (content && typeof content.save === 'function') {
+                                    content.save();
+                                }
+                            }
+
                         }
                     } else {
                         console.error('Error generating Alt Text', data);
