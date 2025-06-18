@@ -4,7 +4,7 @@ Donate link: https://ko-fi.com/valeriomonti
 Tags: alt text, alt tag, accessibility, openai, seo
 Requires at least: 6.0
 Tested up to: 6.7.2
-Stable tag: 2.4.0
+Stable tag: 2.4.1
 Requires PHP: 7.4
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
@@ -155,6 +155,9 @@ Once you’ve re-entered your API Key (and, if desired, added the constants), hi
 6. Single image alt text generation
 
 == Changelog ==
+= 2.4.1 =
+- Fixed: Alt text now correctly persists when generated from both the post media overlay and the main Media Library.
+
 = 2.4.0 =
 - Introduce two new plugin-specific constants, `AATXT_ENCRYPTION_KEY` and `AATXT_ENCRYPTION_SALT`, allowing API keys to be encrypted independently of WordPress’s own salts.
 - Implement automatic migration of existing encrypted API keys: on upgrade, keys encrypted with the old WP salts are decrypted (if possible) and re-encrypted with the new plugin key.

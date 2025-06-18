@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [v2.4.1] - 2025-06-18
+### Changed
+- Fixed: Alt text now correctly persists when generated from both the post media overlay and the main Media Library.
+
 ## [v2.4.0] - 2025-06-15
 ### Changed
 - Introduce two new plugin-specific constants, `AATXT_ENCRYPTION_KEY` and `AATXT_ENCRYPTION_SALT`, allowing API keys to be encrypted independently of WordPress’s own salts.
