@@ -1,4 +1,4 @@
-## [v2.4.1] - 2025-06-18
+## [v2.4.2] - 2025-06-21
 
 ### Changed
-- Fixed: Alt text now correctly persists when generated from both the post media overlay and the main Media Library.
+- Modify documentation and build again the assets
