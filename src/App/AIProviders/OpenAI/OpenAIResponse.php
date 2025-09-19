@@ -59,7 +59,7 @@ abstract class OpenAIResponse implements AIProviderInterface
      */
     protected function prompt(): string
     {
-        return PluginOptions::prompt() ?: Constants::AATXT_OPENAI_DEFAULT_PROMPT;
+        return PluginOptions::openAiPrompt() ?: Constants::AATXT_OPENAI_DEFAULT_PROMPT;
     }
 
     /**

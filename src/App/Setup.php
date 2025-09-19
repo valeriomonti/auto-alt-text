@@ -3,6 +3,7 @@
 namespace AATXT\App;
 
 use AATXT\App\Admin\MediaLibrary;
+use AATXT\App\AIProviders\Anthropic\AnthropicResponse;
 use AATXT\App\Logging\DBLogger;
 use AATXT\App\Admin\PluginOptions;
 use AATXT\App\AIProviders\Azure\AzureComputerVisionCaptionsResponse;
@@ -223,6 +224,9 @@ class Setup
                 } catch (AzureException $e) {
                     (DBLogger::make())->writeImageLog($postId, "Azure - " . $e->getMessage());
                 }
+                break;
+            case Constants::AATXT_OPTION_TYPOLOGY_CHOICE_ANTHROPIC:
+                $altText = (AltTextGeneratorAi::make(AnthropicResponse::make()))->altText($postId);
                 break;
             case Constants::AATXT_OPTION_TYPOLOGY_CHOICE_OPENAI:
                 if (!in_array($mimeType, Constants::AATXT_OPENAI_ALLOWED_MIME_TYPES, true)) {

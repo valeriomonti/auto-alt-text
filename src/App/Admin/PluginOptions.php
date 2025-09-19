@@ -42,6 +42,7 @@ class PluginOptions
         add_action('pre_update_option_' . Constants::AATXT_OPTION_FIELD_API_KEY_AZURE_COMPUTER_VISION, [self::$instance, 'encryptDataOnUpdate'], 10, 3);
         add_action('pre_update_option_' . Constants::AATXT_OPTION_FIELD_API_KEY_AZURE_TRANSLATE_INSTANCE, [self::$instance, 'encryptDataOnUpdate'], 10, 3);
         add_action('pre_update_option_' . Constants::AATXT_OPTION_FIELD_API_KEY_OPENAI, [self::$instance, 'encryptDataOnUpdate'], 10, 3);
+        add_action('pre_update_option_' . Constants::AATXT_OPTION_FIELD_API_KEY_ANTRHOPIC, [self::$instance, 'encryptDataOnUpdate'], 10, 3);
 
         add_action('admin_notices', [self::$instance, 'encryptionErrorNotice']);
     }
@@ -278,6 +279,7 @@ define('AATXT_ENCRYPTION_SALT', '<?php echo esc_html( $suggestedSalt ); ?>');
                     <option value="<?php echo esc_attr(Constants::AATXT_OPTION_TYPOLOGY_DEACTIVATED); ?>"<?php echo esc_attr(self::selected($typology, Constants::AATXT_OPTION_TYPOLOGY_DEACTIVATED)); ?>><?php esc_html_e("Deactivated", 'auto-alt-text'); ?></option>
                     <option value="<?php echo esc_attr(Constants::AATXT_OPTION_TYPOLOGY_CHOICE_OPENAI); ?>"<?php echo esc_attr(self::selected($typology, Constants::AATXT_OPTION_TYPOLOGY_CHOICE_OPENAI)); ?>><?php esc_html_e("OpenAI's APIs", 'auto-alt-text'); ?></option>
                     <option value="<?php echo esc_attr(Constants::AATXT_OPTION_TYPOLOGY_CHOICE_AZURE); ?>"<?php echo esc_attr(self::selected($typology, Constants::AATXT_OPTION_TYPOLOGY_CHOICE_AZURE)); ?>><?php esc_html_e("Azure's APIs", 'auto-alt-text'); ?></option>
+                    <option value="<?php echo esc_attr(Constants::AATXT_OPTION_TYPOLOGY_CHOICE_ANTHROPIC); ?>"<?php echo esc_attr(self::selected($typology, Constants::AATXT_OPTION_TYPOLOGY_CHOICE_ANTHROPIC)); ?>><?php esc_html_e("Antrhopic's APIs", 'auto-alt-text'); ?></option>
                     <option value="<?php echo esc_attr(Constants::AATXT_OPTION_TYPOLOGY_CHOICE_ARTICLE_TITLE); ?>"<?php echo esc_attr(self::selected($typology, Constants::AATXT_OPTION_TYPOLOGY_CHOICE_ARTICLE_TITLE)); ?>><?php esc_html_e("Title of the article (not AI)", 'auto-alt-text'); ?></option>
                     <option value="<?php echo esc_attr(Constants::AATXT_OPTION_TYPOLOGY_CHOICE_ATTACHMENT_TITLE); ?>"<?php echo esc_attr(self::selected($typology, Constants::AATXT_OPTION_TYPOLOGY_CHOICE_ATTACHMENT_TITLE)); ?>><?php esc_html_e("Title of the attachment (not AI)", 'auto-alt-text'); ?></option>
                 </select>
@@ -401,7 +403,34 @@ define('AATXT_ENCRYPTION_SALT', '<?php echo esc_html( $suggestedSalt ); ?>');
                     echo '</div>';
                 endif;
 
-                echo '<div class="plugin-option type-article-title type-attachment-title type-openai type-azure">';
+                echo '<div class="plugin-option type-anthropic">';
+                echo '<label for="' . esc_attr(Constants::AATXT_OPTION_FIELD_API_KEY_ANTRHOPIC) . '">' . esc_html__('Antrhopic API Key', 'auto-alt-text') . '</label>';
+                echo '<p class="description">' . esc_html__("Enter your API Key", 'auto-alt-text') . '</p>';
+                $apiKey = get_option(Constants::AATXT_OPTION_FIELD_API_KEY_ANTRHOPIC);
+                echo '<input type="password" name="' . esc_attr(Constants::AATXT_OPTION_FIELD_API_KEY_ANTRHOPIC) . '" value="' . esc_attr((Encryption::make())->decrypt($apiKey)) . '" />';
+                echo '</div>';
+
+                $anthropicModel = self::anthropicModel();
+
+                echo '<div class="plugin-option type-anthropic">';
+                echo '<label for="' .  esc_attr(Constants::AATXT_OPTION_FIELD_MODEL_ANTHROPIC) . '">' . esc_html__('Model', 'auto-alt-text') . '</label>';
+
+                echo '<select name="' . esc_attr(Constants::AATXT_OPTION_FIELD_MODEL_ANTHROPIC) . '" id="' . esc_attr(Constants::AATXT_OPTION_FIELD_MODEL_ANTHROPIC) . '">';
+                foreach(Constants::AATXT_OPTION_FIELD_MODEL_ANTHROPIC_OPTIONS as $key => $value) {
+                    echo '<option value="' . esc_attr($key) . '" ' . esc_attr(self::selected($anthropicModel, $key)) . '>' . esc_html($value) . '</option>';
+                }
+                echo '</select>';
+                echo '</div>';
+
+                echo '<div class="plugin-option type-anthropic">';
+                echo '<label for="' . esc_attr(Constants::AATXT_OPTION_FIELD_PROMPT_ANTHROPIC) . '">' . esc_html__('Prompt', 'auto-alt-text') . '</label>';
+                echo '<p class="description">' . esc_html__("Enter a specific and detailed prompt according to your needs.", 'auto-alt-text') . '</p>';
+                $defaultPrompt = sprintf(esc_html__("Act like an SEO expert and write an alt text of up to 125 characters for this image.", 'auto-alt-text'), Constants::AATXT_IMAGE_URL_TAG);
+                $prompt = get_option(Constants::AATXT_OPTION_FIELD_PROMPT_ANTHROPIC) ?: $defaultPrompt;
+                echo '<textarea name="' . esc_attr(Constants::AATXT_OPTION_FIELD_PROMPT_ANTHROPIC) . '" rows="5" cols="50">' . esc_textarea($prompt) . '</textarea>';
+                echo '</div>';
+
+                echo '<div class="plugin-option type-article-title type-attachment-title type-openai type-azure type-anthropic">';
                 echo '<label for="' . esc_attr(Constants::AATXT_OPTION_FIELD_PRESERVE_EXISTING_ALT_TEXT) . '">' . esc_html__('Keep existing alt text', 'auto-alt-text') . '</label>';
                 echo '<p class="description">' . esc_html__("If checked, the existing alt text of images will not be overwritten.", 'auto-alt-text') . '</p>';
                 $preserveAltText = get_option(Constants::AATXT_OPTION_FIELD_PRESERVE_EXISTING_ALT_TEXT);
@@ -447,6 +476,8 @@ define('AATXT_ENCRYPTION_SALT', '<?php echo esc_html( $suggestedSalt ); ?>');
         register_setting('auto_alt_text_options', Constants::AATXT_OPTION_FIELD_REGION_AZURE_TRANSLATE_INSTANCE, [self::class, 'sanitizeText']);
         register_setting('auto_alt_text_options', Constants::AATXT_OPTION_FIELD_LANGUAGE_AZURE_TRANSLATE_INSTANCE, [self::class, 'sanitizeText']);
         register_setting('auto_alt_text_options', Constants::AATXT_OPTION_FIELD_PRESERVE_EXISTING_ALT_TEXT);
+        register_setting('auto_alt_text_options', Constants::AATXT_OPTION_FIELD_API_KEY_ANTRHOPIC);
+        register_setting('auto_alt_text_options', Constants::AATXT_OPTION_FIELD_PROMPT_ANTHROPIC, [self::class, 'sanitizeTextArea']);
     }
 
     /**
@@ -462,12 +493,25 @@ define('AATXT_ENCRYPTION_SALT', '<?php echo esc_html( $suggestedSalt ); ?>');
         return get_option(Constants::AATXT_OPTION_FIELD_MODEL_OPENAI) ?: Constants::AATXT_GPT4O;
     }
 
+    public static function anthropicModel(): string
+    {
+        return get_option(Constants::AATXT_OPTION_FIELD_MODEL_ANTHROPIC) ?: Constants::AATXT_CLAUDE_SONNET_4;
+    }
+
     /**
      * @return string
      */
-    public static function prompt(): string
+    public static function openAiPrompt(): string
     {
         return get_option(Constants::AATXT_OPTION_FIELD_PROMPT_OPENAI);
+    }
+
+    /**
+     * @return string
+     */
+    public static function anthropicPrompt(): string
+    {
+        return get_option(Constants::AATXT_OPTION_FIELD_PROMPT_ANTHROPIC);
     }
 
     /**
@@ -476,6 +520,15 @@ define('AATXT_ENCRYPTION_SALT', '<?php echo esc_html( $suggestedSalt ); ?>');
     public static function apiKeyOpenAI(): string
     {
         $apiKey = get_option(Constants::AATXT_OPTION_FIELD_API_KEY_OPENAI);
+        return (Encryption::make())->decrypt($apiKey);
+    }
+
+    /**
+     * @return string
+     */
+    public static function apiKeyAnthropic(): string
+    {
+        $apiKey = get_option(Constants::AATXT_OPTION_FIELD_API_KEY_ANTRHOPIC);
         return (Encryption::make())->decrypt($apiKey);
     }
 
