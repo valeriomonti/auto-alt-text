@@ -4,6 +4,7 @@ namespace AATXT\App;
 
 use AATXT\App\Admin\MediaLibrary;
 use AATXT\App\AIProviders\Anthropic\AnthropicResponse;
+use AATXT\App\Exceptions\Anthropic\AnthropicException;
 use AATXT\App\Logging\DBLogger;
 use AATXT\App\Admin\PluginOptions;
 use AATXT\App\AIProviders\Azure\AzureComputerVisionCaptionsResponse;
@@ -226,7 +227,19 @@ class Setup
                 }
                 break;
             case Constants::AATXT_OPTION_TYPOLOGY_CHOICE_ANTHROPIC:
-                $altText = (AltTextGeneratorAi::make(AnthropicResponse::make()))->altText($postId);
+                if (!in_array($mimeType, Constants::AATXT_ANTHROPIC_ALLOWED_MIME_TYPES, true)) {
+                    $formats = self::allowedMimeTypesList(Constants::AATXT_ANTHROPIC_ALLOWED_MIME_TYPES);
+                    (DBLogger::make())->writeImageLog($postId, "You uploaded an unsupported image. Please make sure your image has of one the following formats: $formats");
+                    return '';
+                }
+
+                try {
+                    $altText = (AltTextGeneratorAi::make(AnthropicResponse::make()))->altText($postId);
+                } catch (AnthropicException $e) {
+                    $errorMessage = "Anthropic - " . ' - ' . $e->getMessage();
+                    (DBLogger::make())->writeImageLog($postId, $errorMessage);
+                }
+
                 break;
             case Constants::AATXT_OPTION_TYPOLOGY_CHOICE_OPENAI:
                 if (!in_array($mimeType, Constants::AATXT_OPENAI_ALLOWED_MIME_TYPES, true)) {

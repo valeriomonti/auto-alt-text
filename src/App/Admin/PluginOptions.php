@@ -478,6 +478,7 @@ define('AATXT_ENCRYPTION_SALT', '<?php echo esc_html( $suggestedSalt ); ?>');
         register_setting('auto_alt_text_options', Constants::AATXT_OPTION_FIELD_PRESERVE_EXISTING_ALT_TEXT);
         register_setting('auto_alt_text_options', Constants::AATXT_OPTION_FIELD_API_KEY_ANTRHOPIC);
         register_setting('auto_alt_text_options', Constants::AATXT_OPTION_FIELD_PROMPT_ANTHROPIC, [self::class, 'sanitizeTextArea']);
+        register_setting('auto_alt_text_options', Constants::AATXT_OPTION_FIELD_MODEL_ANTHROPIC, [self::class, 'sanitizeText']);
     }
 
     /**

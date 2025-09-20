@@ -28,7 +28,10 @@ class Constants
     const AATXT_OPTION_FIELD_MODEL_ANTHROPIC = 'aatxt_model_anthropic';
 
     const AATXT_CLAUDE_SONNET_4 = 'claude-sonnet-4-20250514';
+    const AATXT_CLAUDE_HAIKU_3_5 = 'claude-3-5-haiku-20241022';
+
     const AATXT_OPTION_FIELD_MODEL_ANTHROPIC_OPTIONS = [
+        self::AATXT_CLAUDE_HAIKU_3_5 => 'Claude 3.5 Haiku',
         self::AATXT_CLAUDE_SONNET_4 => 'Claude Sonnet 4',
     ];
     const AATXT_OPTION_FIELD_PROMPT_ANTHROPIC = 'aatxt_prompt_anthropic';
@@ -60,6 +63,13 @@ class Constants
         'image/webp',
     ];
     const AATXT_AZURE_ALLOWED_MIME_TYPES = [
+        'image/png',
+        'image/jpeg',
+        'image/gif',
+        'image/webp',
+    ];
+
+    const AATXT_ANTHROPIC_ALLOWED_MIME_TYPES = [
         'image/png',
         'image/jpeg',
         'image/gif',

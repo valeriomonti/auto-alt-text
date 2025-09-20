@@ -29,7 +29,6 @@ class AnthropicResponse implements AIProviderInterface
             throw new AnthropicException('Anthropic API key is missing in plugin settings');
         }
 
-
         $payload = [
             "model"      => $model,
             "max_tokens" => 1024,
