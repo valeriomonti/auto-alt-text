@@ -3,6 +3,11 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
+
+## [v2.5.0] - 2025-09-20
+### Changed
+- Implement the Anthropic API as an alternative for generating alt text.
+
 ## [v2.4.2] - 2025-06-21
 ### Changed
 - Modify documentation and build again the assets

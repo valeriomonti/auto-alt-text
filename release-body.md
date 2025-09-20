@@ -1,4 +1,4 @@
-## [v2.4.2] - 2025-06-21
+## [v2.5.0] - 2025-09-20
 
 ### Changed
-- Modify documentation and build again the assets
+- Implement the Anthropic API as an alternative for generating alt text.

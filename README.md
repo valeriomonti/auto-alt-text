@@ -6,6 +6,7 @@ This plugin is able to use the AI of external services of OpenaAI or Azure to ge
 
 This plugin allows you to generate alt texts in the following ways:
 - using Openai APIs (GPT-4o, GPT-4o Mini, o1 Mini)
+- using Claude Anthropic APIs
 - using Azure APIs for computational vision;
 - recovering the title of the image
 - recovering the title of the article in which the image is uploaded
@@ -37,6 +38,14 @@ After installing the plugin, click on the 'Auto Alt Text' menu item and select t
 In your OpenAI account, retrieve the following data to enter on the options page:
 - API Key
 
+Choose the model you want to use for generating the alt text.
+Enter a prompt for generating the alt text according to your needs.
+
+### Claude Anthropic's APIs
+In your Anthropic account, retrieve the following data to enter on the options page:
+- API Key
+
+Choose the model you want to use for generating the alt text.
 Enter a prompt for generating the alt text according to your needs.
 
 ### Azure's APIs method

@@ -4,7 +4,7 @@ Donate link: https://ko-fi.com/valeriomonti
 Tags: alt text, alt tag, accessibility, openai, seo
 Requires at least: 6.0
 Tested up to: 6.7.2
-Stable tag: 2.4.2
+Stable tag: 2.5.0
 Requires PHP: 7.4
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
@@ -23,6 +23,7 @@ Clearly, using artificial intelligence will allow for a more accurate and useful
 ___
 This plugin allows you to generate alt texts in the following ways:
 - using Openai APIs (GPT-4o, GPT-4o Mini, o1 Mini)
+- using Anthropic Claude API
 - using Azure APIs for computational vision;
 - recovering the title of the image
 - recovering the title of the article in which the image is uploaded
@@ -38,7 +39,16 @@ Select the Generation Method you prefer
 In your OpenAI account, retrieve the following data to enter on the options page:
 - API Key
 
+Choose the model you want to use for generating the alt text.
 Enter a prompt for generating the alt text according to your needs.
+
+### Claude Anthropic's APIs
+In your Anthropic account, retrieve the following data to enter on the options page:
+- API Key
+
+Choose the model you want to use for generating the alt text.
+Enter a prompt for generating the alt text according to your needs.
+
 
 ### Azure's APIs
 On your Azure account, create a Computer Vision instance and retrieve the following data to enter on the options page:
@@ -88,6 +98,13 @@ Selecting the generation method "OpenAI's APIs" will use the API services of [Op
 This plugin does not collect any information from your OpenAI account. The data transmitted to OpenAI mainly consists of the image files uploaded to your website and the specified prompt.
 
 For accurate information on privacy and conditions of use, please consult the [privacy policy](https://openai.com/policies/privacy-policy) and [terms and conditions](https://openai.com/) directly on the official website. It is also advisable to check the costs and usage statistics of the API service on the OpenAI website.
+
+### Anthropic Claude
+Selecting the generation method "Anthropic's APIs" will use the API services of [Anthropic](https://console.anthropic.com/).
+
+This plugin does not collect any information from your Anthropic Claude account. The data transmitted to Anthropic Claude mainly consists of the image files uploaded to your website and the specified prompt.
+
+For accurate information on privacy and conditions of use, please consult the [privacy policy](https://www.anthropic.com/legal/privacy), [terms and conditions for consumers](https://www.anthropic.com/legal/consumer-terms) and [terms and conditions for commercial](https://www.anthropic.com/legal/commercial-terms) directly on the official website. It is also advisable to check the costs and usage statistics of the API service on the Anthropic website.
 
 ### Azure
 Selecting the "Azure's APIs" generation method will use the API services of [Microsoft Azure](https://azure.microsoft.com/en-us/).
@@ -155,6 +172,9 @@ Once you’ve re-entered your API Key (and, if desired, added the constants), hi
 6. Single image alt text generation
 
 == Changelog ==
+= 2.5.0 =
+- Implement the Anthropic API as an alternative for generating alt text.
+
 = 2.4.2 =
 - Modify documentation and build again the assets
 
