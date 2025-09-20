@@ -42,7 +42,7 @@ class PluginOptions
         add_action('pre_update_option_' . Constants::AATXT_OPTION_FIELD_API_KEY_AZURE_COMPUTER_VISION, [self::$instance, 'encryptDataOnUpdate'], 10, 3);
         add_action('pre_update_option_' . Constants::AATXT_OPTION_FIELD_API_KEY_AZURE_TRANSLATE_INSTANCE, [self::$instance, 'encryptDataOnUpdate'], 10, 3);
         add_action('pre_update_option_' . Constants::AATXT_OPTION_FIELD_API_KEY_OPENAI, [self::$instance, 'encryptDataOnUpdate'], 10, 3);
-        add_action('pre_update_option_' . Constants::AATXT_OPTION_FIELD_API_KEY_ANTRHOPIC, [self::$instance, 'encryptDataOnUpdate'], 10, 3);
+        add_action('pre_update_option_' . Constants::AATXT_OPTION_FIELD_API_KEY_ANTHROPIC, [self::$instance, 'encryptDataOnUpdate'], 10, 3);
 
         add_action('admin_notices', [self::$instance, 'encryptionErrorNotice']);
     }
@@ -404,10 +404,10 @@ define('AATXT_ENCRYPTION_SALT', '<?php echo esc_html( $suggestedSalt ); ?>');
                 endif;
 
                 echo '<div class="plugin-option type-anthropic">';
-                echo '<label for="' . esc_attr(Constants::AATXT_OPTION_FIELD_API_KEY_ANTRHOPIC) . '">' . esc_html__('Antrhopic API Key', 'auto-alt-text') . '</label>';
+                echo '<label for="' . esc_attr(Constants::AATXT_OPTION_FIELD_API_KEY_ANTHROPIC) . '">' . esc_html__('Antrhopic API Key', 'auto-alt-text') . '</label>';
                 echo '<p class="description">' . esc_html__("Enter your API Key", 'auto-alt-text') . '</p>';
-                $apiKey = get_option(Constants::AATXT_OPTION_FIELD_API_KEY_ANTRHOPIC);
-                echo '<input type="password" name="' . esc_attr(Constants::AATXT_OPTION_FIELD_API_KEY_ANTRHOPIC) . '" value="' . esc_attr((Encryption::make())->decrypt($apiKey)) . '" />';
+                $apiKey = get_option(Constants::AATXT_OPTION_FIELD_API_KEY_ANTHROPIC);
+                echo '<input type="password" name="' . esc_attr(Constants::AATXT_OPTION_FIELD_API_KEY_ANTHROPIC) . '" value="' . esc_attr((Encryption::make())->decrypt($apiKey)) . '" />';
                 echo '</div>';
 
                 $anthropicModel = self::anthropicModel();
@@ -476,7 +476,7 @@ define('AATXT_ENCRYPTION_SALT', '<?php echo esc_html( $suggestedSalt ); ?>');
         register_setting('auto_alt_text_options', Constants::AATXT_OPTION_FIELD_REGION_AZURE_TRANSLATE_INSTANCE, [self::class, 'sanitizeText']);
         register_setting('auto_alt_text_options', Constants::AATXT_OPTION_FIELD_LANGUAGE_AZURE_TRANSLATE_INSTANCE, [self::class, 'sanitizeText']);
         register_setting('auto_alt_text_options', Constants::AATXT_OPTION_FIELD_PRESERVE_EXISTING_ALT_TEXT);
-        register_setting('auto_alt_text_options', Constants::AATXT_OPTION_FIELD_API_KEY_ANTRHOPIC);
+        register_setting('auto_alt_text_options', Constants::AATXT_OPTION_FIELD_API_KEY_ANTHROPIC);
         register_setting('auto_alt_text_options', Constants::AATXT_OPTION_FIELD_PROMPT_ANTHROPIC, [self::class, 'sanitizeTextArea']);
         register_setting('auto_alt_text_options', Constants::AATXT_OPTION_FIELD_MODEL_ANTHROPIC, [self::class, 'sanitizeText']);
     }
@@ -496,7 +496,7 @@ define('AATXT_ENCRYPTION_SALT', '<?php echo esc_html( $suggestedSalt ); ?>');
 
     public static function anthropicModel(): string
     {
-        return get_option(Constants::AATXT_OPTION_FIELD_MODEL_ANTHROPIC) ?: Constants::AATXT_CLAUDE_SONNET_4;
+        return get_option(Constants::AATXT_OPTION_FIELD_MODEL_ANTHROPIC) ?: Constants::AATXT_CLAUDE_HAIKU_3_5;
     }
 
     /**
@@ -529,7 +529,7 @@ define('AATXT_ENCRYPTION_SALT', '<?php echo esc_html( $suggestedSalt ); ?>');
      */
     public static function apiKeyAnthropic(): string
     {
-        $apiKey = get_option(Constants::AATXT_OPTION_FIELD_API_KEY_ANTRHOPIC);
+        $apiKey = get_option(Constants::AATXT_OPTION_FIELD_API_KEY_ANTHROPIC);
         return (Encryption::make())->decrypt($apiKey);
     }
 

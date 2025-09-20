@@ -56,7 +56,7 @@ class AnthropicResponse implements AIProviderInterface
             'headers'     => [
                 'Content-Type'      => 'application/json',
                 'x-api-key'         => $apiKey,
-                'anthropic-version' => '2023-06-01',
+                'anthropic-version' => Constants::AATXT_API_VERSION,
             ],
             'body'        => wp_json_encode($payload),
             'timeout'     => 30,
@@ -68,7 +68,7 @@ class AnthropicResponse implements AIProviderInterface
             throw new AnthropicException('Request error: ' . $response->get_error_message());
         }
         $statusCode = wp_remote_retrieve_response_code($response);
-        $body        = wp_remote_retrieve_body($response);
+        $body = wp_remote_retrieve_body($response);
 
         if ($statusCode < 200 || $statusCode >= 300) {
             throw new AnthropicException('HTTP Error ' . $statusCode . ':' . $body);
@@ -83,6 +83,5 @@ class AnthropicResponse implements AIProviderInterface
         }
 
         return $answer;
-
     }
 }
