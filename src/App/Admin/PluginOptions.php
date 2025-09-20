@@ -425,7 +425,7 @@ define('AATXT_ENCRYPTION_SALT', '<?php echo esc_html( $suggestedSalt ); ?>');
                 echo '<div class="plugin-option type-anthropic">';
                 echo '<label for="' . esc_attr(Constants::AATXT_OPTION_FIELD_PROMPT_ANTHROPIC) . '">' . esc_html__('Prompt', 'auto-alt-text') . '</label>';
                 echo '<p class="description">' . esc_html__("Enter a specific and detailed prompt according to your needs.", 'auto-alt-text') . '</p>';
-                $defaultPrompt = sprintf(esc_html__("Act like an SEO expert and write an alt text of up to 125 characters for this image.", 'auto-alt-text'), Constants::AATXT_IMAGE_URL_TAG);
+                $defaultPrompt = sprintf(esc_html__("Act like an SEO expert and write an alt text of up to 125 characters for this image. Return only the complete alt text.", 'auto-alt-text'), Constants::AATXT_IMAGE_URL_TAG);
                 $prompt = get_option(Constants::AATXT_OPTION_FIELD_PROMPT_ANTHROPIC) ?: $defaultPrompt;
                 echo '<textarea name="' . esc_attr(Constants::AATXT_OPTION_FIELD_PROMPT_ANTHROPIC) . '" rows="5" cols="50">' . esc_textarea($prompt) . '</textarea>';
                 echo '</div>';

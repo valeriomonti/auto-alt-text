@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2025-09-20T20:55:06+00:00\n"
+"POT-Creation-Date: 2025-09-20T21:44:56+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.11.0\n"
 "X-Domain: auto-alt-text\n"
@@ -104,7 +104,7 @@ msgid "the image will be analyzed by the AI services provided by OpenAI and an a
 msgstr ""
 
 #: src/App/Admin/PluginOptions.php:250
-#: src/App/Admin/PluginOptions.php:281
+#: src/App/Admin/PluginOptions.php:282
 msgid "Azure's APIs"
 msgstr ""
 
@@ -162,7 +162,7 @@ msgstr ""
 msgid "Deactivated"
 msgstr ""
 
-#: src/App/Admin/PluginOptions.php:282
+#: src/App/Admin/PluginOptions.php:281
 msgid "Antrhopic's APIs"
 msgstr ""
 
@@ -220,7 +220,6 @@ msgid "Enter a specific and detailed prompt according to your needs."
 msgstr ""
 
 #: src/App/Admin/PluginOptions.php:322
-#: src/App/Admin/PluginOptions.php:428
 msgid "Act like an SEO expert and write an alt text of up to 125 characters for this image."
 msgstr ""
 
@@ -290,6 +289,10 @@ msgstr ""
 
 #: src/App/Admin/PluginOptions.php:407
 msgid "Antrhopic API Key"
+msgstr ""
+
+#: src/App/Admin/PluginOptions.php:428
+msgid "Act like an SEO expert and write an alt text of up to 125 characters for this image. Return only the complete alt text."
 msgstr ""
 
 #: src/App/Admin/PluginOptions.php:434

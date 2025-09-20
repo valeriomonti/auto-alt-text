@@ -4,8 +4,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Auto Alt Text 1.0.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/auto-alt-text\n"
-"POT-Creation-Date: 2025-09-20T20:55:06+00:00\n"
-"PO-Revision-Date: 2025-09-20 22:56+0200\n"
+"POT-Creation-Date: 2025-09-20T21:44:56+00:00\n"
+"PO-Revision-Date: 2025-09-20 23:49+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: it_IT\n"
@@ -141,7 +141,7 @@ msgstr ""
 "l’immagine verrà analizzata dai servizi di AI forniti da OpenAI e verrà "
 "generato un alt text basato sul prompt che hai inserito;"
 
-#: src/App/Admin/PluginOptions.php:250 src/App/Admin/PluginOptions.php:281
+#: src/App/Admin/PluginOptions.php:250 src/App/Admin/PluginOptions.php:282
 msgid "Azure's APIs"
 msgstr "API di Azure"
 
@@ -224,7 +224,7 @@ msgstr "Quale metodo vuoi utilizzare per generare l’alt text delle immagini?"
 msgid "Deactivated"
 msgstr "Disattivato"
 
-#: src/App/Admin/PluginOptions.php:282
+#: src/App/Admin/PluginOptions.php:281
 msgid "Antrhopic's APIs"
 msgstr "API di Anthropic"
 
@@ -299,7 +299,7 @@ msgstr "Prompt"
 msgid "Enter a specific and detailed prompt according to your needs."
 msgstr "Inserisci un prompt specifico e dettagliato in base alle tue esigenze."
 
-#: src/App/Admin/PluginOptions.php:322 src/App/Admin/PluginOptions.php:428
+#: src/App/Admin/PluginOptions.php:322
 msgid ""
 "Act like an SEO expert and write an alt text of up to 125 characters for "
 "this image."
@@ -386,6 +386,14 @@ msgstr "Seleziona la lingua in cui deve essere scritto l’alt text."
 #: src/App/Admin/PluginOptions.php:407
 msgid "Antrhopic API Key"
 msgstr "Chiave API di Anthropic"
+
+#: src/App/Admin/PluginOptions.php:428
+msgid ""
+"Act like an SEO expert and write an alt text of up to 125 characters for "
+"this image. Return only the complete alt text."
+msgstr ""
+"Agisci come un esperto SEO e scrivi un alt text lungo al massimo 125 "
+"caratteri per questa immagine. Ritorna solamente l’alt text completo."
 
 #: src/App/Admin/PluginOptions.php:434
 msgid "Keep existing alt text"
