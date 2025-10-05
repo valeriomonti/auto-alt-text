@@ -1,4 +1,4 @@
-## [v2.5.0] - 2025-09-20
+## [v2.5.1] - 2025-10-05
 
 ### Changed
-- Implement the Anthropic API as an alternative for generating alt text.
+- Replace a deprecated Azure Computer Vision api version

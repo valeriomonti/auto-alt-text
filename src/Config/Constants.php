@@ -6,6 +6,7 @@ class Constants
 {
     const AATXT_PLUGIN_SLUG = 'auto-alt-text';
     const AATXT_AZURE_DEFAULT_LANGUAGE = 'en';
+    const AATXT_AZURE_COMPUTER_VISION_API_VERSION = '2024-02-01';
     const AATXT_PLUGIN_OPTIONS_PAGE_SLUG = 'auto-alt-text-options';
     const AATXT_PLUGIN_OPTION_LOG_PAGE_SLUG = 'auto-alt-text-log';
     const AATXT_PLUGIN_ASSETS_HANDLE = 'aatxt-auto-alt-text-options';
@@ -21,6 +22,7 @@ class Constants
         self::AATXT_GPT4O_MINI => 'GPT-4o Mini',
         self::AATXT_O1_MINI => 'o1 Mini',
     ];
+
     const AATXT_OPTION_FIELD_PROMPT_OPENAI = 'aatxt_prompt_openai';
     const AATXT_OPTION_FIELD_API_KEY_OPENAI = 'aatxt_api_key_openai';
     const AATXT_OPTION_FIELD_API_KEY_ANTHROPIC = 'aatxt_api_key_anthropic';

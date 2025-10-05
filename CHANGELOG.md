@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [v2.5.1] - 2025-10-05
+### Changed
+- Replace a deprecated Azure Computer Vision api version.
+
 ## [v2.5.0] - 2025-09-20
 ### Changed
 - Implement the Anthropic API as an alternative for generating alt text.

@@ -30,7 +30,7 @@ class AzureComputerVisionCaptionsResponse implements AIProviderInterface
     public function response(string $imageUrl): string
     {
         $response = wp_remote_post(
-            PluginOptions::endpointAzureComputerVision() . 'computervision/imageanalysis:analyze?api-version=2023-02-01-preview&features=caption&language=en&gender-neutral-caption=False',
+            PluginOptions::endpointAzureComputerVision() . 'computervision/imageanalysis:analyze?api-version='.Constants::AATXT_AZURE_COMPUTER_VISION_API_VERSION.'&features=caption&language=en&gender-neutral-caption=False',
             [
                 'headers' => [
                     'content-type' => 'application/json',
