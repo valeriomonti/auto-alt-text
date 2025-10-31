@@ -5,7 +5,7 @@ This plugin is able to use the AI of external services of OpenaAI or Azure to ge
 ## Features
 
 This plugin allows you to generate alt texts in the following ways:
-- using Openai APIs (GPT-4o, GPT-4o Mini, o1 Mini)
+- using Openai APIs (GPT-5, GPT-5 mini, GPT-5 nano, GPT-4o, GPT-4o Mini, o1 Mini)
 - using Claude Anthropic APIs
 - using Azure APIs for computational vision;
 - recovering the title of the image

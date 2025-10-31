@@ -1,4 +1,4 @@
-## [v2.5.1] - 2025-10-05
+## [v2.5.2] - 2025-10-16
 
 ### Changed
-- Replace a deprecated Azure Computer Vision api version
+- Enable the use of OpenAI's GPT-5, GPT-5 Mini and GPT-5 nano models.

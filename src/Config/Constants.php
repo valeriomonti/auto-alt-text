@@ -17,10 +17,16 @@ class Constants
     const AATXT_GPT4O = 'gpt-4o';
     const AATXT_GPT4O_MINI = 'gpt-4o-mini';
     const AATXT_O1_MINI = 'o1-mini';
+    const AATXT_GPT5 = 'gpt-5';
+    const AATXT_GPT5_MINI = 'gpt-5-mini';
+    const AATXT_GPT5_NANO = 'gpt-5-nano';
     const AATXT_OPTION_FIELD_MODEL_OPENAI_OPTIONS = [
         self::AATXT_GPT4O => 'GPT-4o',
         self::AATXT_GPT4O_MINI => 'GPT-4o Mini',
         self::AATXT_O1_MINI => 'o1 Mini',
+        self::AATXT_GPT5 => 'GPT-5',
+        self::AATXT_GPT5_MINI => 'GPT-5 Mini',
+        self::AATXT_GPT5_NANO => 'GPT-5 Nano',
     ];
 
     const AATXT_OPTION_FIELD_PROMPT_OPENAI = 'aatxt_prompt_openai';
