@@ -71,37 +71,46 @@ class Setup
      */
     public static function handleAltTextBulkAction()
     {
-        $mediaUpdated = 0;
+        if (! current_user_can('upload_files')) {
+            return;
+        }
+
         $wpListTable = _get_list_table('WP_Media_List_Table');
         $action = $wpListTable->current_action();
 
-        if ($action === 'auto_alt_text') {
-            // Recupera l'elenco degli ID dei media selezionati
-            $mediaIds = isset($_REQUEST['media']) ? $_REQUEST['media'] : array();
-
-            // Imposta l'alt text per ogni media selezionato
-            foreach ($mediaIds as $mediaId) {
-                $altText = self::altText($mediaId);
-                if (!empty($altText)) {
-                    update_post_meta($mediaId, '_wp_attachment_image_alt', $altText);
-                    $mediaUpdated++;
-                }
-            }
-
-            $callBackData = [
-                'mediaSelected' => count($mediaIds),
-                'mediaUpdated' => $mediaUpdated,
-                'auto_alt_text' => '1',
-            ];
-
-            // Redirect alla pagina della media library con un messaggio di successo
-            $sendback = add_query_arg(
-                $callBackData,
-                admin_url('upload.php')
-            );
-            wp_redirect($sendback);
-            exit();
+        if ($action !== 'auto_alt_text') {
+            return;
         }
+
+        // Protect execution from Cross-Site Request Forgery attacks
+        check_admin_referer('bulk-media');
+
+        $mediaUpdated = 0;
+        // Recupera l'elenco degli ID dei media selezionati
+        $mediaIds = isset($_REQUEST['media']) ? $_REQUEST['media'] : array();
+
+        // Imposta l'alt text per ogni media selezionato
+        foreach ($mediaIds as $mediaId) {
+            $altText = self::altText($mediaId);
+            if (!empty($altText)) {
+                update_post_meta($mediaId, '_wp_attachment_image_alt', $altText);
+                $mediaUpdated++;
+            }
+        }
+
+        $callBackData = [
+            'mediaSelected' => count($mediaIds),
+            'mediaUpdated' => $mediaUpdated,
+            'auto_alt_text' => '1',
+        ];
+
+        // Redirect alla pagina della media library con un messaggio di successo
+        $sendback = add_query_arg(
+            $callBackData,
+            admin_url('upload.php')
+        );
+        wp_redirect($sendback);
+        exit();
     }
 
     /**
