@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [v2.5.3] - 2025-12-06
+### Changed
+- Protect the plugin from Cross-Site Request Forgery attacks
+
 ## [v2.5.2] - 2025-10-15
 ### Changed
 - Enable the use of OpenAI's GPT-5, GPT-5 Mini and GPT-5 nano models.
