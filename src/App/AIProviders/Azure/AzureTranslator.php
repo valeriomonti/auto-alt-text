@@ -2,20 +2,32 @@
 
 namespace AATXT\App\AIProviders\Azure;
 
-use AATXT\App\Admin\PluginOptions;
 use AATXT\App\AIProviders\AITranslatorInterface;
+use AATXT\App\Configuration\AzureConfig;
 use AATXT\App\Exceptions\Azure\AzureTranslateInstanceException;
+use AATXT\App\Infrastructure\Http\HttpClientInterface;
 
+/**
+ * Azure Translator provider for translating text.
+ *
+ * This class uses dependency injection to receive HTTP client and configuration,
+ * removing static dependencies on PluginOptions.
+ */
 class AzureTranslator implements AITranslatorInterface
 {
+    private HttpClientInterface $httpClient;
+    private AzureConfig $config;
 
-    private function __construct()
+    /**
+     * Constructor.
+     *
+     * @param HttpClientInterface $httpClient HTTP client for API calls
+     * @param AzureConfig $config Azure configuration with API keys and endpoints
+     */
+    public function __construct(HttpClientInterface $httpClient, AzureConfig $config)
     {
-    }
-
-    public static function make(): AzureTranslator
-    {
-        return new self();
+        $this->httpClient = $httpClient;
+        $this->config = $config;
     }
 
     /**
@@ -27,48 +39,34 @@ class AzureTranslator implements AITranslatorInterface
      */
     public function translate(string $text, string $language): string
     {
-        $apiKey = PluginOptions::apiKeyAzureTranslateInstance();
-        $region = PluginOptions::regionAzureTranslateInstance();
-        $endpoint = PluginOptions::endpointAzureTranslateInstance();
+        $apiKey = $this->config->getTranslationApiKey();
+        $region = $this->config->getRegion();
+        $endpoint = $this->config->getTranslationEndpoint();
 
         if (empty($apiKey) || empty($region) || empty($endpoint)) {
             return $text;
         }
 
         $route = "translate?api-version=3.0&from=en&to=" . $language;
+        $url = $endpoint . $route;
 
-        $response = wp_remote_post(
-            $endpoint . $route,
+        $headers = [
+            'Content-type' => 'application/json',
+            'Ocp-Apim-Subscription-Key' => $apiKey,
+            'Ocp-Apim-Subscription-Region' => $region,
+        ];
+
+        $payload = [
             [
-                'headers' => [
-                    'Content-type' => 'application/json',
-                    'Ocp-Apim-Subscription-Key' => $apiKey,
-                    'Ocp-Apim-Subscription-Region' => $region,
-                ],
-                'body' => json_encode([
-                    [
-                        'Text' => $text
-                    ]
-                ]),
-                'method' => 'POST',
+                'Text' => $text
             ]
-        );
+        ];
 
-
-        //$bodyResult = json_decode(wp_remote_retrieve_body($response), true);
-
-        $responseBody = wp_remote_retrieve_body($response);
-        if (empty($responseBody)) {
-            if (is_object($response) && property_exists($response, 'errors') && array_key_exists('http_request_failed', $response->errors)) {
-                throw new AzureTranslateInstanceException("Error: " . $response->errors['http_request_failed'][0]);
-            }
-            if (is_array($response) && array_key_exists('response', $response)) {
-                throw new AzureTranslateInstanceException("Code: " . $response['response']['code'] . " - " . $response['response']['message']);
-            }
-            throw new AzureTranslateInstanceException("Error: please check if the Azure endpoint in plugin options is right");
+        try {
+            $bodyResult = $this->httpClient->post($url, $headers, $payload);
+        } catch (\Exception $e) {
+            throw new AzureTranslateInstanceException('HTTP request failed: ' . $e->getMessage());
         }
-
-        $bodyResult = json_decode($responseBody, true);
 
         if (array_key_exists('error', $bodyResult)) {
             throw new AzureTranslateInstanceException("Error code: " . $bodyResult['error']['code'] . " - " . $bodyResult['error']['message']);
@@ -84,35 +82,35 @@ class AzureTranslator implements AITranslatorInterface
      */
     public function supportedLanguages(): array
     {
-        $apiKey = PluginOptions::apiKeyAzureTranslateInstance();
+        $apiKey = $this->config->getTranslationApiKey();
         if (empty($apiKey)) {
             return [];
         }
-        $endpoint = PluginOptions::endpointAzureTranslateInstance();
+        $endpoint = $this->config->getTranslationEndpoint();
         if (empty($endpoint)) {
             return [];
         }
 
         $route = 'languages?api-version=3.0';
-
         $url = $endpoint . $route;
 
-        $headers = array(
+        $headers = [
             'Content-type' => 'application/json',
             'Ocp-Apim-Subscription-Key' => $apiKey
-        );
+        ];
 
-        $response = wp_remote_get(
-            $url,
-            array(
-                'headers' => $headers
-            )
-        );
-
-        $bodyResult = json_decode(wp_remote_retrieve_body($response), true);
+        try {
+            $bodyResult = $this->httpClient->get($url, $headers);
+        } catch (\Exception $e) {
+            throw new AzureTranslateInstanceException(
+                esc_html__('No language retrieved: maybe the translation endpoint is wrong. Please check it out and try again.', 'auto-alt-text')
+            );
+        }
 
         if (empty($bodyResult)) {
-            throw new AzureTranslateInstanceException(esc_html__('No language retrieved: maybe the translation endpoint is wrong. Please check it out and try again.', 'auto-alt-text'));
+            throw new AzureTranslateInstanceException(
+                esc_html__('No language retrieved: maybe the translation endpoint is wrong. Please check it out and try again.', 'auto-alt-text')
+            );
         }
 
         if (array_key_exists('error', $bodyResult)) {

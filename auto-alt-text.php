@@ -14,7 +14,7 @@
  * Namespace: AATXT
  */
 
-use AATXT\App\Setup;
+use AATXT\App\Core\PluginBootstrap;
 
 if ( ! defined( 'ABSPATH' ) ) {
     exit; // Exit if accessed directly.
@@ -26,4 +26,4 @@ define('AATXT_LANGUAGES_RELATIVE_PATH', dirname( plugin_basename( __FILE__ ) ) .
 
 require AATXT_ABSPATH . '/vendor/autoload.php';
 
-Setup::register();
+PluginBootstrap::init(AATXT_FILE_ABSPATH);
