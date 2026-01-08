@@ -105,11 +105,25 @@ class Setup
         ];
 
         // Redirect alla pagina della media library con un messaggio di successo
-        $sendback = add_query_arg(
-            $callBackData,
-            admin_url('upload.php')
-        );
-        wp_redirect($sendback);
+        $sendback = wp_get_referer();
+        if (empty($sendback)) {
+            $sendback = admin_url('upload.php');
+        }
+
+        $sendback = remove_query_arg([
+            'action',
+            'action2',
+            'media',
+            '_wpnonce',
+            '_wp_http_referer',
+            'auto_alt_text',
+            'mediaSelected',
+            'mediaUpdated',
+        ], $sendback);
+
+        $sendback = add_query_arg($callBackData, $sendback);
+
+        wp_safe_redirect($sendback);
         exit();
     }
 
