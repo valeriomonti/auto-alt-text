@@ -1,4 +1,7 @@
-## [v2.5.3] - 2025-12-06
+## [v2.6.0] - 2026-01-12
 
 ### Changed
-- Protect the plugin from Cross-Site Request Forgery attacks
+- Implement SOLID principles
+- Use design patterns
+- Implement tests
+- Preserve Media Library pagination when redirecting after bulk action
