@@ -35,11 +35,15 @@ jobs:
           composer dump-autoload --no-dev --optimize --classmap-authoritative
       - name: Verify no dev dependencies
         run: |
-          if grep -r "phpstan" vendor/composer/ 2>/dev/null; then
-            echo "Error: PHPStan references found in autoloader"
+          if [ -d "vendor/phpstan" ]; then
+            echo "Error: PHPStan directory found in vendor - dev dependencies installed"
             exit 1
           fi
-          echo "Autoloader is clean - no dev dependencies found"
+          if [ -d "vendor/phpunit" ]; then
+            echo "Error: PHPUnit directory found in vendor - dev dependencies installed"
+            exit 1
+          fi
+          echo "No dev dependencies found in vendor directory"
       - name: Create zip file
         run: |
           zip -r auto-alt-text.zip *.php composer.json composer.lock readme.txt dist languages src vendor -x "*.git*"
