@@ -20,10 +20,19 @@ jobs:
       - run: npm install
       - name: Build assets
         run: npm run build
+      - name: Clean vendor directory
+        run: rm -rf vendor
       - name: Install PHP dependencies
         uses: php-actions/composer@v6
         with:
-          args: --no-dev --optimize-autoloader
+          args: --no-dev --optimize-autoloader --classmap-authoritative
+      - name: Verify no dev dependencies
+        run: |
+          if grep -r "phpstan" vendor/composer/ 2>/dev/null; then
+            echo "Error: PHPStan references found in autoloader"
+            exit 1
+          fi
+          echo "Autoloader is clean - no dev dependencies found"
       - name: Create zip file
         run: |
           zip -r auto-alt-text.zip *.php composer.json composer.lock readme.txt dist languages src vendor -x "*.git*"
