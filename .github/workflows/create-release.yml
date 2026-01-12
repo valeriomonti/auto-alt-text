@@ -22,9 +22,11 @@ jobs:
         run: npm run build
       - name: Install PHP dependencies
         uses: php-actions/composer@v6
+        with:
+          args: --no-dev --optimize-autoloader
       - name: Create zip file
         run: |
-          zip -r auto-alt-text.zip *.php composer.* readme.txt dist languages resources src vendor -x "*phpstan*"
+          zip -r auto-alt-text.zip *.php composer.json composer.lock readme.txt dist languages src vendor -x "*.git*"
       - name: Create Release
         id: create_release
         uses: softprops/action-gh-release@v2
