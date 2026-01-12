@@ -1,9 +1,15 @@
 {
     "name": "valeriomonti/auto-alt-text",
+    "description": "WordPress plugin that automatically generates alt text for images using AI services (OpenAI, Anthropic Claude, Azure Computer Vision)",
     "license": "MIT",
     "autoload": {
         "psr-4": {
             "AATXT\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "AATXT\\Tests\\": "tests/"
         }
     },
     "authors": [
@@ -14,7 +20,23 @@
     ],
     "config": {
         "allow-plugins": {
-            "php-http/discovery": true
+            "php-http/discovery": true,
+            "phpstan/extension-installer": true
         }
+    },
+    "require": {
+        "php-di/php-di": "^6.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^9.6",
+        "phpstan/phpstan": "*",
+        "szepeviktor/phpstan-wordpress": "*",
+        "phpstan/extension-installer": "*"
+    },
+    "scripts": {
+        "test": "@php -d error_reporting=E_ALL^E_DEPRECATED vendor/bin/phpunit",
+        "test:coverage": "@php -d error_reporting=E_ALL^E_DEPRECATED vendor/bin/phpunit --coverage-html coverage",
+        "phpstan": "vendor/bin/phpstan analyse --memory-limit=1G",
+        "phpstan:baseline": "vendor/bin/phpstan analyse --memory-limit=1G --generate-baseline"
     }
 }

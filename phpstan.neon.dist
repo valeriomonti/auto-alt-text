@@ -1,0 +1,41 @@
+includes:
+    - phpstan-baseline.neon
+
+parameters:
+    level: 6
+
+    paths:
+        - src
+
+    excludePaths:
+        - src/Config/Constants.php
+
+    # PHP version compatibility
+    phpVersion: 70400
+
+    # Treat code as if it was running in WordPress environment
+    bootstrapFiles:
+        - %currentWorkingDirectory%/vendor/php-stubs/wordpress-stubs/wordpress-stubs.php
+        - %currentWorkingDirectory%/phpstan-bootstrap.php
+
+    # Ignore errors from WordPress core functions
+    # that might not be perfectly typed in stubs
+    ignoreErrors:
+        # WordPress uses mixed return types extensively
+        - '#Function get_option invoked with [0-9]+ parameters?, 1-2 required\.#'
+        - '#Function update_option invoked with [0-9]+ parameters?, 2 required\.#'
+        - '#Function get_post_meta invoked with [0-9]+ parameters?, 2-4 required\.#'
+        - '#Function add_action invoked with [0-9]+ parameters?, 2-4 required\.#'
+        - '#Function add_filter invoked with [0-9]+ parameters?, 2-4 required\.#'
+
+    # Strictness options
+    checkExplicitMixedMissingReturn: true
+    checkFunctionNameCase: true
+    checkUninitializedProperties: true
+
+    # Report unused declarations
+    reportUnmatchedIgnoredErrors: false
+
+    # Parallel processing
+    parallel:
+        maximumNumberOfProcesses: 4

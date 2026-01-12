@@ -3,8 +3,8 @@ Contributors: valeriomonti
 Donate link: https://ko-fi.com/valeriomonti
 Tags: alt text, alt tag, accessibility, openai, seo
 Requires at least: 6.0
-Tested up to: 6.8.3
-Stable tag: 2.5.3
+Tested up to: 6.9.0
+Stable tag: 2.6.0
 Requires PHP: 7.4
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
@@ -172,6 +172,12 @@ Once you’ve re-entered your API Key (and, if desired, added the constants), hi
 6. Single image alt text generation
 
 == Changelog ==
+= 2.6.0 =
+- Implement SOLID principles
+- Use design patterns
+- Implement tests
+- Preserve Media Library pagination when redirecting after bulk action
+
 = 2.5.3 =
 - Protect the plugin from Cross-Site Request Forgery attacks
 

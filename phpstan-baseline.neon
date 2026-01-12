@@ -1,0 +1,133 @@
+parameters:
+	ignoreErrors:
+		-
+			message: '#^Method AATXT\\App\\AIProviders\\Azure\\AzureTranslator\:\:supportedLanguages\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/App/AIProviders/Azure/AzureTranslator.php
+
+		-
+			message: '#^Offset 0 does not exist on array\<string, mixed\>\.$#'
+			identifier: offsetAccess.notFound
+			count: 1
+			path: src/App/AIProviders/Azure/AzureTranslator.php
+
+		-
+			message: '#^Parameter \#3 \$body of method AATXT\\App\\Infrastructure\\Http\\HttpClientInterface\:\:post\(\) expects array\<string, mixed\>, array\<int, array\<string, string\>\> given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/App/AIProviders/Azure/AzureTranslator.php
+
+		-
+			message: '#^Method AATXT\\App\\AIProviders\\OpenAI\\OpenAIResponse\:\:decodedResponseBody\(\) has parameter \$requestBody with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/App/AIProviders/OpenAI/OpenAIResponse.php
+
+		-
+			message: '#^Method AATXT\\App\\AIProviders\\OpenAI\\OpenAIResponse\:\:decodedResponseBody\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/App/AIProviders/OpenAI/OpenAIResponse.php
+
+		-
+			message: '#^Method AATXT\\App\\AIProviders\\OpenAI\\OpenAIResponse\:\:prepareRequestBody\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/App/AIProviders/OpenAI/OpenAIResponse.php
+
+		-
+			message: '#^Method AATXT\\App\\Admin\\MediaLibrary\:\:addGenerateAltTextButton\(\) has parameter \$form_fields with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/App/Admin/MediaLibrary.php
+
+		-
+			message: '#^Method AATXT\\App\\Admin\\MediaLibrary\:\:addGenerateAltTextButton\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/App/Admin/MediaLibrary.php
+
+		-
+			message: '#^Unreachable statement \- code above always terminates\.$#'
+			identifier: deadCode.unreachable
+			count: 2
+			path: src/App/Admin/MediaLibrary.php
+
+		-
+			message: '#^Action callback returns string\|null but should not return anything\.$#'
+			identifier: return.void
+			count: 4
+			path: src/App/Admin/PluginOptions.php
+
+		-
+			message: '#^Method AATXT\\App\\Admin\\PluginOptions\:\:sanitizeText\(\) has parameter \$input with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/App/Admin/PluginOptions.php
+
+		-
+			message: '#^Method AATXT\\App\\Admin\\PluginOptions\:\:sanitizeTextArea\(\) has parameter \$input with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/App/Admin/PluginOptions.php
+
+		-
+			message: '#^Method AATXT\\App\\Admin\\PluginOptions\:\:sanitizeUrl\(\) has parameter \$input with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/App/Admin/PluginOptions.php
+
+		-
+			message: '#^Parameter \#6 \$icon_url of function add_menu_page expects string, null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/App/Admin/PluginOptions.php
+
+		-
+			message: '#^Method AATXT\\App\\Domain\\Entities\\ErrorLog\:\:fromDatabaseRow\(\) has parameter \$row with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/App/Domain/Entities/ErrorLog.php
+
+		-
+			message: '#^Method AATXT\\App\\Domain\\Exceptions\\InvalidImageException\:\:__construct\(\) has parameter \$supportedTypes with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/App/Domain/Exceptions/InvalidImageException.php
+
+		-
+			message: '#^Call to function is_array\(\) with array\<string, mixed\> will always evaluate to true\.$#'
+			identifier: function.alreadyNarrowedType
+			count: 1
+			path: src/App/Infrastructure/Http/WordPressHttpClient.php
+
+		-
+			message: '#^Method AATXT\\App\\Logging\\DBLogger\:\:logTableExists\(\) is unused\.$#'
+			identifier: method.unused
+			count: 1
+			path: src/App/Logging/DBLogger.php
+
+		-
+			message: '#^Property AATXT\\App\\Services\\AltTextService\:\:\$config is never read, only written\.$#'
+			identifier: property.onlyWritten
+			count: 1
+			path: src/App/Services/AltTextService.php
+
+		-
+			message: '#^Offset ''height'' on array\{width\: int, height\: int, file\: string, sizes\: array, image_meta\: array, filesize\: int\} in isset\(\) always exists and is not nullable\.$#'
+			identifier: isset.offset
+			count: 1
+			path: src/App/Services/ImageValidator.php
+
+		-
+			message: '#^Offset ''width'' on array\{width\: int, height\: int, file\: string, sizes\: array, image_meta\: array, filesize\: int\} in isset\(\) always exists and is not nullable\.$#'
+			identifier: isset.offset
+			count: 1
+			path: src/App/Services/ImageValidator.php
+
+		-
+			message: '#^PHPDoc tag @return with type bool\|string is not subtype of native type string\.$#'
+			identifier: return.phpDocType
+			count: 1
+			path: src/App/Utilities/Encryption.php

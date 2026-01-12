@@ -2,37 +2,50 @@
 
 namespace AATXT\App\Admin;
 
-use AATXT\App\Setup;
+use AATXT\App\Services\AltTextService;
 use AATXT\App\Utilities\AssetsManager;
 use AATXT\Config\Constants;
 
 class MediaLibrary
 {
-    private static ?self $instance = null;
-    private static AssetsManager $assetsManager;
+    /**
+     * Alt text generation service
+     *
+     * @var AltTextService
+     */
+    private $altTextService;
 
-    private function __construct()
+    /**
+     * Assets manager for handling Vite manifests
+     *
+     * @var AssetsManager
+     */
+    private $assetsManager;
+
+    /**
+     * Constructor
+     *
+     * @param AltTextService $altTextService Service for generating alt text
+     * @param AssetsManager $assetsManager Manager for asset URLs
+     */
+    public function __construct(AltTextService $altTextService, AssetsManager $assetsManager)
     {
-        //
+        $this->altTextService = $altTextService;
+        $this->assetsManager = $assetsManager;
     }
 
-    public static function register(): void
+    public function register(): void
     {
-        if (is_null(self::$instance)) {
-            self::$instance = new self();
-        }
-        self::$assetsManager = AssetsManager::make();
-
-        add_action('admin_enqueue_scripts', [self::$instance, 'enqueue'], 1);
+        add_action('admin_enqueue_scripts', [$this, 'enqueue'], 1);
 
         // Render custom template in media modal
-        add_action('print_media_templates', [self::$instance, 'renderGenerateButtonTemplate']);
+        add_action('print_media_templates', [$this, 'renderGenerateButtonTemplate']);
 
         // Add button to generate alt text in media library
-        add_filter('attachment_fields_to_edit', [self::$instance, 'addGenerateAltTextButton'], 10, 2);
+        add_filter('attachment_fields_to_edit', [$this, 'addGenerateAltTextButton'], 10, 2);
 
         // Handle AJAX request to generate alt text
-        add_action('wp_ajax_generate_alt_text', [self::$instance, 'generateAltText']);
+        add_action('wp_ajax_generate_alt_text', [$this, 'generateAltText']);
     }
 
     public function enqueue(): void
@@ -41,7 +54,7 @@ class MediaLibrary
 
         // Load script in Media Library and in any post editing/modal (all CPTs)
         if (! $screen || in_array($screen->base, ['upload', 'post'], true)) {
-            $mediaLibraryJs = self::$assetsManager->getAssetUrl('resources/js/media-library.js', false);
+            $mediaLibraryJs = $this->assetsManager->getAssetUrl('resources/js/media-library.js', false);
             wp_enqueue_script(
                 Constants::AATXT_PLUGIN_MEDIA_LIBRARY_HANDLE,
                 $mediaLibraryJs,
@@ -125,7 +138,7 @@ class MediaLibrary
             return;
         }
 
-        $generatedAltText = Setup::altText($postId);
+        $generatedAltText = $this->altTextService->generateForAttachment($postId);
         wp_send_json_success(['alt_text' => $generatedAltText]);
     }
 }

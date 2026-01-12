@@ -3,3 +3,17 @@
 vendor
 node_modules
 dist
+
+# Test coverage and reports
+coverage/
+.phpunit.result.cache
+phpunit.xml.bak
+
+# Debug and logs
+debug.log
+*.log
+
+# Claude Code
+.claude/
+CLAUDE.md
+*.claude.md

@@ -2,35 +2,103 @@
 
 namespace AATXT\App\AIProviders\Anthropic;
 
-use AATXT\App\Admin\PluginOptions;
 use AATXT\App\AIProviders\AIProviderInterface;
+use AATXT\App\AIProviders\Contracts\RequiresAuthentication;
+use AATXT\App\AIProviders\Contracts\SupportsImageValidation;
+use AATXT\App\Configuration\AIProviderConfig;
 use AATXT\App\Exceptions\Anthropic\AnthropicException;
+use AATXT\App\Infrastructure\Http\HttpClientInterface;
 use AATXT\Config\Constants;
 
-class AnthropicResponse implements AIProviderInterface
+/**
+ * Anthropic Claude provider for generating alt text using Claude models.
+ *
+ * Implements SupportsImageValidation and RequiresAuthentication interfaces
+ * following the Interface Segregation Principle.
+ */
+class AnthropicResponse implements AIProviderInterface, SupportsImageValidation, RequiresAuthentication
 {
-    public static function make(): AnthropicResponse
+    /**
+     * @var HttpClientInterface
+     */
+    private $httpClient;
+
+    /**
+     * @var AIProviderConfig
+     */
+    private $config;
+
+    /**
+     * Constructor.
+     *
+     * @param HttpClientInterface $httpClient HTTP client for API calls
+     * @param AIProviderConfig $config Configuration with API key, prompt, and model
+     */
+    public function __construct(HttpClientInterface $httpClient, AIProviderConfig $config)
     {
-        return new self();
+        $this->httpClient = $httpClient;
+        $this->config = $config;
     }
 
     /**
-     *  Make a request to OpenAI Chat APIs to retrieve a description for the image passed
+     * Get the list of supported MIME types for Anthropic Claude.
+     *
+     * @return array<string> List of supported MIME types
+     */
+    public function getSupportedMimeTypes(): array
+    {
+        return Constants::AATXT_ANTHROPIC_ALLOWED_MIME_TYPES;
+    }
+
+    /**
+     * Check if a specific MIME type is supported.
+     *
+     * @param string $mimeType The MIME type to check
+     * @return bool True if supported, false otherwise
+     */
+    public function supportsImage(string $mimeType): bool
+    {
+        return in_array($mimeType, $this->getSupportedMimeTypes(), true);
+    }
+
+    /**
+     * Validate that valid credentials are configured.
+     *
+     * @return bool True if credentials are valid
+     */
+    public function validateCredentials(): bool
+    {
+        $apiKey = $this->config->getApiKey();
+        return !empty($apiKey) && strlen($apiKey) > 10;
+    }
+
+    /**
+     * Check if an API key is configured.
+     *
+     * @return bool True if API key is set
+     */
+    public function hasApiKey(): bool
+    {
+        return !empty($this->config->getApiKey());
+    }
+
+    /**
+     * Make a request to Anthropic Claude API to retrieve a description for the image passed
+     *
      * @param string $imageUrl
      * @return string
      * @throws AnthropicException
      */
     public function response(string $imageUrl): string
     {
-        $model = PluginOptions::anthropicModel();
-        $apiKey = PluginOptions::apiKeyAnthropic();
+        $apiKey = $this->config->getApiKey();
 
-        if(!$apiKey) {
+        if (empty($apiKey)) {
             throw new AnthropicException('Anthropic API key is missing in plugin settings');
         }
 
         $payload = [
-            "model"      => $model,
+            "model"      => $this->config->getModel(),
             "max_tokens" => 1024,
             "messages"   => [
                 [
@@ -45,41 +113,30 @@ class AnthropicResponse implements AIProviderInterface
                         ],
                         [
                             "type" => "text",
-                            "text" => PluginOptions::anthropicPrompt(),
+                            "text" => $this->config->getPrompt(),
                         ],
                     ],
                 ],
             ],
         ];
 
-        $args = [
-            'headers'     => [
-                'Content-Type'      => 'application/json',
-                'x-api-key'         => $apiKey,
-                'anthropic-version' => Constants::AATXT_API_VERSION,
-            ],
-            'body'        => wp_json_encode($payload),
-            'timeout'     => 30,
-            'data_format' => 'body',
+        $headers = [
+            'Content-Type'      => 'application/json',
+            'x-api-key'         => $apiKey,
+            'anthropic-version' => Constants::AATXT_API_VERSION,
         ];
 
-        $response = wp_remote_post(Constants::AATXT_ANTHROPIC_ENDPOINT, $args);
-        if (is_wp_error($response)) {
-            throw new AnthropicException('Request error: ' . $response->get_error_message());
+        try {
+            $data = $this->httpClient->post(Constants::AATXT_ANTHROPIC_ENDPOINT, $headers, $payload);
+        } catch (\Exception $e) {
+            throw new AnthropicException('HTTP request failed: ' . $e->getMessage());
         }
-        $statusCode = wp_remote_retrieve_response_code($response);
-        $body = wp_remote_retrieve_body($response);
-
-        if ($statusCode < 200 || $statusCode >= 300) {
-            throw new AnthropicException('HTTP Error ' . $statusCode . ':' . $body);
-        }
-
-        $data = json_decode($body, true);
 
         $answer = $data['content'][0]['text'] ?? null;
 
         if (!$answer) {
-            throw new AnthropicException('Response format unattended : ' . $body);
+            $bodyJson = json_encode($data);
+            throw new AnthropicException('Response format unexpected: ' . $bodyJson);
         }
 
         return $answer;
