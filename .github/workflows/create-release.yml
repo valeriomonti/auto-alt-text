@@ -24,7 +24,7 @@ jobs:
         uses: php-actions/composer@v6
       - name: Create zip file
         run: |
-          zip -r auto-alt-text.zip *.php composer.* readme.txt dist vendor src resources languages
+          zip -r auto-alt-text.zip *.php composer.* readme.txt dist languages resources src vendor -x "*phpstan*"
       - name: Create Release
         id: create_release
         uses: softprops/action-gh-release@v2
