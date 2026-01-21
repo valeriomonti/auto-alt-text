@@ -1,7 +1,4 @@
-## [v2.6.0] - 2026-01-12
+## [v2.6.1] - 2026-01-21
 
 ### Changed
-- Implement SOLID principles
-- Use design patterns
-- Implement tests
-- Preserve Media Library pagination when redirecting after bulk action
+- Avoid to truncate alt text too long

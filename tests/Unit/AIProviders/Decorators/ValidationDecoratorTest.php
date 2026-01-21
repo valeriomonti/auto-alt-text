@@ -5,11 +5,14 @@ namespace AATXT\Tests\Unit\AIProviders\Decorators;
 use AATXT\App\AIProviders\AIProviderInterface;
 use AATXT\App\AIProviders\Decorators\ValidationDecorator;
 use AATXT\App\Domain\Exceptions\EmptyResponseException;
-use AATXT\App\Domain\ValueObjects\AltText;
 use PHPUnit\Framework\TestCase;
 
 /**
  * Unit tests for ValidationDecorator
+ *
+ * Note: This decorator validates that responses are not empty but does NOT
+ * truncate responses. Alt text length should be controlled by the user's
+ * prompt to the AI provider.
  */
 class ValidationDecoratorTest extends TestCase
 {
@@ -86,7 +89,7 @@ class ValidationDecoratorTest extends TestCase
         $provider->method('response')
             ->willReturn('');
 
-        $decorator = new ValidationDecorator($provider, null, false);
+        $decorator = new ValidationDecorator($provider, false);
 
         $result = $decorator->response('http://example.com/image.jpg');
 
@@ -94,11 +97,14 @@ class ValidationDecoratorTest extends TestCase
     }
 
     /**
-     * Test decorator truncates long text
+     * Test decorator does NOT truncate long text
+     *
+     * Alt text length should be controlled by the user's prompt to the AI provider,
+     * not by the decorator.
      */
-    public function testTruncatesLongText(): void
+    public function testDoesNotTruncateLongText(): void
     {
-        $longText = str_repeat('a', 200); // 200 characters
+        $longText = str_repeat('a', 500); // 500 characters
 
         $provider = $this->createMock(AIProviderInterface::class);
         $provider->method('response')
@@ -108,88 +114,9 @@ class ValidationDecoratorTest extends TestCase
 
         $result = $decorator->response('http://example.com/image.jpg');
 
-        $this->assertLessThanOrEqual(AltText::MAX_LENGTH, mb_strlen($result));
-    }
-
-    /**
-     * Test decorator uses custom max length
-     */
-    public function testUsesCustomMaxLength(): void
-    {
-        $longText = str_repeat('a', 100);
-
-        $provider = $this->createMock(AIProviderInterface::class);
-        $provider->method('response')
-            ->willReturn($longText);
-
-        $decorator = new ValidationDecorator($provider, 50);
-
-        $result = $decorator->response('http://example.com/image.jpg');
-
-        $this->assertLessThanOrEqual(50, mb_strlen($result));
-    }
-
-    /**
-     * Test decorator does not truncate text under max length
-     */
-    public function testDoesNotTruncateTextUnderMaxLength(): void
-    {
-        $shortText = 'Short text';
-
-        $provider = $this->createMock(AIProviderInterface::class);
-        $provider->method('response')
-            ->willReturn($shortText);
-
-        $decorator = new ValidationDecorator($provider);
-
-        $result = $decorator->response('http://example.com/image.jpg');
-
-        $this->assertEquals($shortText, $result);
-    }
-
-    /**
-     * Test decorator truncates at word boundary when possible
-     */
-    public function testTruncatesAtWordBoundary(): void
-    {
-        // Create text that needs truncation
-        $text = 'This is a sentence with many words that will need to be truncated at some point during validation testing process';
-        $customMaxLength = 60;
-
-        $provider = $this->createMock(AIProviderInterface::class);
-        $provider->method('response')
-            ->willReturn($text);
-
-        $decorator = new ValidationDecorator($provider, $customMaxLength);
-
-        $result = $decorator->response('http://example.com/image.jpg');
-
-        // Should be shorter than or equal to max length
-        $this->assertLessThanOrEqual($customMaxLength, mb_strlen($result));
-    }
-
-    /**
-     * Test getMaxLength returns configured value
-     */
-    public function testGetMaxLengthReturnsConfiguredValue(): void
-    {
-        $provider = $this->createMock(AIProviderInterface::class);
-
-        $decorator = new ValidationDecorator($provider, 100);
-
-        $this->assertEquals(100, $decorator->getMaxLength());
-    }
-
-    /**
-     * Test getMaxLength returns default when null passed
-     */
-    public function testGetMaxLengthReturnsDefaultWhenNullPassed(): void
-    {
-        $provider = $this->createMock(AIProviderInterface::class);
-
-        $decorator = new ValidationDecorator($provider, null);
-
-        $this->assertEquals(AltText::MAX_LENGTH, $decorator->getMaxLength());
+        // Text should be returned unchanged (no truncation)
+        $this->assertEquals(500, mb_strlen($result));
+        $this->assertEquals($longText, $result);
     }
 
     /**
@@ -211,7 +138,7 @@ class ValidationDecoratorTest extends TestCase
     {
         $provider = $this->createMock(AIProviderInterface::class);
 
-        $decorator = new ValidationDecorator($provider, null, false);
+        $decorator = new ValidationDecorator($provider, false);
 
         $this->assertFalse($decorator->throwsOnEmpty());
     }

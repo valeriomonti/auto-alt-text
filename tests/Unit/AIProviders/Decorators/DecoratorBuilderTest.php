@@ -93,22 +93,6 @@ class DecoratorBuilderTest extends TestCase
     }
 
     /**
-     * Test withValidation with custom max length
-     */
-    public function testWithValidationWithCustomMaxLength(): void
-    {
-        $provider = $this->createMock(AIProviderInterface::class);
-
-        /** @var ValidationDecorator $result */
-        $result = DecoratorBuilder::wrap($provider)
-            ->withValidation(100)
-            ->build();
-
-        $this->assertInstanceOf(ValidationDecorator::class, $result);
-        $this->assertEquals(100, $result->getMaxLength());
-    }
-
-    /**
      * Test withValidation with throwOnEmpty false
      */
     public function testWithValidationWithThrowOnEmptyFalse(): void
@@ -117,7 +101,7 @@ class DecoratorBuilderTest extends TestCase
 
         /** @var ValidationDecorator $result */
         $result = DecoratorBuilder::wrap($provider)
-            ->withValidation(null, false)
+            ->withValidation(false)
             ->build();
 
         $this->assertInstanceOf(ValidationDecorator::class, $result);
@@ -197,7 +181,7 @@ class DecoratorBuilderTest extends TestCase
 
         $result = DecoratorBuilder::wrap($provider)
             ->withCleaning()
-            ->withValidation(100, false)
+            ->withValidation(false)
             ->withCaching(7200, 'openai')
             ->build();
 

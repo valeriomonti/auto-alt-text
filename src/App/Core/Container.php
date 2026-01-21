@@ -218,7 +218,7 @@ final class Container
             'openai.vision.decorated' => function ($container) {
                 return DecoratorBuilder::wrap($container->get(OpenAIVision::class))
                     ->withCleaning()
-                    ->withValidation(null, false)
+                    ->withValidation(false)
                     ->build();
             },
 
@@ -227,7 +227,7 @@ final class Container
             'anthropic.decorated' => function ($container) {
                 return DecoratorBuilder::wrap($container->get(AnthropicResponse::class))
                     ->withCleaning()
-                    ->withValidation(null, false)
+                    ->withValidation(false)
                     ->build();
             },
 
@@ -237,7 +237,7 @@ final class Container
             'azure.decorated' => function ($container) {
                 return DecoratorBuilder::wrap($container->get(AzureComputerVisionCaptionsResponse::class))
                     ->withCleaning()
-                    ->withValidation(null, false)
+                    ->withValidation(false)
                     ->build();
             },
 

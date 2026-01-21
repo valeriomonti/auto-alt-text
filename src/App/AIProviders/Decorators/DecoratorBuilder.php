@@ -3,7 +3,6 @@
 namespace AATXT\App\AIProviders\Decorators;
 
 use AATXT\App\AIProviders\AIProviderInterface;
-use AATXT\App\Domain\ValueObjects\AltText;
 
 /**
  * Builder for assembling decorated AI providers.
@@ -14,7 +13,7 @@ use AATXT\App\Domain\ValueObjects\AltText;
  * Recommended decorator order (inside to outside):
  * 1. Provider (innermost) - The actual AI provider
  * 2. Cleaning - Clean the raw response
- * 3. Validation - Validate and truncate if needed
+ * 3. Validation - Validate non-empty response
  * 4. Caching (outermost) - Cache the final result
  *
  * Example usage:
@@ -50,13 +49,6 @@ final class DecoratorBuilder
      * @var bool
      */
     private $withValidation = false;
-
-    /**
-     * Validation max length
-     *
-     * @var int|null
-     */
-    private $validationMaxLength;
 
     /**
      * Whether validation throws on empty
@@ -122,17 +114,14 @@ final class DecoratorBuilder
 
     /**
      * Add the validation decorator.
+     * Validates that the response is not empty.
      *
-     * Validates response is not empty and truncates if too long.
-     *
-     * @param int|null $maxLength Maximum length (defaults to AltText::MAX_LENGTH)
      * @param bool $throwOnEmpty Whether to throw exception on empty (default: true)
      * @return self Fluent interface
      */
-    public function withValidation(?int $maxLength = null, bool $throwOnEmpty = true): self
+    public function withValidation(bool $throwOnEmpty = true): self
     {
         $this->withValidation = true;
-        $this->validationMaxLength = $maxLength;
         $this->validationThrowOnEmpty = $throwOnEmpty;
         return $this;
     }
@@ -196,7 +185,6 @@ final class DecoratorBuilder
         if ($this->withValidation) {
             $provider = new ValidationDecorator(
                 $provider,
-                $this->validationMaxLength,
                 $this->validationThrowOnEmpty
             );
         }

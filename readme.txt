@@ -172,6 +172,9 @@ Once you’ve re-entered your API Key (and, if desired, added the constants), hi
 6. Single image alt text generation
 
 == Changelog ==
+= 2.6.1 =
+- Avoid to truncate alt text too long
+
 = 2.6.0 =
 - Implement SOLID principles
 - Use design patterns
