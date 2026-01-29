@@ -25,10 +25,9 @@ class OpenAIVisionTest extends TestCase
     private const TEST_IMAGE_URL = 'https://example.com/image.jpg';
 
     /**
-     * @test
      * @covers ::response
      */
-    public function it_returns_alt_text_from_successful_api_response(): void
+    public function testItReturnsAltTextFromSuccessfulApiResponse(): void
     {
         // Arrange
         $expectedAltText = 'A cat sitting on a windowsill looking outside';
@@ -46,7 +45,7 @@ class OpenAIVisionTest extends TestCase
                 ]
             ]);
 
-        $config = $this->createMock(AIProviderConfig::class);
+        $config = $this->createStub(AIProviderConfig::class);
         $config->method('getApiKey')->willReturn(self::TEST_API_KEY);
         $config->method('getPrompt')->willReturn(self::TEST_PROMPT);
         $config->method('getModel')->willReturn(self::TEST_MODEL);
@@ -61,16 +60,15 @@ class OpenAIVisionTest extends TestCase
     }
 
     /**
-     * @test
      * @covers ::response
      */
-    public function it_cleans_double_quotes_from_response(): void
+    public function testItCleansDoubleQuotesFromResponse(): void
     {
         // Arrange
         $rawResponse = '"A beautiful sunset over the ocean"';
         $expectedAltText = 'A beautiful sunset over the ocean';
 
-        $httpClient = $this->createMock(HttpClientInterface::class);
+        $httpClient = $this->createStub(HttpClientInterface::class);
         $httpClient->method('post')
             ->willReturn([
                 'choices' => [
@@ -82,7 +80,7 @@ class OpenAIVisionTest extends TestCase
                 ]
             ]);
 
-        $config = $this->createMock(AIProviderConfig::class);
+        $config = $this->createStub(AIProviderConfig::class);
         $config->method('getApiKey')->willReturn(self::TEST_API_KEY);
         $config->method('getPrompt')->willReturn(self::TEST_PROMPT);
         $config->method('getModel')->willReturn(self::TEST_MODEL);
@@ -97,16 +95,15 @@ class OpenAIVisionTest extends TestCase
     }
 
     /**
-     * @test
      * @covers ::response
      */
-    public function it_cleans_multiple_whitespaces_from_response(): void
+    public function testItCleansMultipleWhitespacesFromResponse(): void
     {
         // Arrange - The cleanString method removes double+ whitespaces entirely
         $rawResponse = 'A dog   running  in   the park';
         $expectedAltText = 'A dogrunninginthe park';
 
-        $httpClient = $this->createMock(HttpClientInterface::class);
+        $httpClient = $this->createStub(HttpClientInterface::class);
         $httpClient->method('post')
             ->willReturn([
                 'choices' => [
@@ -118,7 +115,7 @@ class OpenAIVisionTest extends TestCase
                 ]
             ]);
 
-        $config = $this->createMock(AIProviderConfig::class);
+        $config = $this->createStub(AIProviderConfig::class);
         $config->method('getApiKey')->willReturn(self::TEST_API_KEY);
         $config->method('getPrompt')->willReturn(self::TEST_PROMPT);
         $config->method('getModel')->willReturn(self::TEST_MODEL);
@@ -133,13 +130,12 @@ class OpenAIVisionTest extends TestCase
     }
 
     /**
-     * @test
      * @covers ::response
      */
-    public function it_throws_exception_on_api_error_response(): void
+    public function testItThrowsExceptionOnApiErrorResponse(): void
     {
         // Arrange
-        $httpClient = $this->createMock(HttpClientInterface::class);
+        $httpClient = $this->createStub(HttpClientInterface::class);
         $httpClient->method('post')
             ->willReturn([
                 'error' => [
@@ -149,7 +145,7 @@ class OpenAIVisionTest extends TestCase
                 ]
             ]);
 
-        $config = $this->createMock(AIProviderConfig::class);
+        $config = $this->createStub(AIProviderConfig::class);
         $config->method('getApiKey')->willReturn(self::TEST_API_KEY);
         $config->method('getPrompt')->willReturn(self::TEST_PROMPT);
         $config->method('getModel')->willReturn(self::TEST_MODEL);
@@ -165,17 +161,16 @@ class OpenAIVisionTest extends TestCase
     }
 
     /**
-     * @test
      * @covers ::response
      */
-    public function it_throws_exception_on_http_failure(): void
+    public function testItThrowsExceptionOnHttpFailure(): void
     {
         // Arrange
-        $httpClient = $this->createMock(HttpClientInterface::class);
+        $httpClient = $this->createStub(HttpClientInterface::class);
         $httpClient->method('post')
             ->willThrowException(new \Exception('Connection timeout'));
 
-        $config = $this->createMock(AIProviderConfig::class);
+        $config = $this->createStub(AIProviderConfig::class);
         $config->method('getApiKey')->willReturn(self::TEST_API_KEY);
         $config->method('getPrompt')->willReturn(self::TEST_PROMPT);
         $config->method('getModel')->willReturn(self::TEST_MODEL);
@@ -191,10 +186,9 @@ class OpenAIVisionTest extends TestCase
     }
 
     /**
-     * @test
      * @covers ::response
      */
-    public function it_sends_correct_headers_with_api_key(): void
+    public function testItSendsCorrectHeadersWithApiKey(): void
     {
         // Arrange
         $httpClient = $this->createMock(HttpClientInterface::class);
@@ -216,7 +210,7 @@ class OpenAIVisionTest extends TestCase
                 ]
             ]);
 
-        $config = $this->createMock(AIProviderConfig::class);
+        $config = $this->createStub(AIProviderConfig::class);
         $config->method('getApiKey')->willReturn(self::TEST_API_KEY);
         $config->method('getPrompt')->willReturn(self::TEST_PROMPT);
         $config->method('getModel')->willReturn(self::TEST_MODEL);
@@ -228,10 +222,9 @@ class OpenAIVisionTest extends TestCase
     }
 
     /**
-     * @test
      * @covers ::response
      */
-    public function it_sends_image_url_in_request_body(): void
+    public function testItSendsImageUrlInRequestBody(): void
     {
         // Arrange
         $httpClient = $this->createMock(HttpClientInterface::class);
@@ -251,7 +244,7 @@ class OpenAIVisionTest extends TestCase
                 ]
             ]);
 
-        $config = $this->createMock(AIProviderConfig::class);
+        $config = $this->createStub(AIProviderConfig::class);
         $config->method('getApiKey')->willReturn(self::TEST_API_KEY);
         $config->method('getPrompt')->willReturn(self::TEST_PROMPT);
         $config->method('getModel')->willReturn(self::TEST_MODEL);
@@ -263,10 +256,9 @@ class OpenAIVisionTest extends TestCase
     }
 
     /**
-     * @test
      * @covers ::response
      */
-    public function it_uses_default_prompt_when_config_prompt_is_empty(): void
+    public function testItUsesDefaultPromptWhenConfigPromptIsEmpty(): void
     {
         // Arrange
         $httpClient = $this->createMock(HttpClientInterface::class);
@@ -287,7 +279,7 @@ class OpenAIVisionTest extends TestCase
                 ]
             ]);
 
-        $config = $this->createMock(AIProviderConfig::class);
+        $config = $this->createStub(AIProviderConfig::class);
         $config->method('getApiKey')->willReturn(self::TEST_API_KEY);
         $config->method('getPrompt')->willReturn(''); // Empty prompt
         $config->method('getModel')->willReturn(self::TEST_MODEL);
@@ -299,14 +291,13 @@ class OpenAIVisionTest extends TestCase
     }
 
     /**
-     * @test
      * @covers ::getSupportedMimeTypes
      */
-    public function it_returns_supported_mime_types(): void
+    public function testItReturnsSupportedMimeTypes(): void
     {
         // Arrange
-        $httpClient = $this->createMock(HttpClientInterface::class);
-        $config = $this->createMock(AIProviderConfig::class);
+        $httpClient = $this->createStub(HttpClientInterface::class);
+        $config = $this->createStub(AIProviderConfig::class);
 
         $provider = new OpenAIVision($httpClient, $config);
 
@@ -321,14 +312,13 @@ class OpenAIVisionTest extends TestCase
     }
 
     /**
-     * @test
      * @covers ::supportsImage
      */
-    public function it_correctly_validates_supported_mime_types(): void
+    public function testItCorrectlyValidatesSupportedMimeTypes(): void
     {
         // Arrange
-        $httpClient = $this->createMock(HttpClientInterface::class);
-        $config = $this->createMock(AIProviderConfig::class);
+        $httpClient = $this->createStub(HttpClientInterface::class);
+        $config = $this->createStub(AIProviderConfig::class);
 
         $provider = new OpenAIVision($httpClient, $config);
 
@@ -340,21 +330,20 @@ class OpenAIVisionTest extends TestCase
     }
 
     /**
-     * @test
      * @covers ::validateCredentials
      */
-    public function it_validates_credentials_correctly(): void
+    public function testItValidatesCredentialsCorrectly(): void
     {
         // Arrange
-        $httpClient = $this->createMock(HttpClientInterface::class);
+        $httpClient = $this->createStub(HttpClientInterface::class);
 
-        $validConfig = $this->createMock(AIProviderConfig::class);
+        $validConfig = $this->createStub(AIProviderConfig::class);
         $validConfig->method('getApiKey')->willReturn(self::TEST_API_KEY);
 
-        $invalidConfig = $this->createMock(AIProviderConfig::class);
+        $invalidConfig = $this->createStub(AIProviderConfig::class);
         $invalidConfig->method('getApiKey')->willReturn('short');
 
-        $emptyConfig = $this->createMock(AIProviderConfig::class);
+        $emptyConfig = $this->createStub(AIProviderConfig::class);
         $emptyConfig->method('getApiKey')->willReturn('');
 
         $validProvider = new OpenAIVision($httpClient, $validConfig);
@@ -368,18 +357,17 @@ class OpenAIVisionTest extends TestCase
     }
 
     /**
-     * @test
      * @covers ::hasApiKey
      */
-    public function it_checks_if_api_key_exists(): void
+    public function testItChecksIfApiKeyExists(): void
     {
         // Arrange
-        $httpClient = $this->createMock(HttpClientInterface::class);
+        $httpClient = $this->createStub(HttpClientInterface::class);
 
-        $configWithKey = $this->createMock(AIProviderConfig::class);
+        $configWithKey = $this->createStub(AIProviderConfig::class);
         $configWithKey->method('getApiKey')->willReturn(self::TEST_API_KEY);
 
-        $configWithoutKey = $this->createMock(AIProviderConfig::class);
+        $configWithoutKey = $this->createStub(AIProviderConfig::class);
         $configWithoutKey->method('getApiKey')->willReturn('');
 
         $providerWithKey = new OpenAIVision($httpClient, $configWithKey);
@@ -391,16 +379,15 @@ class OpenAIVisionTest extends TestCase
     }
 
     /**
-     * @test
      * @covers ::response
      */
-    public function it_trims_whitespace_from_response(): void
+    public function testItTrimsWhitespaceFromResponse(): void
     {
         // Arrange
         $rawResponse = '  A mountain landscape with snow  ';
         $expectedAltText = 'A mountain landscape with snow';
 
-        $httpClient = $this->createMock(HttpClientInterface::class);
+        $httpClient = $this->createStub(HttpClientInterface::class);
         $httpClient->method('post')
             ->willReturn([
                 'choices' => [
@@ -412,7 +399,7 @@ class OpenAIVisionTest extends TestCase
                 ]
             ]);
 
-        $config = $this->createMock(AIProviderConfig::class);
+        $config = $this->createStub(AIProviderConfig::class);
         $config->method('getApiKey')->willReturn(self::TEST_API_KEY);
         $config->method('getPrompt')->willReturn(self::TEST_PROMPT);
         $config->method('getModel')->willReturn(self::TEST_MODEL);
@@ -427,16 +414,15 @@ class OpenAIVisionTest extends TestCase
     }
 
     /**
-     * @test
      * @covers ::response
      */
-    public function it_handles_html_entities_in_response(): void
+    public function testItHandlesHtmlEntitiesInResponse(): void
     {
         // Arrange
         $rawResponse = 'A &quot;beautiful&quot; garden';
         $expectedAltText = 'A beautiful garden';
 
-        $httpClient = $this->createMock(HttpClientInterface::class);
+        $httpClient = $this->createStub(HttpClientInterface::class);
         $httpClient->method('post')
             ->willReturn([
                 'choices' => [
@@ -448,7 +434,7 @@ class OpenAIVisionTest extends TestCase
                 ]
             ]);
 
-        $config = $this->createMock(AIProviderConfig::class);
+        $config = $this->createStub(AIProviderConfig::class);
         $config->method('getApiKey')->willReturn(self::TEST_API_KEY);
         $config->method('getPrompt')->willReturn(self::TEST_PROMPT);
         $config->method('getModel')->willReturn(self::TEST_MODEL);

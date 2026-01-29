@@ -47,10 +47,9 @@ class WordPressHttpClientIntegrationTest extends TestCase
     }
 
     /**
-     * @test
      * @covers ::post
      */
-    public function it_successfully_sends_post_request_with_json_body(): void
+    public function testItSuccessfullySendsPostRequestWithJsonBody(): void
     {
         // Arrange
         $url = 'https://jsonplaceholder.typicode.com/posts';
@@ -72,10 +71,9 @@ class WordPressHttpClientIntegrationTest extends TestCase
     }
 
     /**
-     * @test
      * @covers ::get
      */
-    public function it_successfully_sends_get_request(): void
+    public function testItSuccessfullySendsGetRequest(): void
     {
         // Arrange
         $url = 'https://jsonplaceholder.typicode.com/posts/1';
@@ -93,10 +91,9 @@ class WordPressHttpClientIntegrationTest extends TestCase
     }
 
     /**
-     * @test
      * @covers ::get
      */
-    public function it_throws_exception_on_404_not_found(): void
+    public function testItThrowsExceptionOn404NotFound(): void
     {
         // Arrange
         $url = 'https://jsonplaceholder.typicode.com/posts/99999999';
@@ -110,10 +107,9 @@ class WordPressHttpClientIntegrationTest extends TestCase
     }
 
     /**
-     * @test
      * @covers ::post
      */
-    public function it_throws_exception_on_invalid_url(): void
+    public function testItThrowsExceptionOnInvalidUrl(): void
     {
         // Arrange
         $url = 'https://this-domain-does-not-exist-12345.invalid/api';
@@ -128,10 +124,9 @@ class WordPressHttpClientIntegrationTest extends TestCase
     }
 
     /**
-     * @test
      * @covers ::get
      */
-    public function it_correctly_sends_custom_headers(): void
+    public function testItCorrectlySendsCustomHeaders(): void
     {
         // Arrange
         $url = 'https://httpbin.org/headers';
@@ -152,10 +147,9 @@ class WordPressHttpClientIntegrationTest extends TestCase
     }
 
     /**
-     * @test
      * @covers ::post
      */
-    public function it_handles_json_encoding_of_array_body(): void
+    public function testItHandlesJsonEncodingOfArrayBody(): void
     {
         // Arrange
         $url = 'https://httpbin.org/post';
@@ -178,10 +172,9 @@ class WordPressHttpClientIntegrationTest extends TestCase
     }
 
     /**
-     * @test
      * @covers ::post
      */
-    public function it_throws_exception_on_http_error_status(): void
+    public function testItThrowsExceptionOnHttpErrorStatus(): void
     {
         // Arrange
         $url = 'https://httpbin.org/status/500';
@@ -195,10 +188,9 @@ class WordPressHttpClientIntegrationTest extends TestCase
     }
 
     /**
-     * @test
      * @covers ::get
      */
-    public function it_throws_exception_on_empty_response_body(): void
+    public function testItThrowsExceptionOnEmptyResponseBody(): void
     {
         // This test verifies that truly empty responses are caught
         // Note: Most real APIs don't return truly empty bodies, so this tests edge case handling
@@ -213,10 +205,9 @@ class WordPressHttpClientIntegrationTest extends TestCase
     }
 
     /**
-     * @test
      * @covers ::post
      */
-    public function it_parses_json_response_correctly(): void
+    public function testItParsesJsonResponseCorrectly(): void
     {
         // Arrange
         $url = 'https://httpbin.org/post';

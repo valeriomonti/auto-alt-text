@@ -21,7 +21,7 @@ class ValidationDecoratorTest extends TestCase
      */
     public function testPassesThroughValidTextUnchanged(): void
     {
-        $provider = $this->createMock(AIProviderInterface::class);
+        $provider = $this->createStub(AIProviderInterface::class);
         $provider->method('response')
             ->willReturn('Valid alt text');
 
@@ -37,7 +37,7 @@ class ValidationDecoratorTest extends TestCase
      */
     public function testTrimsWhitespace(): void
     {
-        $provider = $this->createMock(AIProviderInterface::class);
+        $provider = $this->createStub(AIProviderInterface::class);
         $provider->method('response')
             ->willReturn('   Trimmed text   ');
 
@@ -53,7 +53,7 @@ class ValidationDecoratorTest extends TestCase
      */
     public function testThrowsExceptionForEmptyResponse(): void
     {
-        $provider = $this->createMock(AIProviderInterface::class);
+        $provider = $this->createStub(AIProviderInterface::class);
         $provider->method('response')
             ->willReturn('');
 
@@ -69,7 +69,7 @@ class ValidationDecoratorTest extends TestCase
      */
     public function testThrowsExceptionForWhitespaceOnlyResponse(): void
     {
-        $provider = $this->createMock(AIProviderInterface::class);
+        $provider = $this->createStub(AIProviderInterface::class);
         $provider->method('response')
             ->willReturn('   ');
 
@@ -85,7 +85,7 @@ class ValidationDecoratorTest extends TestCase
      */
     public function testDoesNotThrowWhenThrowOnEmptyIsFalse(): void
     {
-        $provider = $this->createMock(AIProviderInterface::class);
+        $provider = $this->createStub(AIProviderInterface::class);
         $provider->method('response')
             ->willReturn('');
 
@@ -106,7 +106,7 @@ class ValidationDecoratorTest extends TestCase
     {
         $longText = str_repeat('a', 500); // 500 characters
 
-        $provider = $this->createMock(AIProviderInterface::class);
+        $provider = $this->createStub(AIProviderInterface::class);
         $provider->method('response')
             ->willReturn($longText);
 
@@ -124,7 +124,7 @@ class ValidationDecoratorTest extends TestCase
      */
     public function testThrowsOnEmptyReturnsTrueByDefault(): void
     {
-        $provider = $this->createMock(AIProviderInterface::class);
+        $provider = $this->createStub(AIProviderInterface::class);
 
         $decorator = new ValidationDecorator($provider);
 
@@ -136,7 +136,7 @@ class ValidationDecoratorTest extends TestCase
      */
     public function testThrowsOnEmptyReturnsConfiguredValue(): void
     {
-        $provider = $this->createMock(AIProviderInterface::class);
+        $provider = $this->createStub(AIProviderInterface::class);
 
         $decorator = new ValidationDecorator($provider, false);
 
@@ -168,7 +168,7 @@ class ValidationDecoratorTest extends TestCase
     {
         $imageUrl = 'http://example.com/test.jpg';
 
-        $provider = $this->createMock(AIProviderInterface::class);
+        $provider = $this->createStub(AIProviderInterface::class);
         $provider->method('response')
             ->willReturn('');
 

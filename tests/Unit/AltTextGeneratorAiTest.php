@@ -52,11 +52,10 @@ use PHPUnit\Framework\TestCase;
 class AltTextGeneratorAiTest extends TestCase
 {
     /**
-     * @test
      * @covers ::make
      * @covers ::altText
      */
-    public function it_generates_alt_text_using_ai_provider(): void
+    public function testItGeneratesAltTextUsingAiProvider(): void
     {
         // Arrange
         $imageId = 123;
@@ -79,13 +78,12 @@ class AltTextGeneratorAiTest extends TestCase
     }
 
     /**
-     * @test
      * @covers ::make
      */
-    public function it_creates_instance_via_factory_method(): void
+    public function testItCreatesInstanceViaFactoryMethod(): void
     {
         // Arrange
-        $aiProvider = $this->createMock(AIProviderInterface::class);
+        $aiProvider = $this->createStub(AIProviderInterface::class);
 
         // Act
         $generator = AltTextGeneratorAi::make($aiProvider);
@@ -95,10 +93,9 @@ class AltTextGeneratorAiTest extends TestCase
     }
 
     /**
-     * @test
      * @covers ::altText
      */
-    public function it_passes_correct_image_url_to_provider(): void
+    public function testItPassesCorrectImageUrlToProvider(): void
     {
         // Arrange
         $imageId = 456;
@@ -117,13 +114,12 @@ class AltTextGeneratorAiTest extends TestCase
     }
 
     /**
-     * @test
      * @covers ::altText
      */
-    public function it_returns_empty_string_when_provider_returns_empty(): void
+    public function testItReturnsEmptyStringWhenProviderReturnsEmpty(): void
     {
         // Arrange
-        $aiProvider = $this->createMock(AIProviderInterface::class);
+        $aiProvider = $this->createStub(AIProviderInterface::class);
         $aiProvider->method('response')->willReturn('');
 
         $generator = AltTextGeneratorAi::make($aiProvider);
@@ -136,13 +132,12 @@ class AltTextGeneratorAiTest extends TestCase
     }
 
     /**
-     * @test
      * @covers ::altText
      */
-    public function it_propagates_exception_from_provider(): void
+    public function testItPropagatesExceptionFromProvider(): void
     {
         // Arrange
-        $aiProvider = $this->createMock(AIProviderInterface::class);
+        $aiProvider = $this->createStub(AIProviderInterface::class);
         $aiProvider->method('response')
             ->willThrowException(new \Exception('API Error'));
 
@@ -157,13 +152,12 @@ class AltTextGeneratorAiTest extends TestCase
     }
 
     /**
-     * @test
      * @covers ::altText
      */
-    public function it_handles_different_image_ids(): void
+    public function testItHandlesDifferentImageIds(): void
     {
         // Arrange
-        $aiProvider = $this->createMock(AIProviderInterface::class);
+        $aiProvider = $this->createStub(AIProviderInterface::class);
         $aiProvider->method('response')
             ->willReturnCallback(function ($url) {
                 // Return different alt text based on URL
@@ -184,16 +178,15 @@ class AltTextGeneratorAiTest extends TestCase
     }
 
     /**
-     * @test
      * @covers ::make
      */
-    public function it_can_use_different_providers(): void
+    public function testItCanUseDifferentProviders(): void
     {
         // Arrange
-        $provider1 = $this->createMock(AIProviderInterface::class);
+        $provider1 = $this->createStub(AIProviderInterface::class);
         $provider1->method('response')->willReturn('Response from provider 1');
 
-        $provider2 = $this->createMock(AIProviderInterface::class);
+        $provider2 = $this->createStub(AIProviderInterface::class);
         $provider2->method('response')->willReturn('Response from provider 2');
 
         $generator1 = AltTextGeneratorAi::make($provider1);

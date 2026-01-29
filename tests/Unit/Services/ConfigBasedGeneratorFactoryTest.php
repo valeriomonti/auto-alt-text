@@ -36,7 +36,7 @@ class ConfigBasedGeneratorFactoryTest extends TestCase
      */
     public function testRegisterGenerator(): void
     {
-        $generator = $this->createMock(AltTextGeneratorInterface::class);
+        $generator = $this->createStub(AltTextGeneratorInterface::class);
 
         $this->factory->register('test_type', function () use ($generator) {
             return $generator;
@@ -50,8 +50,8 @@ class ConfigBasedGeneratorFactoryTest extends TestCase
      */
     public function testRegisterMultipleGenerators(): void
     {
-        $generator1 = $this->createMock(AltTextGeneratorInterface::class);
-        $generator2 = $this->createMock(AltTextGeneratorInterface::class);
+        $generator1 = $this->createStub(AltTextGeneratorInterface::class);
+        $generator2 = $this->createStub(AltTextGeneratorInterface::class);
 
         $this->factory->register('openai', fn() => $generator1);
         $this->factory->register('anthropic', fn() => $generator2);
@@ -66,7 +66,7 @@ class ConfigBasedGeneratorFactoryTest extends TestCase
      */
     public function testCreateReturnsGenerator(): void
     {
-        $generator = $this->createMock(AltTextGeneratorInterface::class);
+        $generator = $this->createStub(AltTextGeneratorInterface::class);
 
         $this->factory->register('test', function () use ($generator) {
             return $generator;
@@ -86,7 +86,7 @@ class ConfigBasedGeneratorFactoryTest extends TestCase
 
         $this->factory->register('test', function () use (&$callCount) {
             $callCount++;
-            return $this->createMock(AltTextGeneratorInterface::class);
+            return $this->createStub(AltTextGeneratorInterface::class);
         });
 
         $this->factory->create('test');
@@ -120,8 +120,8 @@ class ConfigBasedGeneratorFactoryTest extends TestCase
      */
     public function testReRegisterOverwritesPrevious(): void
     {
-        $generator1 = $this->createMock(AltTextGeneratorInterface::class);
-        $generator2 = $this->createMock(AltTextGeneratorInterface::class);
+        $generator1 = $this->createStub(AltTextGeneratorInterface::class);
+        $generator2 = $this->createStub(AltTextGeneratorInterface::class);
 
         $this->factory->register('test', fn() => $generator1);
         $this->factory->register('test', fn() => $generator2);
@@ -144,7 +144,7 @@ class ConfigBasedGeneratorFactoryTest extends TestCase
      */
     public function testTypeComparisonIsCaseSensitive(): void
     {
-        $generator = $this->createMock(AltTextGeneratorInterface::class);
+        $generator = $this->createStub(AltTextGeneratorInterface::class);
 
         $this->factory->register('OpenAI', fn() => $generator);
 
@@ -158,7 +158,7 @@ class ConfigBasedGeneratorFactoryTest extends TestCase
      */
     public function testRegisterWithEmptyStringType(): void
     {
-        $generator = $this->createMock(AltTextGeneratorInterface::class);
+        $generator = $this->createStub(AltTextGeneratorInterface::class);
 
         $this->factory->register('', fn() => $generator);
 

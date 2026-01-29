@@ -26,10 +26,9 @@ class AzureTranslatorTest extends TestCase
     private const TEST_VISION_ENDPOINT = 'https://test-region.api.cognitive.microsoft.com/';
 
     /**
-     * @test
      * @covers ::translate
      */
-    public function it_translates_text_successfully(): void
+    public function testItTranslatesTextSuccessfully(): void
     {
         // Arrange
         $originalText = 'Hello world';
@@ -61,10 +60,9 @@ class AzureTranslatorTest extends TestCase
     }
 
     /**
-     * @test
      * @covers ::translate
      */
-    public function it_returns_original_text_when_api_key_is_missing(): void
+    public function testItReturnsOriginalTextWhenApiKeyIsMissing(): void
     {
         // Arrange
         $originalText = 'Hello world';
@@ -93,10 +91,9 @@ class AzureTranslatorTest extends TestCase
     }
 
     /**
-     * @test
      * @covers ::translate
      */
-    public function it_returns_original_text_when_region_is_missing(): void
+    public function testItReturnsOriginalTextWhenRegionIsMissing(): void
     {
         // Arrange
         $originalText = 'Hello world';
@@ -125,10 +122,9 @@ class AzureTranslatorTest extends TestCase
     }
 
     /**
-     * @test
      * @covers ::translate
      */
-    public function it_returns_original_text_when_endpoint_is_missing(): void
+    public function testItReturnsOriginalTextWhenEndpointIsMissing(): void
     {
         // Arrange
         $originalText = 'Hello world';
@@ -157,13 +153,12 @@ class AzureTranslatorTest extends TestCase
     }
 
     /**
-     * @test
      * @covers ::translate
      */
-    public function it_throws_exception_on_api_error(): void
+    public function testItThrowsExceptionOnApiError(): void
     {
         // Arrange
-        $httpClient = $this->createMock(HttpClientInterface::class);
+        $httpClient = $this->createStub(HttpClientInterface::class);
         $httpClient->method('post')
             ->willReturn([
                 'error' => [
@@ -185,13 +180,12 @@ class AzureTranslatorTest extends TestCase
     }
 
     /**
-     * @test
      * @covers ::translate
      */
-    public function it_throws_exception_on_http_failure(): void
+    public function testItThrowsExceptionOnHttpFailure(): void
     {
         // Arrange
-        $httpClient = $this->createMock(HttpClientInterface::class);
+        $httpClient = $this->createStub(HttpClientInterface::class);
         $httpClient->method('post')
             ->willThrowException(new \Exception('Network error'));
 
@@ -208,10 +202,9 @@ class AzureTranslatorTest extends TestCase
     }
 
     /**
-     * @test
      * @covers ::translate
      */
-    public function it_sends_correct_headers(): void
+    public function testItSendsCorrectHeaders(): void
     {
         // Arrange
         $httpClient = $this->createMock(HttpClientInterface::class);
@@ -246,10 +239,9 @@ class AzureTranslatorTest extends TestCase
     }
 
     /**
-     * @test
      * @covers ::translate
      */
-    public function it_sends_correct_url_with_language_parameter(): void
+    public function testItSendsCorrectUrlWithLanguageParameter(): void
     {
         // Arrange
         $targetLanguage = 'fr';
@@ -284,10 +276,9 @@ class AzureTranslatorTest extends TestCase
     }
 
     /**
-     * @test
      * @covers ::translate
      */
-    public function it_sends_text_in_correct_payload_format(): void
+    public function testItSendsTextInCorrectPayloadFormat(): void
     {
         // Arrange
         $textToTranslate = 'Hello world';
@@ -320,10 +311,9 @@ class AzureTranslatorTest extends TestCase
     }
 
     /**
-     * @test
      * @covers ::supportedLanguages
      */
-    public function it_returns_supported_languages(): void
+    public function testItReturnsSupportedLanguages(): void
     {
         // Arrange
         $expectedLanguages = [
@@ -350,10 +340,9 @@ class AzureTranslatorTest extends TestCase
     }
 
     /**
-     * @test
      * @covers ::supportedLanguages
      */
-    public function it_returns_empty_array_when_api_key_missing_for_languages(): void
+    public function testItReturnsEmptyArrayWhenApiKeyMissingForLanguages(): void
     {
         // Arrange
         $httpClient = $this->createMock(HttpClientInterface::class);
@@ -380,10 +369,9 @@ class AzureTranslatorTest extends TestCase
     }
 
     /**
-     * @test
      * @covers ::supportedLanguages
      */
-    public function it_returns_empty_array_when_endpoint_missing_for_languages(): void
+    public function testItReturnsEmptyArrayWhenEndpointMissingForLanguages(): void
     {
         // Arrange
         $httpClient = $this->createMock(HttpClientInterface::class);
@@ -410,13 +398,12 @@ class AzureTranslatorTest extends TestCase
     }
 
     /**
-     * @test
      * @covers ::supportedLanguages
      */
-    public function it_throws_exception_on_api_error_for_languages(): void
+    public function testItThrowsExceptionOnApiErrorForLanguages(): void
     {
         // Arrange
-        $httpClient = $this->createMock(HttpClientInterface::class);
+        $httpClient = $this->createStub(HttpClientInterface::class);
         $httpClient->method('get')
             ->willReturn([
                 'error' => [

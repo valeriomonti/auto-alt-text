@@ -28,7 +28,7 @@
         "php-di/php-di": "^6.0"
     },
     "require-dev": {
-        "phpunit/phpunit": "^9.6",
+        "phpunit/phpunit": "^9.6.33",
         "phpstan/phpstan": "*",
         "szepeviktor/phpstan-wordpress": "*",
         "phpstan/extension-installer": "*"

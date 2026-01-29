@@ -27,10 +27,9 @@ class AzureComputerVisionCaptionsResponseTest extends TestCase
     private const TEST_IMAGE_URL = 'https://example.com/image.jpg';
 
     /**
-     * @test
      * @covers ::response
      */
-    public function it_returns_caption_from_successful_api_response(): void
+    public function testItReturnsCaptionFromSuccessfulApiResponse(): void
     {
         // Arrange
         $expectedCaption = 'A cat sitting on a windowsill';
@@ -45,7 +44,7 @@ class AzureComputerVisionCaptionsResponseTest extends TestCase
             ]);
 
         $config = $this->createAzureConfig(false);
-        $translator = $this->createMock(AzureTranslator::class);
+        $translator = $this->createStub(AzureTranslator::class);
 
         $provider = new AzureComputerVisionCaptionsResponse($httpClient, $config, $translator);
 
@@ -57,17 +56,16 @@ class AzureComputerVisionCaptionsResponseTest extends TestCase
     }
 
     /**
-     * @test
      * @covers ::response
      */
-    public function it_translates_caption_when_translation_is_enabled(): void
+    public function testItTranslatesCaptionWhenTranslationIsEnabled(): void
     {
         // Arrange
         $englishCaption = 'A cat sitting on a windowsill';
         $translatedCaption = 'Un gatto seduto sul davanzale';
         $targetLanguage = 'it';
 
-        $httpClient = $this->createMock(HttpClientInterface::class);
+        $httpClient = $this->createStub(HttpClientInterface::class);
         $httpClient->method('post')
             ->willReturn([
                 'captionResult' => [
@@ -93,15 +91,14 @@ class AzureComputerVisionCaptionsResponseTest extends TestCase
     }
 
     /**
-     * @test
      * @covers ::response
      */
-    public function it_does_not_translate_when_language_is_default(): void
+    public function testItDoesNotTranslateWhenLanguageIsDefault(): void
     {
         // Arrange
         $expectedCaption = 'A cat sitting on a windowsill';
 
-        $httpClient = $this->createMock(HttpClientInterface::class);
+        $httpClient = $this->createStub(HttpClientInterface::class);
         $httpClient->method('post')
             ->willReturn([
                 'captionResult' => [
@@ -126,13 +123,12 @@ class AzureComputerVisionCaptionsResponseTest extends TestCase
     }
 
     /**
-     * @test
      * @covers ::response
      */
-    public function it_throws_exception_on_api_error_response(): void
+    public function testItThrowsExceptionOnApiErrorResponse(): void
     {
         // Arrange
-        $httpClient = $this->createMock(HttpClientInterface::class);
+        $httpClient = $this->createStub(HttpClientInterface::class);
         $httpClient->method('post')
             ->willReturn([
                 'error' => [
@@ -142,7 +138,7 @@ class AzureComputerVisionCaptionsResponseTest extends TestCase
             ]);
 
         $config = $this->createAzureConfig(false);
-        $translator = $this->createMock(AzureTranslator::class);
+        $translator = $this->createStub(AzureTranslator::class);
 
         $provider = new AzureComputerVisionCaptionsResponse($httpClient, $config, $translator);
 
@@ -155,18 +151,17 @@ class AzureComputerVisionCaptionsResponseTest extends TestCase
     }
 
     /**
-     * @test
      * @covers ::response
      */
-    public function it_throws_exception_on_http_failure(): void
+    public function testItThrowsExceptionOnHttpFailure(): void
     {
         // Arrange
-        $httpClient = $this->createMock(HttpClientInterface::class);
+        $httpClient = $this->createStub(HttpClientInterface::class);
         $httpClient->method('post')
             ->willThrowException(new \Exception('Connection timeout'));
 
         $config = $this->createAzureConfig(false);
-        $translator = $this->createMock(AzureTranslator::class);
+        $translator = $this->createStub(AzureTranslator::class);
 
         $provider = new AzureComputerVisionCaptionsResponse($httpClient, $config, $translator);
 
@@ -179,10 +174,9 @@ class AzureComputerVisionCaptionsResponseTest extends TestCase
     }
 
     /**
-     * @test
      * @covers ::response
      */
-    public function it_sends_correct_headers_with_subscription_key(): void
+    public function testItSendsCorrectHeadersWithSubscriptionKey(): void
     {
         // Arrange
         $httpClient = $this->createMock(HttpClientInterface::class);
@@ -203,7 +197,7 @@ class AzureComputerVisionCaptionsResponseTest extends TestCase
             ]);
 
         $config = $this->createAzureConfig(false);
-        $translator = $this->createMock(AzureTranslator::class);
+        $translator = $this->createStub(AzureTranslator::class);
 
         $provider = new AzureComputerVisionCaptionsResponse($httpClient, $config, $translator);
 
@@ -212,10 +206,9 @@ class AzureComputerVisionCaptionsResponseTest extends TestCase
     }
 
     /**
-     * @test
      * @covers ::response
      */
-    public function it_sends_correct_url_with_api_version_and_features(): void
+    public function testItSendsCorrectUrlWithApiVersionAndFeatures(): void
     {
         // Arrange
         $httpClient = $this->createMock(HttpClientInterface::class);
@@ -236,7 +229,7 @@ class AzureComputerVisionCaptionsResponseTest extends TestCase
             ]);
 
         $config = $this->createAzureConfig(false);
-        $translator = $this->createMock(AzureTranslator::class);
+        $translator = $this->createStub(AzureTranslator::class);
 
         $provider = new AzureComputerVisionCaptionsResponse($httpClient, $config, $translator);
 
@@ -245,10 +238,9 @@ class AzureComputerVisionCaptionsResponseTest extends TestCase
     }
 
     /**
-     * @test
      * @covers ::response
      */
-    public function it_sends_image_url_in_request_body(): void
+    public function testItSendsImageUrlInRequestBody(): void
     {
         // Arrange
         $httpClient = $this->createMock(HttpClientInterface::class);
@@ -266,7 +258,7 @@ class AzureComputerVisionCaptionsResponseTest extends TestCase
             ]);
 
         $config = $this->createAzureConfig(false);
-        $translator = $this->createMock(AzureTranslator::class);
+        $translator = $this->createStub(AzureTranslator::class);
 
         $provider = new AzureComputerVisionCaptionsResponse($httpClient, $config, $translator);
 
@@ -275,15 +267,14 @@ class AzureComputerVisionCaptionsResponseTest extends TestCase
     }
 
     /**
-     * @test
      * @covers ::getSupportedMimeTypes
      */
-    public function it_returns_supported_mime_types(): void
+    public function testItReturnsSupportedMimeTypes(): void
     {
         // Arrange
-        $httpClient = $this->createMock(HttpClientInterface::class);
+        $httpClient = $this->createStub(HttpClientInterface::class);
         $config = $this->createAzureConfig(false);
-        $translator = $this->createMock(AzureTranslator::class);
+        $translator = $this->createStub(AzureTranslator::class);
 
         $provider = new AzureComputerVisionCaptionsResponse($httpClient, $config, $translator);
 
@@ -298,15 +289,14 @@ class AzureComputerVisionCaptionsResponseTest extends TestCase
     }
 
     /**
-     * @test
      * @covers ::supportsImage
      */
-    public function it_correctly_validates_supported_mime_types(): void
+    public function testItCorrectlyValidatesSupportedMimeTypes(): void
     {
         // Arrange
-        $httpClient = $this->createMock(HttpClientInterface::class);
+        $httpClient = $this->createStub(HttpClientInterface::class);
         $config = $this->createAzureConfig(false);
-        $translator = $this->createMock(AzureTranslator::class);
+        $translator = $this->createStub(AzureTranslator::class);
 
         $provider = new AzureComputerVisionCaptionsResponse($httpClient, $config, $translator);
 
@@ -318,14 +308,13 @@ class AzureComputerVisionCaptionsResponseTest extends TestCase
     }
 
     /**
-     * @test
      * @covers ::validateCredentials
      */
-    public function it_validates_credentials_correctly(): void
+    public function testItValidatesCredentialsCorrectly(): void
     {
         // Arrange
-        $httpClient = $this->createMock(HttpClientInterface::class);
-        $translator = $this->createMock(AzureTranslator::class);
+        $httpClient = $this->createStub(HttpClientInterface::class);
+        $translator = $this->createStub(AzureTranslator::class);
 
         $validConfig = $this->createAzureConfig(false);
         $invalidConfig = new AzureConfig('', self::TEST_ENDPOINT);
@@ -339,14 +328,13 @@ class AzureComputerVisionCaptionsResponseTest extends TestCase
     }
 
     /**
-     * @test
      * @covers ::hasApiKey
      */
-    public function it_checks_if_api_key_exists(): void
+    public function testItChecksIfApiKeyExists(): void
     {
         // Arrange
-        $httpClient = $this->createMock(HttpClientInterface::class);
-        $translator = $this->createMock(AzureTranslator::class);
+        $httpClient = $this->createStub(HttpClientInterface::class);
+        $translator = $this->createStub(AzureTranslator::class);
 
         $configWithKey = $this->createAzureConfig(false);
         $configWithoutKey = new AzureConfig('', self::TEST_ENDPOINT);
@@ -360,14 +348,13 @@ class AzureComputerVisionCaptionsResponseTest extends TestCase
     }
 
     /**
-     * @test
      * @covers ::isTranslationEnabled
      */
-    public function it_correctly_reports_translation_status(): void
+    public function testItCorrectlyReportsTranslationStatus(): void
     {
         // Arrange
-        $httpClient = $this->createMock(HttpClientInterface::class);
-        $translator = $this->createMock(AzureTranslator::class);
+        $httpClient = $this->createStub(HttpClientInterface::class);
+        $translator = $this->createStub(AzureTranslator::class);
 
         $configWithTranslation = $this->createAzureConfig(true, 'it');
         $configWithoutTranslation = $this->createAzureConfig(false);
@@ -389,14 +376,13 @@ class AzureComputerVisionCaptionsResponseTest extends TestCase
     }
 
     /**
-     * @test
      * @covers ::getTargetLanguage
      */
-    public function it_returns_target_language(): void
+    public function testItReturnsTargetLanguage(): void
     {
         // Arrange
-        $httpClient = $this->createMock(HttpClientInterface::class);
-        $translator = $this->createMock(AzureTranslator::class);
+        $httpClient = $this->createStub(HttpClientInterface::class);
+        $translator = $this->createStub(AzureTranslator::class);
         $targetLanguage = 'fr';
 
         $config = $this->createAzureConfig(true, $targetLanguage);
@@ -408,17 +394,16 @@ class AzureComputerVisionCaptionsResponseTest extends TestCase
     }
 
     /**
-     * @test
      * @covers ::translate
      */
-    public function it_delegates_translation_to_translator(): void
+    public function testItDelegatesTranslationToTranslator(): void
     {
         // Arrange
         $text = 'Hello world';
         $translatedText = 'Ciao mondo';
         $targetLanguage = 'it';
 
-        $httpClient = $this->createMock(HttpClientInterface::class);
+        $httpClient = $this->createStub(HttpClientInterface::class);
         $config = $this->createAzureConfig(true, $targetLanguage);
 
         $translator = $this->createMock(AzureTranslator::class);

@@ -26,10 +26,9 @@ class AnthropicResponseTest extends TestCase
     private const TEST_IMAGE_URL = 'https://example.com/image.jpg';
 
     /**
-     * @test
      * @covers ::response
      */
-    public function it_returns_alt_text_from_successful_api_response(): void
+    public function testItReturnsAltTextFromSuccessfulApiResponse(): void
     {
         // Arrange
         $expectedAltText = 'A cat sitting on a windowsill looking outside';
@@ -45,7 +44,7 @@ class AnthropicResponseTest extends TestCase
                 ]
             ]);
 
-        $config = $this->createMock(AIProviderConfig::class);
+        $config = $this->createStub(AIProviderConfig::class);
         $config->method('getApiKey')->willReturn(self::TEST_API_KEY);
         $config->method('getPrompt')->willReturn(self::TEST_PROMPT);
         $config->method('getModel')->willReturn(self::TEST_MODEL);
@@ -60,15 +59,14 @@ class AnthropicResponseTest extends TestCase
     }
 
     /**
-     * @test
      * @covers ::response
      */
-    public function it_throws_exception_when_api_key_is_missing(): void
+    public function testItThrowsExceptionWhenApiKeyIsMissing(): void
     {
         // Arrange
-        $httpClient = $this->createMock(HttpClientInterface::class);
+        $httpClient = $this->createStub(HttpClientInterface::class);
 
-        $config = $this->createMock(AIProviderConfig::class);
+        $config = $this->createStub(AIProviderConfig::class);
         $config->method('getApiKey')->willReturn('');
         $config->method('getPrompt')->willReturn(self::TEST_PROMPT);
         $config->method('getModel')->willReturn(self::TEST_MODEL);
@@ -84,19 +82,18 @@ class AnthropicResponseTest extends TestCase
     }
 
     /**
-     * @test
      * @covers ::response
      */
-    public function it_throws_exception_on_unexpected_response_format(): void
+    public function testItThrowsExceptionOnUnexpectedResponseFormat(): void
     {
         // Arrange
-        $httpClient = $this->createMock(HttpClientInterface::class);
+        $httpClient = $this->createStub(HttpClientInterface::class);
         $httpClient->method('post')
             ->willReturn([
                 'unexpected' => 'format'
             ]);
 
-        $config = $this->createMock(AIProviderConfig::class);
+        $config = $this->createStub(AIProviderConfig::class);
         $config->method('getApiKey')->willReturn(self::TEST_API_KEY);
         $config->method('getPrompt')->willReturn(self::TEST_PROMPT);
         $config->method('getModel')->willReturn(self::TEST_MODEL);
@@ -112,17 +109,16 @@ class AnthropicResponseTest extends TestCase
     }
 
     /**
-     * @test
      * @covers ::response
      */
-    public function it_throws_exception_on_http_failure(): void
+    public function testItThrowsExceptionOnHttpFailure(): void
     {
         // Arrange
-        $httpClient = $this->createMock(HttpClientInterface::class);
+        $httpClient = $this->createStub(HttpClientInterface::class);
         $httpClient->method('post')
             ->willThrowException(new \Exception('Connection timeout'));
 
-        $config = $this->createMock(AIProviderConfig::class);
+        $config = $this->createStub(AIProviderConfig::class);
         $config->method('getApiKey')->willReturn(self::TEST_API_KEY);
         $config->method('getPrompt')->willReturn(self::TEST_PROMPT);
         $config->method('getModel')->willReturn(self::TEST_MODEL);
@@ -138,10 +134,9 @@ class AnthropicResponseTest extends TestCase
     }
 
     /**
-     * @test
      * @covers ::response
      */
-    public function it_sends_correct_headers_with_api_key(): void
+    public function testItSendsCorrectHeadersWithApiKey(): void
     {
         // Arrange
         $httpClient = $this->createMock(HttpClientInterface::class);
@@ -165,7 +160,7 @@ class AnthropicResponseTest extends TestCase
                 ]
             ]);
 
-        $config = $this->createMock(AIProviderConfig::class);
+        $config = $this->createStub(AIProviderConfig::class);
         $config->method('getApiKey')->willReturn(self::TEST_API_KEY);
         $config->method('getPrompt')->willReturn(self::TEST_PROMPT);
         $config->method('getModel')->willReturn(self::TEST_MODEL);
@@ -177,10 +172,9 @@ class AnthropicResponseTest extends TestCase
     }
 
     /**
-     * @test
      * @covers ::response
      */
-    public function it_sends_correct_request_body_structure(): void
+    public function testItSendsCorrectRequestBodyStructure(): void
     {
         // Arrange
         $httpClient = $this->createMock(HttpClientInterface::class);
@@ -223,7 +217,7 @@ class AnthropicResponseTest extends TestCase
                 ]
             ]);
 
-        $config = $this->createMock(AIProviderConfig::class);
+        $config = $this->createStub(AIProviderConfig::class);
         $config->method('getApiKey')->willReturn(self::TEST_API_KEY);
         $config->method('getPrompt')->willReturn(self::TEST_PROMPT);
         $config->method('getModel')->willReturn(self::TEST_MODEL);
@@ -235,13 +229,12 @@ class AnthropicResponseTest extends TestCase
     }
 
     /**
-     * @test
      * @covers ::response
      */
-    public function it_handles_empty_text_in_response(): void
+    public function testItHandlesEmptyTextInResponse(): void
     {
         // Arrange
-        $httpClient = $this->createMock(HttpClientInterface::class);
+        $httpClient = $this->createStub(HttpClientInterface::class);
         $httpClient->method('post')
             ->willReturn([
                 'content' => [
@@ -249,7 +242,7 @@ class AnthropicResponseTest extends TestCase
                 ]
             ]);
 
-        $config = $this->createMock(AIProviderConfig::class);
+        $config = $this->createStub(AIProviderConfig::class);
         $config->method('getApiKey')->willReturn(self::TEST_API_KEY);
         $config->method('getPrompt')->willReturn(self::TEST_PROMPT);
         $config->method('getModel')->willReturn(self::TEST_MODEL);
@@ -265,14 +258,13 @@ class AnthropicResponseTest extends TestCase
     }
 
     /**
-     * @test
      * @covers ::getSupportedMimeTypes
      */
-    public function it_returns_supported_mime_types(): void
+    public function testItReturnsSupportedMimeTypes(): void
     {
         // Arrange
-        $httpClient = $this->createMock(HttpClientInterface::class);
-        $config = $this->createMock(AIProviderConfig::class);
+        $httpClient = $this->createStub(HttpClientInterface::class);
+        $config = $this->createStub(AIProviderConfig::class);
 
         $provider = new AnthropicResponse($httpClient, $config);
 
@@ -289,14 +281,13 @@ class AnthropicResponseTest extends TestCase
     }
 
     /**
-     * @test
      * @covers ::supportsImage
      */
-    public function it_correctly_validates_supported_mime_types(): void
+    public function testItCorrectlyValidatesSupportedMimeTypes(): void
     {
         // Arrange
-        $httpClient = $this->createMock(HttpClientInterface::class);
-        $config = $this->createMock(AIProviderConfig::class);
+        $httpClient = $this->createStub(HttpClientInterface::class);
+        $config = $this->createStub(AIProviderConfig::class);
 
         $provider = new AnthropicResponse($httpClient, $config);
 
@@ -310,21 +301,20 @@ class AnthropicResponseTest extends TestCase
     }
 
     /**
-     * @test
      * @covers ::validateCredentials
      */
-    public function it_validates_credentials_correctly(): void
+    public function testItValidatesCredentialsCorrectly(): void
     {
         // Arrange
-        $httpClient = $this->createMock(HttpClientInterface::class);
+        $httpClient = $this->createStub(HttpClientInterface::class);
 
-        $validConfig = $this->createMock(AIProviderConfig::class);
+        $validConfig = $this->createStub(AIProviderConfig::class);
         $validConfig->method('getApiKey')->willReturn(self::TEST_API_KEY);
 
-        $shortConfig = $this->createMock(AIProviderConfig::class);
+        $shortConfig = $this->createStub(AIProviderConfig::class);
         $shortConfig->method('getApiKey')->willReturn('short');
 
-        $emptyConfig = $this->createMock(AIProviderConfig::class);
+        $emptyConfig = $this->createStub(AIProviderConfig::class);
         $emptyConfig->method('getApiKey')->willReturn('');
 
         $validProvider = new AnthropicResponse($httpClient, $validConfig);
@@ -338,18 +328,17 @@ class AnthropicResponseTest extends TestCase
     }
 
     /**
-     * @test
      * @covers ::hasApiKey
      */
-    public function it_checks_if_api_key_exists(): void
+    public function testItChecksIfApiKeyExists(): void
     {
         // Arrange
-        $httpClient = $this->createMock(HttpClientInterface::class);
+        $httpClient = $this->createStub(HttpClientInterface::class);
 
-        $configWithKey = $this->createMock(AIProviderConfig::class);
+        $configWithKey = $this->createStub(AIProviderConfig::class);
         $configWithKey->method('getApiKey')->willReturn(self::TEST_API_KEY);
 
-        $configWithoutKey = $this->createMock(AIProviderConfig::class);
+        $configWithoutKey = $this->createStub(AIProviderConfig::class);
         $configWithoutKey->method('getApiKey')->willReturn('');
 
         $providerWithKey = new AnthropicResponse($httpClient, $configWithKey);
@@ -361,15 +350,14 @@ class AnthropicResponseTest extends TestCase
     }
 
     /**
-     * @test
      * @covers ::response
      */
-    public function it_returns_text_without_modification(): void
+    public function testItReturnsTextWithoutModification(): void
     {
         // Arrange - Anthropic doesn't clean the response like OpenAI
         $expectedAltText = 'A beautiful sunset over the ocean';
 
-        $httpClient = $this->createMock(HttpClientInterface::class);
+        $httpClient = $this->createStub(HttpClientInterface::class);
         $httpClient->method('post')
             ->willReturn([
                 'content' => [
@@ -379,7 +367,7 @@ class AnthropicResponseTest extends TestCase
                 ]
             ]);
 
-        $config = $this->createMock(AIProviderConfig::class);
+        $config = $this->createStub(AIProviderConfig::class);
         $config->method('getApiKey')->willReturn(self::TEST_API_KEY);
         $config->method('getPrompt')->willReturn(self::TEST_PROMPT);
         $config->method('getModel')->willReturn(self::TEST_MODEL);
@@ -394,15 +382,14 @@ class AnthropicResponseTest extends TestCase
     }
 
     /**
-     * @test
      * @covers ::response
      */
-    public function it_handles_multiple_content_blocks(): void
+    public function testItHandlesMultipleContentBlocks(): void
     {
         // Arrange - returns first text block
         $expectedAltText = 'First text block';
 
-        $httpClient = $this->createMock(HttpClientInterface::class);
+        $httpClient = $this->createStub(HttpClientInterface::class);
         $httpClient->method('post')
             ->willReturn([
                 'content' => [
@@ -411,7 +398,7 @@ class AnthropicResponseTest extends TestCase
                 ]
             ]);
 
-        $config = $this->createMock(AIProviderConfig::class);
+        $config = $this->createStub(AIProviderConfig::class);
         $config->method('getApiKey')->willReturn(self::TEST_API_KEY);
         $config->method('getPrompt')->willReturn(self::TEST_PROMPT);
         $config->method('getModel')->willReturn(self::TEST_MODEL);

@@ -16,7 +16,7 @@ class CleaningDecoratorTest extends TestCase
      */
     public function testPassesThroughCleanTextUnchanged(): void
     {
-        $provider = $this->createMock(AIProviderInterface::class);
+        $provider = $this->createStub(AIProviderInterface::class);
         $provider->method('response')
             ->willReturn('Clean text without issues');
 
@@ -32,7 +32,7 @@ class CleaningDecoratorTest extends TestCase
      */
     public function testRemovesDoubleQuotes(): void
     {
-        $provider = $this->createMock(AIProviderInterface::class);
+        $provider = $this->createStub(AIProviderInterface::class);
         $provider->method('response')
             ->willReturn('"A person walking"');
 
@@ -48,7 +48,7 @@ class CleaningDecoratorTest extends TestCase
      */
     public function testRemovesHtmlQuoteEntities(): void
     {
-        $provider = $this->createMock(AIProviderInterface::class);
+        $provider = $this->createStub(AIProviderInterface::class);
         $provider->method('response')
             ->willReturn('&quot;A beautiful sunset&quot;');
 
@@ -65,7 +65,7 @@ class CleaningDecoratorTest extends TestCase
      */
     public function testRemovesMultipleWhitespaces(): void
     {
-        $provider = $this->createMock(AIProviderInterface::class);
+        $provider = $this->createStub(AIProviderInterface::class);
         $provider->method('response')
             ->willReturn('A   person  walking    on beach');
 
@@ -82,7 +82,7 @@ class CleaningDecoratorTest extends TestCase
      */
     public function testTrimsLeadingAndTrailingWhitespace(): void
     {
-        $provider = $this->createMock(AIProviderInterface::class);
+        $provider = $this->createStub(AIProviderInterface::class);
         $provider->method('response')
             ->willReturn('   Trimmed text   ');
 
@@ -99,7 +99,7 @@ class CleaningDecoratorTest extends TestCase
      */
     public function testHandlesEmptyString(): void
     {
-        $provider = $this->createMock(AIProviderInterface::class);
+        $provider = $this->createStub(AIProviderInterface::class);
         $provider->method('response')
             ->willReturn('');
 
@@ -115,7 +115,7 @@ class CleaningDecoratorTest extends TestCase
      */
     public function testHandlesStringWithOnlyQuotes(): void
     {
-        $provider = $this->createMock(AIProviderInterface::class);
+        $provider = $this->createStub(AIProviderInterface::class);
         $provider->method('response')
             ->willReturn('"""');
 
@@ -131,7 +131,7 @@ class CleaningDecoratorTest extends TestCase
      */
     public function testCombinesAllCleaningOperations(): void
     {
-        $provider = $this->createMock(AIProviderInterface::class);
+        $provider = $this->createStub(AIProviderInterface::class);
         $provider->method('response')
             ->willReturn('"A   &quot;person&quot;  in park"');
 
@@ -167,7 +167,7 @@ class CleaningDecoratorTest extends TestCase
      */
     public function testPreservesSingleSpaces(): void
     {
-        $provider = $this->createMock(AIProviderInterface::class);
+        $provider = $this->createStub(AIProviderInterface::class);
         $provider->method('response')
             ->willReturn('A person walking on the beach');
 

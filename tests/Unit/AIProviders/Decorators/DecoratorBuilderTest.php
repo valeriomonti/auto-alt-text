@@ -19,7 +19,7 @@ class DecoratorBuilderTest extends TestCase
      */
     public function testWrapReturnsBuilderInstance(): void
     {
-        $provider = $this->createMock(AIProviderInterface::class);
+        $provider = $this->createStub(AIProviderInterface::class);
 
         $builder = DecoratorBuilder::wrap($provider);
 
@@ -31,7 +31,7 @@ class DecoratorBuilderTest extends TestCase
      */
     public function testBuildWithoutDecoratorsReturnsOriginalProvider(): void
     {
-        $provider = $this->createMock(AIProviderInterface::class);
+        $provider = $this->createStub(AIProviderInterface::class);
 
         $result = DecoratorBuilder::wrap($provider)->build();
 
@@ -43,7 +43,7 @@ class DecoratorBuilderTest extends TestCase
      */
     public function testWithCleaningReturnsSelf(): void
     {
-        $provider = $this->createMock(AIProviderInterface::class);
+        $provider = $this->createStub(AIProviderInterface::class);
 
         $builder = DecoratorBuilder::wrap($provider);
         $result = $builder->withCleaning();
@@ -56,7 +56,7 @@ class DecoratorBuilderTest extends TestCase
      */
     public function testWithCleaningAddsCleaningDecorator(): void
     {
-        $provider = $this->createMock(AIProviderInterface::class);
+        $provider = $this->createStub(AIProviderInterface::class);
 
         $result = DecoratorBuilder::wrap($provider)
             ->withCleaning()
@@ -70,7 +70,7 @@ class DecoratorBuilderTest extends TestCase
      */
     public function testWithValidationReturnsSelf(): void
     {
-        $provider = $this->createMock(AIProviderInterface::class);
+        $provider = $this->createStub(AIProviderInterface::class);
 
         $builder = DecoratorBuilder::wrap($provider);
         $result = $builder->withValidation();
@@ -83,7 +83,7 @@ class DecoratorBuilderTest extends TestCase
      */
     public function testWithValidationAddsValidationDecorator(): void
     {
-        $provider = $this->createMock(AIProviderInterface::class);
+        $provider = $this->createStub(AIProviderInterface::class);
 
         $result = DecoratorBuilder::wrap($provider)
             ->withValidation()
@@ -97,7 +97,7 @@ class DecoratorBuilderTest extends TestCase
      */
     public function testWithValidationWithThrowOnEmptyFalse(): void
     {
-        $provider = $this->createMock(AIProviderInterface::class);
+        $provider = $this->createStub(AIProviderInterface::class);
 
         /** @var ValidationDecorator $result */
         $result = DecoratorBuilder::wrap($provider)
@@ -113,7 +113,7 @@ class DecoratorBuilderTest extends TestCase
      */
     public function testWithCachingReturnsSelf(): void
     {
-        $provider = $this->createMock(AIProviderInterface::class);
+        $provider = $this->createStub(AIProviderInterface::class);
 
         $builder = DecoratorBuilder::wrap($provider);
         $result = $builder->withCaching();
@@ -126,7 +126,7 @@ class DecoratorBuilderTest extends TestCase
      */
     public function testWithCachingAddsCachingDecorator(): void
     {
-        $provider = $this->createMock(AIProviderInterface::class);
+        $provider = $this->createStub(AIProviderInterface::class);
 
         $result = DecoratorBuilder::wrap($provider)
             ->withCaching()
@@ -140,7 +140,7 @@ class DecoratorBuilderTest extends TestCase
      */
     public function testWithAllDecoratorsAddsAllDecorators(): void
     {
-        $provider = $this->createMock(AIProviderInterface::class);
+        $provider = $this->createStub(AIProviderInterface::class);
 
         $result = DecoratorBuilder::wrap($provider)
             ->withAllDecorators('test')
@@ -155,7 +155,7 @@ class DecoratorBuilderTest extends TestCase
      */
     public function testDecoratorOrderIsCorrect(): void
     {
-        $provider = $this->createMock(AIProviderInterface::class);
+        $provider = $this->createStub(AIProviderInterface::class);
         $provider->method('response')
             ->willReturn('   "Test   response"   ');
 
@@ -177,7 +177,7 @@ class DecoratorBuilderTest extends TestCase
      */
     public function testFluentInterfaceChaining(): void
     {
-        $provider = $this->createMock(AIProviderInterface::class);
+        $provider = $this->createStub(AIProviderInterface::class);
 
         $result = DecoratorBuilder::wrap($provider)
             ->withCleaning()
@@ -193,8 +193,8 @@ class DecoratorBuilderTest extends TestCase
      */
     public function testMultipleBuildersAreIndependent(): void
     {
-        $provider1 = $this->createMock(AIProviderInterface::class);
-        $provider2 = $this->createMock(AIProviderInterface::class);
+        $provider1 = $this->createStub(AIProviderInterface::class);
+        $provider2 = $this->createStub(AIProviderInterface::class);
 
         $builder1 = DecoratorBuilder::wrap($provider1)->withCleaning();
         $builder2 = DecoratorBuilder::wrap($provider2)->withValidation();
@@ -211,7 +211,7 @@ class DecoratorBuilderTest extends TestCase
      */
     public function testOnlyCleaningDecorator(): void
     {
-        $provider = $this->createMock(AIProviderInterface::class);
+        $provider = $this->createStub(AIProviderInterface::class);
 
         $result = DecoratorBuilder::wrap($provider)
             ->withCleaning()
@@ -227,7 +227,7 @@ class DecoratorBuilderTest extends TestCase
      */
     public function testOnlyValidationDecorator(): void
     {
-        $provider = $this->createMock(AIProviderInterface::class);
+        $provider = $this->createStub(AIProviderInterface::class);
 
         $result = DecoratorBuilder::wrap($provider)
             ->withValidation()
@@ -243,7 +243,7 @@ class DecoratorBuilderTest extends TestCase
      */
     public function testOnlyCachingDecorator(): void
     {
-        $provider = $this->createMock(AIProviderInterface::class);
+        $provider = $this->createStub(AIProviderInterface::class);
 
         $result = DecoratorBuilder::wrap($provider)
             ->withCaching()

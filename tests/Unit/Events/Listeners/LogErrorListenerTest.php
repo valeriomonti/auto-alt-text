@@ -39,7 +39,7 @@ class LogErrorListenerTest extends TestCase
      */
     public function testHandleMarksEventAsHandled(): void
     {
-        $repository = $this->createMock(ErrorLogRepositoryInterface::class);
+        $repository = $this->createStub(ErrorLogRepositoryInterface::class);
 
         $listener = new LogErrorListener($repository);
         $event = new AltTextGenerationFailedEvent(123, 'OpenAI', new Exception('Error'));
