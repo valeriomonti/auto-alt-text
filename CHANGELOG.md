@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [v2.6.2] - 2026-01-30
+### Changed
+- Replace hardcoded Openai model with the one selected from the user
+- Update phpunit
+- Update Vite
+
 ## [v2.6.1] - 2026-01-21
 ### Changed
 - Avoid to truncate alt text too long

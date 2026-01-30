@@ -4,7 +4,7 @@ Donate link: https://ko-fi.com/valeriomonti
 Tags: alt text, alt tag, accessibility, openai, seo
 Requires at least: 6.0
 Tested up to: 6.9.0
-Stable tag: 2.6.1
+Stable tag: 2.6.2
 Requires PHP: 7.4
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
@@ -172,6 +172,11 @@ Once you’ve re-entered your API Key (and, if desired, added the constants), hi
 6. Single image alt text generation
 
 == Changelog ==
+= 2.6.2 =
+- Replace hardcoded Openai model with the one selected from the user
+- Update phpunit
+- Update Vite
+
 = 2.6.1 =
 - Avoid to truncate alt text too long
 

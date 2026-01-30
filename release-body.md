@@ -1,4 +1,6 @@
-## [v2.6.1] - 2026-01-21
+## [v2.6.2] - 2026-01-30
 
 ### Changed
-- Avoid to truncate alt text too long
+- Replace hardcoded Openai model with the one selected from the user
+- Update phpunit
+- Update Vite
