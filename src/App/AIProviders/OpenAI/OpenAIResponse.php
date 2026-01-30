@@ -156,7 +156,7 @@ abstract class OpenAIResponse implements AIProviderInterface, SupportsImageValid
     protected function prepareRequestBody(string $model, string $prompt, string $imageUrl): array
     {
         return [
-            'model' => Constants::AATXT_OPENAI_VISION_MODEL,
+            'model' => $model,
             'messages' => [
                 [
                     'role' => 'user',
