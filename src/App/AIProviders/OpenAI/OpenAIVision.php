@@ -36,7 +36,14 @@ class OpenAIVision extends OpenAIResponse
     {
         $prompt = parent::prompt();
         $requestBody = parent::prepareRequestBody($this->config->getModel(), $prompt, $imageUrl);
-        $decodedBody = parent::decodedResponseBody($requestBody, Constants::AATXT_OPENAI_CHAT_COMPLETION_ENDPOINT);
-        return $this->cleanString($decodedBody['choices'][0]['message']['content']);
+        $decodedBody = parent::decodedResponseBody($requestBody, Constants::AATXT_OPENAI_RESPONSES_API_ENDPOINT);
+
+        foreach($decodedBody['output'] as $output) {
+            if($output['type'] === 'message') {
+                return $this->cleanString($output['content'][0]['text']);
+            }
+        }
+
+        return '';
     }
 }

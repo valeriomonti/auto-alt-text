@@ -157,24 +157,21 @@ abstract class OpenAIResponse implements AIProviderInterface, SupportsImageValid
     {
         return [
             'model' => $model,
-            'messages' => [
+            'input' => [
                 [
                     'role' => 'user',
                     'content' => [
                         [
-                            "type" => "text",
+                            "type" => "input_text",
                             "text" => $prompt
                         ],
                         [
-                            "type" => "image_url",
-                            "image_url" => [
-                                "url" => $imageUrl
-                            ]
+                            "type" => "input_image",
+                            "image_url" => $imageUrl
                         ]
-                    ]
-                ],
+                    ],
+                ]
             ],
-            'max_tokens' => Constants::AATXT_OPENAI_MAX_TOKENS,
         ];
     }
 }

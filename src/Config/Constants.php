@@ -16,14 +16,12 @@ class Constants
 
     const AATXT_GPT4O = 'gpt-4o';
     const AATXT_GPT4O_MINI = 'gpt-4o-mini';
-    const AATXT_O1_MINI = 'o1-mini';
     const AATXT_GPT5 = 'gpt-5';
     const AATXT_GPT5_MINI = 'gpt-5-mini';
     const AATXT_GPT5_NANO = 'gpt-5-nano';
     const AATXT_OPTION_FIELD_MODEL_OPENAI_OPTIONS = [
         self::AATXT_GPT4O => 'GPT-4o',
         self::AATXT_GPT4O_MINI => 'GPT-4o Mini',
-        self::AATXT_O1_MINI => 'o1 Mini',
         self::AATXT_GPT5 => 'GPT-5',
         self::AATXT_GPT5_MINI => 'GPT-5 Mini',
         self::AATXT_GPT5_NANO => 'GPT-5 Nano',
@@ -58,10 +56,7 @@ class Constants
     const AATXT_LEGACY_ENCRYPTION_MIGRATION_DONE = 'aatxt_legacy_encryption_migration_done';
     const AATXT_IMAGE_URL_TAG = '%imageUrl%';
     const AATXT_OPENAI_DEFAULT_PROMPT = "Act like an SEO expert and write an English alt text of up to 125 characters for this image.";
-    const AATXT_OPENAI_VISION_MODEL = 'gpt-4o';
-    const AATXT_OPENAI_FALLBACK_MODEL = 'gpt-4o-mini';
-    const AATXT_OPENAI_MAX_TOKENS = 70;
-    const AATXT_OPENAI_CHAT_COMPLETION_ENDPOINT = 'https://api.openai.com/v1/chat/completions';
+    const AATXT_OPENAI_RESPONSES_API_ENDPOINT = 'https://api.openai.com/v1/responses';
     const AATXT_AJAX_GENERATE_ALT_TEXT_NONCE = 'generate_alt_text_nonce';
     const AATXT_OPENAI_ALLOWED_MIME_TYPES = [
         'image/png',
