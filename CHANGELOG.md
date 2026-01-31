@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [v2.7.0] - 2026-01-31
+### Changed
+- Migrate to the Responses API from the Chat Completion API for OpenAI
+- Remove o1 Mini deprecated model
+
 ## [v2.6.2] - 2026-01-30
 ### Changed
 - Replace hardcoded Openai model with the one selected from the user

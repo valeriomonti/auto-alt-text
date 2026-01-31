@@ -1,6 +1,5 @@
-## [v2.6.2] - 2026-01-30
+## [v2.7.0] - 2026-01-31
 
 ### Changed
-- Replace hardcoded Openai model with the one selected from the user
-- Update phpunit
-- Update Vite
+- Migrate to the Responses API from the Chat Completion API for OpenAI
+- Remove o1 Mini deprecated model
