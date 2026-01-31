@@ -36,10 +36,11 @@ class OpenAIVisionTest extends TestCase
         $httpClient->expects($this->once())
             ->method('post')
             ->willReturn([
-                'choices' => [
+                'output' => [
                     [
-                        'message' => [
-                            'content' => $expectedAltText
+                        'type' => 'message',
+                        'content' => [
+                            ['text' => $expectedAltText]
                         ]
                     ]
                 ]
@@ -71,10 +72,11 @@ class OpenAIVisionTest extends TestCase
         $httpClient = $this->createStub(HttpClientInterface::class);
         $httpClient->method('post')
             ->willReturn([
-                'choices' => [
+                'output' => [
                     [
-                        'message' => [
-                            'content' => $rawResponse
+                        'type' => 'message',
+                        'content' => [
+                            ['text' => $rawResponse]
                         ]
                     ]
                 ]
@@ -106,10 +108,11 @@ class OpenAIVisionTest extends TestCase
         $httpClient = $this->createStub(HttpClientInterface::class);
         $httpClient->method('post')
             ->willReturn([
-                'choices' => [
+                'output' => [
                     [
-                        'message' => [
-                            'content' => $rawResponse
+                        'type' => 'message',
+                        'content' => [
+                            ['text' => $rawResponse]
                         ]
                     ]
                 ]
@@ -205,8 +208,8 @@ class OpenAIVisionTest extends TestCase
                 $this->anything()
             )
             ->willReturn([
-                'choices' => [
-                    ['message' => ['content' => 'Test alt text']]
+                'output' => [
+                    ['type' => 'message', 'content' => [['text' => 'Test alt text']]]
                 ]
             ]);
 
@@ -234,13 +237,13 @@ class OpenAIVisionTest extends TestCase
                 $this->anything(),
                 $this->anything(),
                 $this->callback(function ($body) {
-                    return isset($body['messages'][0]['content'][1]['image_url']['url'])
-                        && $body['messages'][0]['content'][1]['image_url']['url'] === self::TEST_IMAGE_URL;
+                    return isset($body['input'][0]['content'][1]['image_url'])
+                        && $body['input'][0]['content'][1]['image_url'] === self::TEST_IMAGE_URL;
                 })
             )
             ->willReturn([
-                'choices' => [
-                    ['message' => ['content' => 'Test alt text']]
+                'output' => [
+                    ['type' => 'message', 'content' => [['text' => 'Test alt text']]]
                 ]
             ]);
 
@@ -269,13 +272,13 @@ class OpenAIVisionTest extends TestCase
                 $this->anything(),
                 $this->callback(function ($body) {
                     // Should contain some prompt text even if config is empty
-                    return isset($body['messages'][0]['content'][0]['text'])
-                        && !empty($body['messages'][0]['content'][0]['text']);
+                    return isset($body['input'][0]['content'][0]['text'])
+                        && !empty($body['input'][0]['content'][0]['text']);
                 })
             )
             ->willReturn([
-                'choices' => [
-                    ['message' => ['content' => 'Test alt text']]
+                'output' => [
+                    ['type' => 'message', 'content' => [['text' => 'Test alt text']]]
                 ]
             ]);
 
@@ -390,10 +393,11 @@ class OpenAIVisionTest extends TestCase
         $httpClient = $this->createStub(HttpClientInterface::class);
         $httpClient->method('post')
             ->willReturn([
-                'choices' => [
+                'output' => [
                     [
-                        'message' => [
-                            'content' => $rawResponse
+                        'type' => 'message',
+                        'content' => [
+                            ['text' => $rawResponse]
                         ]
                     ]
                 ]
@@ -425,10 +429,11 @@ class OpenAIVisionTest extends TestCase
         $httpClient = $this->createStub(HttpClientInterface::class);
         $httpClient->method('post')
             ->willReturn([
-                'choices' => [
+                'output' => [
                     [
-                        'message' => [
-                            'content' => $rawResponse
+                        'type' => 'message',
+                        'content' => [
+                            ['text' => $rawResponse]
                         ]
                     ]
                 ]

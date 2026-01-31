@@ -6,6 +6,7 @@ dist
 
 # Test coverage and reports
 coverage/
+.phpunit.cache/
 .phpunit.result.cache
 phpunit.xml.bak
 
