@@ -2,6 +2,7 @@
 
 namespace AATXT\App\Core;
 
+use AATXT\App\CLI\AutoAltTextCommand;
 use AATXT\App\Admin\BulkActions\BulkActionHandler;
 use AATXT\App\Admin\BulkActions\GenerateAltTextBulkAction;
 use AATXT\App\Admin\MediaLibrary;
@@ -60,6 +61,10 @@ final class PluginBootstrap
         $altTextService = $this->container->get(AltTextService::class);
         $mediaLibrary = $this->container->get(MediaLibrary::class);
         $schema = $this->container->get(ErrorLogSchema::class);
+
+        if (defined('WP_CLI') && WP_CLI) {
+            \WP_CLI::add_command('auto-alt-text', new AutoAltTextCommand($altTextService));
+        }
 
         // Create plugin lifecycle handler
         $lifecycle = new PluginLifecycle($schema);

@@ -81,6 +81,26 @@ For images already in the media library, you can create bulk alt texts. Open the
 
 You can also generate the alt text of a single image directly from the media library. Open the Media Library in “grid” mode, choose the image for which to generate the alt text, and click the “Generate alt text” button. In no time the alt text field will be overwritten by the generated description.
 
+### WP-CLI
+If you prefer generating alt text in batch (e.g., to avoid processing in the Media Library UI), you can use WP-CLI.
+
+Generate alt text for a list of attachment IDs:
+
+`wp auto-alt-text generate --ids=123,456,789`
+
+Process all image attachments in batches:
+
+`wp auto-alt-text generate --all --limit=200 --offset=0`
+`wp auto-alt-text generate --all --limit=200 --offset=200`
+
+Dry run (no metadata updates):
+
+`wp auto-alt-text generate --ids=123,456 --dry-run`
+
+Force overwrite of existing alt text (even if “Keep existing alt text” is enabled):
+
+`wp auto-alt-text generate --all --limit=200 --offset=0 --force`
+
 **Notice**: If you choose one of the methods that involves the use of external APIs, the upload times for images in the media library might increase because it requires sending a request to the APIs, waiting for the external server to process, and waiting for a response.
 
 ### Logging
