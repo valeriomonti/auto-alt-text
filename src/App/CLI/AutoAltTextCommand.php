@@ -55,11 +55,22 @@ final class AutoAltTextCommand extends \WP_CLI_Command
         $dryRun = isset($assocArgs['dry-run']);
         $force = isset($assocArgs['force']);
 
-        $limit = isset($assocArgs['limit']) ? (int) $assocArgs['limit'] : 100;
+        $isQueryMode = ($idsArg === '' && $all);
+
+        $limit = isset($assocArgs['limit'])
+            ? (int) $assocArgs['limit']
+            : ($isQueryMode ? 100 : -1);
+
         $offset = isset($assocArgs['offset']) ? (int) $assocArgs['offset'] : 0;
 
-        if ($limit < 1) {
-            \WP_CLI::error('Invalid --limit. Must be >= 1.');
+        if ($isQueryMode) {
+            if ($limit < 1) {
+                \WP_CLI::error('Invalid --limit. Must be >= 1 when using --all.');
+            }
+        } else {
+            if ($limit < 1 && $limit !== -1) {
+                \WP_CLI::error('Invalid --limit. Must be >= 1.');
+            }
         }
 
         if ($offset < 0) {
@@ -76,22 +87,7 @@ final class AutoAltTextCommand extends \WP_CLI_Command
             $ids = array_values(array_unique($ids));
         }
 
-        if ($idsArg === '' && $all) {
-            $query = new \WP_Query([
-                'post_type' => 'attachment',
-                'post_status' => 'inherit',
-                'post_mime_type' => 'image',
-                'fields' => 'ids',
-                'posts_per_page' => $limit,
-                'offset' => $offset,
-                'orderby' => 'ID',
-                'order' => 'ASC',
-            ]);
-
-            $ids = array_map('intval', $query->posts);
-        }
-
-        if ($ids === []) {
+        if (! $isQueryMode && $ids === []) {
             \WP_CLI::success('No attachments found.');
             return;
         }
@@ -108,52 +104,103 @@ final class AutoAltTextCommand extends \WP_CLI_Command
         $skipped = 0;
         $failed = 0;
 
-        $progress = \WP_CLI\Utils\make_progress_bar('Generating alt text', count($ids));
+        if ($isQueryMode) {
+            $countQuery = new \WP_Query([
+                'post_type' => 'attachment',
+                'post_status' => 'inherit',
+                'post_mime_type' => 'image',
+                'fields' => 'ids',
+                'posts_per_page' => 1,
+                'offset' => 0,
+                'orderby' => 'ID',
+                'order' => 'DESC',
+            ]);
+
+            $totalToProcess = max(0, (int) $countQuery->found_posts - $offset);
+        } else {
+            $totalToProcess = count($ids);
+        }
+
+        $progress = \WP_CLI\Utils\make_progress_bar('Generating alt text', $totalToProcess);
 
         try {
-            foreach ($ids as $attachmentId) {
-                $attachmentId = (int) $attachmentId;
+            $currentOffset = $offset;
+            $batchIds = $ids;
 
-                if ($attachmentId < 1) {
-                    $failed++;
-                    $processed++;
-                    $progress->tick();
-                    continue;
+            while (true) {
+                if ($isQueryMode) {
+                    $query = new \WP_Query([
+                        'post_type' => 'attachment',
+                        'post_status' => 'inherit',
+                        'post_mime_type' => 'image',
+                        'fields' => 'ids',
+                        'posts_per_page' => $limit,
+                        'offset' => $currentOffset,
+                        'orderby' => 'ID',
+                        'order' => 'DESC',
+                        'no_found_rows' => true,
+                    ]);
+
+                    $batchIds = array_map('intval', $query->posts);
+                    if ($batchIds === []) {
+                        break;
+                    }
+
+                    $currentOffset += count($batchIds);
+                } else {
+                    if ($batchIds === []) {
+                        break;
+                    }
                 }
 
-                if (! wp_attachment_is_image($attachmentId)) {
-                    $skipped++;
-                    $processed++;
-                    $progress->tick();
-                    continue;
-                }
+                foreach ($batchIds as $attachmentId) {
+                    $attachmentId = (int) $attachmentId;
 
-                if (! $force && PluginOptions::preserveExistingAltText()) {
-                    $existingAlt = (string) get_post_meta($attachmentId, '_wp_attachment_image_alt', true);
-                    if ($existingAlt !== '') {
+                    if ($attachmentId < 1) {
+                        $failed++;
+                        $processed++;
+                        $progress->tick();
+                        continue;
+                    }
+
+                    if (! wp_attachment_is_image($attachmentId)) {
                         $skipped++;
                         $processed++;
                         $progress->tick();
                         continue;
                     }
-                }
 
-                $altText = $this->altTextService->generateForAttachment($attachmentId);
+                    if (! $force && PluginOptions::preserveExistingAltText()) {
+                        $existingAlt = (string) get_post_meta($attachmentId, '_wp_attachment_image_alt', true);
+                        if ($existingAlt !== '') {
+                            $skipped++;
+                            $processed++;
+                            $progress->tick();
+                            continue;
+                        }
+                    }
 
-                if ($altText === '') {
-                    $failed++;
+                    $altText = $this->altTextService->generateForAttachment($attachmentId);
+
+                    if ($altText === '') {
+                        $failed++;
+                        $processed++;
+                        $progress->tick();
+                        continue;
+                    }
+
+                    if (! $dryRun) {
+                        update_post_meta($attachmentId, '_wp_attachment_image_alt', $altText);
+                    }
+
+                    $updated++;
                     $processed++;
                     $progress->tick();
-                    continue;
                 }
 
-                if (! $dryRun) {
-                    update_post_meta($attachmentId, '_wp_attachment_image_alt', $altText);
+                if (! $isQueryMode) {
+                    break;
                 }
-
-                $updated++;
-                $processed++;
-                $progress->tick();
             }
         } finally {
             $progress->finish();
