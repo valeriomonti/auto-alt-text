@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [v2.8.0] - 2026-03-25
+### Changed
+- Implement WP CLI commands for generating alt text
+
 ## [v2.7.0] - 2026-01-31
 ### Changed
 - Migrate to the Responses API from the Chat Completion API for OpenAI
