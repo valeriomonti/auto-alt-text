@@ -6,6 +6,7 @@ namespace AATXT\App\Core;
 
 use AATXT\App\Admin\MediaLibrary;
 use AATXT\App\Admin\PluginOptions;
+use AATXT\App\Frontend\ContentAltTextFilter;
 use AATXT\App\AIProviders\Anthropic\AnthropicResponse;
 use AATXT\App\AIProviders\Azure\AzureComputerVisionCaptionsResponse;
 use AATXT\App\AIProviders\Azure\AzureTranslator;
@@ -365,6 +366,15 @@ final class Container
                 return new MediaLibrary(
                     $container->get(AltTextService::class),
                     $container->get(AssetsManager::class)
+                );
+            },
+
+            // Frontend Content Alt Text Filter
+            // Injects alt text from Media Library into <img> tags in post content
+            ContentAltTextFilter::class => function () {
+                return new ContentAltTextFilter(
+                    PluginOptions::frontendAltText(),
+                    PluginOptions::frontendOverwriteAltText()
                 );
             },
         ];

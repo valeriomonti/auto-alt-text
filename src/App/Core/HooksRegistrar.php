@@ -5,6 +5,7 @@ namespace AATXT\App\Core;
 use AATXT\App\Admin\BulkActions\BulkActionHandler;
 use AATXT\App\Admin\MediaLibrary;
 use AATXT\App\Admin\PluginOptions;
+use AATXT\App\Frontend\ContentAltTextFilter;
 use AATXT\App\Services\AltTextService;
 
 /**
@@ -44,6 +45,13 @@ final class HooksRegistrar
     private $mediaLibrary;
 
     /**
+     * Frontend content alt text filter
+     *
+     * @var ContentAltTextFilter
+     */
+    private $contentAltTextFilter;
+
+    /**
      * Path to the main plugin file
      *
      * @var string
@@ -57,6 +65,7 @@ final class HooksRegistrar
      * @param BulkActionHandler $bulkActionHandler Handler for bulk actions
      * @param PluginLifecycle $lifecycle Plugin lifecycle handler
      * @param MediaLibrary $mediaLibrary Media library handler
+     * @param ContentAltTextFilter $contentAltTextFilter Frontend content filter
      * @param string $pluginFile Path to the main plugin file
      */
     public function __construct(
@@ -64,12 +73,14 @@ final class HooksRegistrar
         BulkActionHandler $bulkActionHandler,
         PluginLifecycle $lifecycle,
         MediaLibrary $mediaLibrary,
+        ContentAltTextFilter $contentAltTextFilter,
         string $pluginFile
     ) {
         $this->altTextService = $altTextService;
         $this->bulkActionHandler = $bulkActionHandler;
         $this->lifecycle = $lifecycle;
         $this->mediaLibrary = $mediaLibrary;
+        $this->contentAltTextFilter = $contentAltTextFilter;
         $this->pluginFile = $pluginFile;
     }
 
@@ -80,6 +91,11 @@ final class HooksRegistrar
      */
     public function register(): void
     {
+        // Frontend: inject alt text into post content images
+        if (!is_admin() && $this->contentAltTextFilter->isEnabled()) {
+            add_filter('the_content', [$this->contentAltTextFilter, 'filter'], 999);
+        }
+
         // Register admin pages
         PluginOptions::register();
         $this->mediaLibrary->register();

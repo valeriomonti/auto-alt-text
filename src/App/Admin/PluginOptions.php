@@ -454,6 +454,20 @@ define('AATXT_ENCRYPTION_SALT', '<?php echo esc_html( $suggestedSalt ); ?>');
                 echo '<input type="checkbox" name="' . esc_attr(Constants::AATXT_OPTION_FIELD_PRESERVE_EXISTING_ALT_TEXT) . '" value="1" class="notRequired" ' . checked(1, $preserveAltText, false) . ' />';
                 echo '</div>';
 
+                echo '<div class="plugin-option type-article-title type-attachment-title type-openai type-azure type-anthropic">';
+                echo '<label for="' . esc_attr(Constants::AATXT_OPTION_FIELD_FRONTEND_ALT_TEXT) . '">' . esc_html__('Apply alt text to frontend content', 'auto-alt-text') . '</label>';
+                echo '<p class="description">' . esc_html__('If checked, alt text from the Media Library will be automatically injected into images displayed in published posts and pages. This allows already published content to show updated alt text without manual editing.', 'auto-alt-text') . '</p>';
+                $frontendAltText = get_option(Constants::AATXT_OPTION_FIELD_FRONTEND_ALT_TEXT);
+                echo '<input type="checkbox" name="' . esc_attr(Constants::AATXT_OPTION_FIELD_FRONTEND_ALT_TEXT) . '" value="1" class="notRequired" ' . checked(1, $frontendAltText, false) . ' />';
+                echo '</div>';
+
+                echo '<div class="plugin-option type-article-title type-attachment-title type-openai type-azure type-anthropic">';
+                echo '<label for="' . esc_attr(Constants::AATXT_OPTION_FIELD_FRONTEND_OVERWRITE_ALT_TEXT) . '">' . esc_html__('Overwrite existing alt text in content', 'auto-alt-text') . '</label>';
+                echo '<p class="description">' . esc_html__('If checked, existing alt text in image tags will be replaced with the alt text from the Media Library. If unchecked, only images without alt text will be updated.', 'auto-alt-text') . '</p>';
+                $frontendOverwriteAltText = get_option(Constants::AATXT_OPTION_FIELD_FRONTEND_OVERWRITE_ALT_TEXT);
+                echo '<input type="checkbox" name="' . esc_attr(Constants::AATXT_OPTION_FIELD_FRONTEND_OVERWRITE_ALT_TEXT) . '" value="1" class="notRequired" ' . checked(1, $frontendOverwriteAltText, false) . ' />';
+                echo '</div>';
+
                 submit_button();
                 ?>
             </form>
@@ -493,6 +507,8 @@ define('AATXT_ENCRYPTION_SALT', '<?php echo esc_html( $suggestedSalt ); ?>');
         register_setting('auto_alt_text_options', Constants::AATXT_OPTION_FIELD_REGION_AZURE_TRANSLATE_INSTANCE, [self::class, 'sanitizeText']);
         register_setting('auto_alt_text_options', Constants::AATXT_OPTION_FIELD_LANGUAGE_AZURE_TRANSLATE_INSTANCE, [self::class, 'sanitizeText']);
         register_setting('auto_alt_text_options', Constants::AATXT_OPTION_FIELD_PRESERVE_EXISTING_ALT_TEXT);
+        register_setting('auto_alt_text_options', Constants::AATXT_OPTION_FIELD_FRONTEND_ALT_TEXT);
+        register_setting('auto_alt_text_options', Constants::AATXT_OPTION_FIELD_FRONTEND_OVERWRITE_ALT_TEXT);
         register_setting('auto_alt_text_options', Constants::AATXT_OPTION_FIELD_API_KEY_ANTHROPIC);
         register_setting('auto_alt_text_options', Constants::AATXT_OPTION_FIELD_PROMPT_ANTHROPIC, [self::class, 'sanitizeTextArea']);
         register_setting('auto_alt_text_options', Constants::AATXT_OPTION_FIELD_MODEL_ANTHROPIC, [self::class, 'sanitizeText']);
@@ -606,6 +622,22 @@ define('AATXT_ENCRYPTION_SALT', '<?php echo esc_html( $suggestedSalt ); ?>');
     public static function preserveExistingAltText(): bool
     {
         return get_option(Constants::AATXT_OPTION_FIELD_PRESERVE_EXISTING_ALT_TEXT);
+    }
+
+    /**
+     * @return bool
+     */
+    public static function frontendAltText(): bool
+    {
+        return (bool) get_option(Constants::AATXT_OPTION_FIELD_FRONTEND_ALT_TEXT);
+    }
+
+    /**
+     * @return bool
+     */
+    public static function frontendOverwriteAltText(): bool
+    {
+        return (bool) get_option(Constants::AATXT_OPTION_FIELD_FRONTEND_OVERWRITE_ALT_TEXT);
     }
 
     public static function sanitizeUrl($input): string

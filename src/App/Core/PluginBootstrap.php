@@ -6,6 +6,7 @@ use AATXT\App\CLI\AutoAltTextCommand;
 use AATXT\App\Admin\BulkActions\BulkActionHandler;
 use AATXT\App\Admin\BulkActions\GenerateAltTextBulkAction;
 use AATXT\App\Admin\MediaLibrary;
+use AATXT\App\Frontend\ContentAltTextFilter;
 use AATXT\App\Infrastructure\Database\ErrorLogSchema;
 use AATXT\App\Services\AltTextService;
 use DI\Container as DIContainer;
@@ -60,6 +61,7 @@ final class PluginBootstrap
         // Get services from container
         $altTextService = $this->container->get(AltTextService::class);
         $mediaLibrary = $this->container->get(MediaLibrary::class);
+        $contentAltTextFilter = $this->container->get(ContentAltTextFilter::class);
         $schema = $this->container->get(ErrorLogSchema::class);
 
         if (defined('WP_CLI') && WP_CLI) {
@@ -78,6 +80,7 @@ final class PluginBootstrap
             $bulkActionHandler,
             $lifecycle,
             $mediaLibrary,
+            $contentAltTextFilter,
             $this->pluginFile
         );
 
