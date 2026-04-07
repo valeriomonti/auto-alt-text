@@ -137,12 +137,52 @@ For accurate information on privacy and conditions of use, please directly consu
 
 We **strongly recommend** defining the new plugin-specific constants in your `wp-config.php`:
 
-`define( 'AAT_ENCRYPTION_KEY',  'a_random_string_of_at_least_64_characters' );`
-`define( 'AAT_ENCRYPTION_SALT', 'another_random_string_of_at_least_64_characters' );`
+`define( 'AATXT_ENCRYPTION_KEY',  'a_random_string_of_at_least_64_characters' );`
+`define( 'AATXT_ENCRYPTION_SALT', 'another_random_string_of_at_least_64_characters' );`
 
 You will find these two define(...) lines already generated for you on the Auto Alt Text » Options page – simply copy & paste them before the `/* That's all, stop editing! Happy publishing. */` line in your `wp-config.php`.
 
 If you choose not to add them, the plugin will continue to work normally, but it will fall back to using your WordPress `LOGGED_IN_KEY` / `LOGGED_IN_SALT`, which may break if those salts are ever changed.
+
+## Configuration via PHP Constants
+
+Any plugin option can be hard-coded in `wp-config.php` using PHP constants instead of (or in place of) the admin settings page. This is useful for keeping API keys out of the database, locking configuration on managed hosting, or maintaining consistent settings across environments.
+
+When a constant is defined it takes precedence over the database value and the corresponding field on the settings page is disabled with a notice indicating which constant controls it.
+
+Add any combination of the following to your `wp-config.php` before the `/* That's all, stop editing! */` line:
+
+`define( 'AATXT_TYPOLOGY', 'openai' );` — generation method: openai, anthropic, azure, article-title, attachment-title, or deactivated
+
+**OpenAI**
+
+`define( 'AATXT_API_KEY_OPENAI', 'sk-...' );`
+`define( 'AATXT_MODEL_OPENAI', 'gpt-4o' );` — gpt-4o, gpt-4o-mini, gpt-5, gpt-5-mini, gpt-5-nano
+`define( 'AATXT_PROMPT_OPENAI', 'Write a concise alt text for this image.' );`
+
+**Anthropic**
+
+`define( 'AATXT_API_KEY_ANTHROPIC', 'sk-ant-...' );`
+`define( 'AATXT_MODEL_ANTHROPIC', 'claude-sonnet-4-20250514' );` — or claude-3-5-haiku-20241022
+`define( 'AATXT_PROMPT_ANTHROPIC', 'Write a concise alt text for this image.' );`
+
+**Azure Computer Vision**
+
+`define( 'AATXT_API_KEY_AZURE_COMPUTER_VISION', '...' );`
+`define( 'AATXT_ENDPOINT_AZURE_COMPUTER_VISION', 'https://your-instance.cognitiveservices.azure.com/' );`
+
+**Azure Translator (optional — only needed for non-English output)**
+
+`define( 'AATXT_API_KEY_AZURE_TRANSLATE_INSTANCE', '...' );`
+`define( 'AATXT_ENDPOINT_AZURE_TRANSLATE_INSTANCE', 'https://api.cognitive.microsofttranslator.com/' );`
+`define( 'AATXT_REGION_AZURE_TRANSLATE_INSTANCE', 'westeurope' );`
+`define( 'AATXT_LANGUAGE_AZURE_TRANSLATE_INSTANCE', 'en' );`
+
+**Behaviour**
+
+`define( 'AATXT_PRESERVE_EXISTING_ALT_TEXT', '1' );` — '1' to keep existing alt text, '0' to overwrite
+
+Note: API key constants are plain text — do not encrypt them. The plugin reads them directly and skips the decryption step that applies to database-stored keys.
 
 ## Disclaimer
 Auto Alt Text is a plugin that helps users automatically generate Alt Texts of their images using AI services such as OpenAI's ChatGPT or Microsoft Azure.
@@ -167,15 +207,15 @@ This message appears because the plugin was unable to decrypt your stored API Ke
 
 **Common causes**
 - You (or another plugin) have changed the WordPress authentication salts (`LOGGED_IN_KEY` / `LOGGED_IN_SALT`) in your `wp-config.php` after saving the API Key.
-- You haven’t defined the recommended plugin-specific constants (`AAT_ENCRYPTION_KEY` / `AAT_ENCRYPTION_SALT`) in your `wp-config.php`, so the plugin fell back to the WordPress salts.
+- You haven’t defined the recommended plugin-specific constants (`AATXT_ENCRYPTION_KEY` / `AATXT_ENCRYPTION_SALT`) in your `wp-config.php`, so the plugin fell back to the WordPress salts.
 
 **How to fix**
 1. Go to **Auto Alt Text » Options** in your WordPress admin.
 2. Re-enter your API Key in the appropriate field and click **Save Changes**.
 3. _(Recommended)_ Prevent this issue in the future by adding these lines **before** the `/* That's all, stop editing! Happy publishing. */` comment in your `wp-config.php`:
    ```
-   define( 'AAT_ENCRYPTION_KEY',  'a_random_string_of_at_least_64_characters' );
-   define( 'AAT_ENCRYPTION_SALT', 'another_random_string_of_at_least_64_characters' );
+   define( 'AATXT_ENCRYPTION_KEY',  'a_random_string_of_at_least_64_characters' );
+   define( 'AATXT_ENCRYPTION_SALT', 'another_random_string_of_at_least_64_characters' );
    ```
 
 This ensures the plugin uses stable, plugin-specific values for encryption and won’t break if WordPress salts are ever changed again.
