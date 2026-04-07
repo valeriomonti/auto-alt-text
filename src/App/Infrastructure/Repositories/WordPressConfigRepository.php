@@ -2,6 +2,8 @@
 
 namespace AATXT\App\Infrastructure\Repositories;
 
+use AATXT\App\Infrastructure\Repositories\ConstantsResolver;
+
 /**
  * WordPress Config Repository
  *
@@ -22,6 +24,10 @@ final class WordPressConfigRepository implements ConfigRepositoryInterface
      */
     public function get(string $key, $default = null)
     {
+        if (ConstantsResolver::has($key)) {
+            return ConstantsResolver::get($key);
+        }
+
         $value = get_option($key, $default);
 
         // WordPress returns false when option doesn't exist

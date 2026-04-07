@@ -8,6 +8,7 @@ use AATXT\App\Configuration\AzureConfig;
 use AATXT\App\Core\Container;
 use AATXT\App\Exceptions\Azure\AzureTranslateInstanceException;
 use AATXT\App\Infrastructure\Http\WordPressHttpClient;
+use AATXT\App\Infrastructure\Repositories\ConstantsResolver;
 use AATXT\App\Utilities\AssetsManager;
 use AATXT\App\Utilities\Encryption;
 use AATXT\Config\Constants;
@@ -279,8 +280,10 @@ define('AATXT_ENCRYPTION_SALT', '<?php echo esc_html( $suggestedSalt ); ?>');
 
                 ?>
 
+                <?php $typologyLocked = self::lockedByConstant(Constants::AATXT_OPTION_FIELD_TYPOLOGY); ?>
                 <select name="<?php echo esc_attr(Constants::AATXT_OPTION_FIELD_TYPOLOGY); ?>"
-                        id="<?php echo esc_attr(Constants::AATXT_OPTION_FIELD_TYPOLOGY); ?>">
+                        id="<?php echo esc_attr(Constants::AATXT_OPTION_FIELD_TYPOLOGY); ?>"
+                        <?php echo $typologyLocked ? 'disabled="disabled"' : ''; ?>>
                     <option value="<?php echo esc_attr(Constants::AATXT_OPTION_TYPOLOGY_DEACTIVATED); ?>"<?php echo esc_attr(self::selected($typology, Constants::AATXT_OPTION_TYPOLOGY_DEACTIVATED)); ?>><?php esc_html_e("Deactivated", 'auto-alt-text'); ?></option>
                     <option value="<?php echo esc_attr(Constants::AATXT_OPTION_TYPOLOGY_CHOICE_OPENAI); ?>"<?php echo esc_attr(self::selected($typology, Constants::AATXT_OPTION_TYPOLOGY_CHOICE_OPENAI)); ?>><?php esc_html_e("OpenAI's APIs", 'auto-alt-text'); ?></option>
                     <option value="<?php echo esc_attr(Constants::AATXT_OPTION_TYPOLOGY_CHOICE_ANTHROPIC); ?>"<?php echo esc_attr(self::selected($typology, Constants::AATXT_OPTION_TYPOLOGY_CHOICE_ANTHROPIC)); ?>><?php esc_html_e("Antrhopic's APIs", 'auto-alt-text'); ?></option>
@@ -289,6 +292,9 @@ define('AATXT_ENCRYPTION_SALT', '<?php echo esc_html( $suggestedSalt ); ?>');
                     <option value="<?php echo esc_attr(Constants::AATXT_OPTION_TYPOLOGY_CHOICE_ATTACHMENT_TITLE); ?>"<?php echo esc_attr(self::selected($typology, Constants::AATXT_OPTION_TYPOLOGY_CHOICE_ATTACHMENT_TITLE)); ?>><?php esc_html_e("Title of the attachment (not AI)", 'auto-alt-text'); ?></option>
                 </select>
                 <?php
+                if ($typologyLocked) {
+                    echo self::constantNotice(Constants::AATXT_OPTION_FIELD_TYPOLOGY); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+                }
                 echo '</div>';
 
                 echo '<div class="plugin-option type-article-title"><strong>' . esc_html__('Notice', 'auto-alt-text') . '</strong>: ' .
@@ -298,14 +304,18 @@ define('AATXT_ENCRYPTION_SALT', '<?php echo esc_html( $suggestedSalt ); ?>');
 
                 $openaiModel = self::openAiModel();
 
+                $openaiModelLocked = self::lockedByConstant(Constants::AATXT_OPTION_FIELD_MODEL_OPENAI);
                 echo '<div class="plugin-option type-openai">';
                 echo '<label for="' .  esc_attr(Constants::AATXT_OPTION_FIELD_MODEL_OPENAI) . '">' . esc_html__('Model', 'auto-alt-text') . '</label>';
 
-                echo '<select name="' . esc_attr(Constants::AATXT_OPTION_FIELD_MODEL_OPENAI) . '" id="' . esc_attr(Constants::AATXT_OPTION_FIELD_MODEL_OPENAI) . '">';
+                echo '<select name="' . esc_attr(Constants::AATXT_OPTION_FIELD_MODEL_OPENAI) . '" id="' . esc_attr(Constants::AATXT_OPTION_FIELD_MODEL_OPENAI) . '"' . ($openaiModelLocked ? ' disabled="disabled"' : '') . '>';
                 foreach(Constants::AATXT_OPTION_FIELD_MODEL_OPENAI_OPTIONS as $key => $value) {
                     echo '<option value="' . esc_attr($key) . '" ' . esc_attr(self::selected($openaiModel, $key)) . '>' . esc_html($value) . '</option>';
                 }
                 echo '</select>';
+                if ($openaiModelLocked) {
+                    echo self::constantNotice(Constants::AATXT_OPTION_FIELD_MODEL_OPENAI); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+                }
                 echo '</div>';
 
                 echo '<div class="plugin-option type-openai"><strong>' . esc_html__('Notice', 'auto-alt-text') . '</strong>: ' .
@@ -314,35 +324,58 @@ define('AATXT_ENCRYPTION_SALT', '<?php echo esc_html( $suggestedSalt ); ?>');
                     esc_html__('In case of errors, it is still possible to find the specific reason stated on the', 'auto-alt-text') . ' <a href="' . esc_url(menu_page_url(Constants::AATXT_PLUGIN_OPTION_LOG_PAGE_SLUG, false)) . '">' . esc_html__('error log page', 'auto-alt-text') . '</a>.' .
                     '</div>';
 
+                $openaiKeyLocked = self::lockedByConstant(Constants::AATXT_OPTION_FIELD_API_KEY_OPENAI);
                 echo '<div class="plugin-option type-openai">';
                 echo '<label for="' . esc_attr(Constants::AATXT_OPTION_FIELD_API_KEY_OPENAI) . '">' . esc_html__('OpenAI API Key', 'auto-alt-text') . '</label>';
-                echo '<p class="description">' . esc_html__("Enter your API Key", 'auto-alt-text') . '</p>';
-                $apiKey = get_option(Constants::AATXT_OPTION_FIELD_API_KEY_OPENAI);
-                echo '<input type="password" name="' . esc_attr(Constants::AATXT_OPTION_FIELD_API_KEY_OPENAI) . '" value="' . esc_attr((Encryption::make())->decrypt($apiKey)) . '" />';
+                if (! $openaiKeyLocked) {
+                    echo '<p class="description">' . esc_html__("Enter your API Key", 'auto-alt-text') . '</p>';
+                    $apiKey = get_option(Constants::AATXT_OPTION_FIELD_API_KEY_OPENAI);
+                    echo '<input type="password" name="' . esc_attr(Constants::AATXT_OPTION_FIELD_API_KEY_OPENAI) . '" value="' . esc_attr((Encryption::make())->decrypt($apiKey)) . '" />';
+                } else {
+                    echo '<input type="password" value="••••••••" disabled="disabled" />';
+                    echo self::constantNotice(Constants::AATXT_OPTION_FIELD_API_KEY_OPENAI); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+                }
                 echo '</div>';
 
+                $openaiPromptLocked = self::lockedByConstant(Constants::AATXT_OPTION_FIELD_PROMPT_OPENAI);
                 echo '<div class="plugin-option type-openai">';
                 echo '<label for="' . esc_attr(Constants::AATXT_OPTION_FIELD_PROMPT_OPENAI) . '">' . esc_html__('Prompt', 'auto-alt-text') . '</label>';
                 echo '<p class="description">' . esc_html__("Enter a specific and detailed prompt according to your needs.", 'auto-alt-text') . '</p>';
                 $defaultPrompt = sprintf(esc_html__("Act like an SEO expert and write an alt text of up to 125 characters for this image.", 'auto-alt-text'), Constants::AATXT_IMAGE_URL_TAG);
                 $prompt = get_option(Constants::AATXT_OPTION_FIELD_PROMPT_OPENAI) ?: $defaultPrompt;
-                echo '<textarea name="' . esc_attr(Constants::AATXT_OPTION_FIELD_PROMPT_OPENAI) . '" rows="5" cols="50">' . esc_textarea($prompt) . '</textarea>';
+                if ($openaiPromptLocked) {
+                    $prompt = self::openAiPrompt() ?: $defaultPrompt;
+                }
+                echo '<textarea name="' . esc_attr(Constants::AATXT_OPTION_FIELD_PROMPT_OPENAI) . '" rows="5" cols="50"' . ($openaiPromptLocked ? ' disabled="disabled"' : '') . '>' . esc_textarea($prompt) . '</textarea>';
+                if ($openaiPromptLocked) {
+                    echo self::constantNotice(Constants::AATXT_OPTION_FIELD_PROMPT_OPENAI); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+                }
                 echo '</div>';
 
                 echo '<div class="plugin-option type-azure">' . esc_html__("Fill out the following fields to leverage Azure's computer vision services to generate the Alt texts.", 'auto-alt-text') . '</div>';
 
+                $azureCvKeyLocked = self::lockedByConstant(Constants::AATXT_OPTION_FIELD_API_KEY_AZURE_COMPUTER_VISION);
                 echo '<div class="plugin-option type-azure">';
                 echo '<label for="' . esc_attr(Constants::AATXT_OPTION_FIELD_API_KEY_AZURE_COMPUTER_VISION) . '">' . esc_html__('Azure Computer Vision API Key', 'auto-alt-text') . '</label>';
-                echo '<p class="description">' . esc_html__("Enter the API key for the Computer Vision service of your Azure account.", 'auto-alt-text') . '</p>';
-                $apiKey = get_option(Constants::AATXT_OPTION_FIELD_API_KEY_AZURE_COMPUTER_VISION);
-                echo '<input type="password" name="' . esc_attr(Constants::AATXT_OPTION_FIELD_API_KEY_AZURE_COMPUTER_VISION) . '" value="' . esc_attr((Encryption::make())->decrypt($apiKey)) . '" />';
+                if (! $azureCvKeyLocked) {
+                    echo '<p class="description">' . esc_html__("Enter the API key for the Computer Vision service of your Azure account.", 'auto-alt-text') . '</p>';
+                    $apiKey = get_option(Constants::AATXT_OPTION_FIELD_API_KEY_AZURE_COMPUTER_VISION);
+                    echo '<input type="password" name="' . esc_attr(Constants::AATXT_OPTION_FIELD_API_KEY_AZURE_COMPUTER_VISION) . '" value="' . esc_attr((Encryption::make())->decrypt($apiKey)) . '" />';
+                } else {
+                    echo '<input type="password" value="••••••••" disabled="disabled" />';
+                    echo self::constantNotice(Constants::AATXT_OPTION_FIELD_API_KEY_AZURE_COMPUTER_VISION); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+                }
                 echo '</div>';
 
+                $azureCvEndpointLocked = self::lockedByConstant(Constants::AATXT_OPTION_FIELD_ENDPOINT_AZURE_COMPUTER_VISION);
                 echo '<div class="plugin-option type-azure">';
                 echo '<label for="' . esc_attr(Constants::AATXT_OPTION_FIELD_ENDPOINT_AZURE_COMPUTER_VISION) . '">' . esc_html__('Azure Computer Vision Endpoint', 'auto-alt-text') . '</label>';
                 echo '<p class="description">' . esc_html__("Enter the endpoint of the Computer Vision service.", 'auto-alt-text') . ' (es. https://computer-vision-france-central.cognitiveservices.azure.com/)</p>';
-                $endpoint = get_option(Constants::AATXT_OPTION_FIELD_ENDPOINT_AZURE_COMPUTER_VISION);
-                echo '<input type="text" name="' . esc_attr(Constants::AATXT_OPTION_FIELD_ENDPOINT_AZURE_COMPUTER_VISION) . '" value="' . esc_attr($endpoint) . '" />';
+                $endpoint = $azureCvEndpointLocked ? self::endpointAzureComputerVision() : get_option(Constants::AATXT_OPTION_FIELD_ENDPOINT_AZURE_COMPUTER_VISION);
+                echo '<input type="text" name="' . esc_attr(Constants::AATXT_OPTION_FIELD_ENDPOINT_AZURE_COMPUTER_VISION) . '" value="' . esc_attr($endpoint) . '"' . ($azureCvEndpointLocked ? ' disabled="disabled"' : '') . ' />';
+                if ($azureCvEndpointLocked) {
+                    echo self::constantNotice(Constants::AATXT_OPTION_FIELD_ENDPOINT_AZURE_COMPUTER_VISION); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+                }
                 echo '</div>';
 
                 echo '<div class="plugin-option type-azure">' .
@@ -351,32 +384,51 @@ define('AATXT_ENCRYPTION_SALT', '<?php echo esc_html( $suggestedSalt ); ?>');
                     esc_html__('After saving the changes you can select the desired language.', 'auto-alt-text') .
                     '</div>';
 
+                $azureTranslateKeyLocked = self::lockedByConstant(Constants::AATXT_OPTION_FIELD_API_KEY_AZURE_TRANSLATE_INSTANCE);
                 echo '<div class="plugin-option type-azure">';
                 echo '<label for="' . esc_attr(Constants::AATXT_OPTION_FIELD_API_KEY_AZURE_TRANSLATE_INSTANCE) . '">' . esc_html__('Azure Translate Instance API Key', 'auto-alt-text') . '</label>';
-                echo '<p class="description">' . esc_html__("Enter your API key for the Azure Translate Instance service.", 'auto-alt-text') . '</p>';
-                $translationApiKey = get_option(Constants::AATXT_OPTION_FIELD_API_KEY_AZURE_TRANSLATE_INSTANCE);
-                echo '<input type="password" name="' . esc_attr(Constants::AATXT_OPTION_FIELD_API_KEY_AZURE_TRANSLATE_INSTANCE) . '" value="' . esc_attr((Encryption::make())->decrypt($translationApiKey)) . '" class="notRequired" />';
+                if (! $azureTranslateKeyLocked) {
+                    echo '<p class="description">' . esc_html__("Enter your API key for the Azure Translate Instance service.", 'auto-alt-text') . '</p>';
+                    $translationApiKey = get_option(Constants::AATXT_OPTION_FIELD_API_KEY_AZURE_TRANSLATE_INSTANCE);
+                    echo '<input type="password" name="' . esc_attr(Constants::AATXT_OPTION_FIELD_API_KEY_AZURE_TRANSLATE_INSTANCE) . '" value="' . esc_attr((Encryption::make())->decrypt($translationApiKey)) . '" class="notRequired" />';
+                } else {
+                    $translationApiKey = self::apiKeyAzureTranslateInstance();
+                    echo '<input type="password" value="••••••••" disabled="disabled" class="notRequired" />';
+                    echo self::constantNotice(Constants::AATXT_OPTION_FIELD_API_KEY_AZURE_TRANSLATE_INSTANCE); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+                }
                 echo '</div>';
 
+                $azureTranslateEndpointLocked = self::lockedByConstant(Constants::AATXT_OPTION_FIELD_ENDPOINT_AZURE_TRANSLATE_INSTANCE);
                 echo '<div class="plugin-option type-azure">';
                 echo '<label for="' . esc_attr(Constants::AATXT_OPTION_FIELD_ENDPOINT_AZURE_TRANSLATE_INSTANCE) . '">' . esc_html__('Azure Translate Instance Endpoint', 'auto-alt-text') . '</label>';
                 echo '<p class="description">' . esc_html__("Enter the endpoint of the Translate Instance service", 'auto-alt-text') . ' (es. https://api.cognitive.microsofttranslator.com/)</p>';
-                $translationEndpoint = get_option(Constants::AATXT_OPTION_FIELD_ENDPOINT_AZURE_TRANSLATE_INSTANCE);
-                echo '<input type="text" name="' . esc_attr(Constants::AATXT_OPTION_FIELD_ENDPOINT_AZURE_TRANSLATE_INSTANCE) . '" value="' . esc_attr($translationEndpoint) . '" class="notRequired" />';
+                $translationEndpoint = $azureTranslateEndpointLocked ? self::endpointAzureTranslateInstance() : get_option(Constants::AATXT_OPTION_FIELD_ENDPOINT_AZURE_TRANSLATE_INSTANCE);
+                echo '<input type="text" name="' . esc_attr(Constants::AATXT_OPTION_FIELD_ENDPOINT_AZURE_TRANSLATE_INSTANCE) . '" value="' . esc_attr($translationEndpoint) . '" class="notRequired"' . ($azureTranslateEndpointLocked ? ' disabled="disabled"' : '') . ' />';
+                if ($azureTranslateEndpointLocked) {
+                    echo self::constantNotice(Constants::AATXT_OPTION_FIELD_ENDPOINT_AZURE_TRANSLATE_INSTANCE); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+                }
                 echo '</div>';
 
+                $azureTranslateRegionLocked = self::lockedByConstant(Constants::AATXT_OPTION_FIELD_REGION_AZURE_TRANSLATE_INSTANCE);
                 echo '<div class="plugin-option type-azure">';
                 echo '<label for="' . esc_attr(Constants::AATXT_OPTION_FIELD_REGION_AZURE_TRANSLATE_INSTANCE) . '">' . esc_html__('Azure Translate Instance Region', 'auto-alt-text') . '</label>';
                 echo '<p class="description">' . esc_html__("Enter the region of the Azure Translate Instance service.", 'auto-alt-text') . ' (es. westeurope)</p>';
-                $translationRegion = get_option(Constants::AATXT_OPTION_FIELD_REGION_AZURE_TRANSLATE_INSTANCE);
-                echo '<input type="text" name="' . esc_attr(Constants::AATXT_OPTION_FIELD_REGION_AZURE_TRANSLATE_INSTANCE) . '" value="' . esc_attr($translationRegion) . '" class="notRequired" />';
+                $translationRegion = $azureTranslateRegionLocked ? self::regionAzureTranslateInstance() : get_option(Constants::AATXT_OPTION_FIELD_REGION_AZURE_TRANSLATE_INSTANCE);
+                echo '<input type="text" name="' . esc_attr(Constants::AATXT_OPTION_FIELD_REGION_AZURE_TRANSLATE_INSTANCE) . '" value="' . esc_attr($translationRegion) . '" class="notRequired"' . ($azureTranslateRegionLocked ? ' disabled="disabled"' : '') . ' />';
+                if ($azureTranslateRegionLocked) {
+                    echo self::constantNotice(Constants::AATXT_OPTION_FIELD_REGION_AZURE_TRANSLATE_INSTANCE); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+                }
                 echo '</div>';
 
-                if ($translationApiKey && $translationEndpoint && $translationRegion):
+                $resolvedTranslationApiKey  = $azureTranslateKeyLocked ? self::apiKeyAzureTranslateInstance() : (isset($translationApiKey) ? $translationApiKey : get_option(Constants::AATXT_OPTION_FIELD_API_KEY_AZURE_TRANSLATE_INSTANCE));
+                $resolvedTranslationEndpoint = $azureTranslateEndpointLocked ? $translationEndpoint : get_option(Constants::AATXT_OPTION_FIELD_ENDPOINT_AZURE_TRANSLATE_INSTANCE);
+                $resolvedTranslationRegion   = $azureTranslateRegionLocked ? $translationRegion : get_option(Constants::AATXT_OPTION_FIELD_REGION_AZURE_TRANSLATE_INSTANCE);
+                if ($resolvedTranslationApiKey && $resolvedTranslationEndpoint && $resolvedTranslationRegion):
+                    $languageLocked = self::lockedByConstant(Constants::AATXT_OPTION_FIELD_LANGUAGE_AZURE_TRANSLATE_INSTANCE);
                     echo '<div class="plugin-option type-azure">';
                     echo '<label for="' . esc_attr(Constants::AATXT_OPTION_FIELD_LANGUAGE_AZURE_TRANSLATE_INSTANCE) . '">' . esc_html__('Alt Text Language', 'auto-alt-text') . '</label>';
                     echo '<p class="description">' . esc_html__("Select the language in which the alt text should be written.", 'auto-alt-text') . '</p>';
-                    $currentLanguage = get_option(Constants::AATXT_OPTION_FIELD_LANGUAGE_AZURE_TRANSLATE_INSTANCE);
+                    $currentLanguage = self::languageAzureTranslateInstance();
 
                     try {
                         $httpClient = new WordPressHttpClient();
@@ -405,7 +457,8 @@ define('AATXT_ENCRYPTION_SALT', '<?php echo esc_html( $suggestedSalt ); ?>');
 
                     ?>
                     <select name="<?php echo esc_attr(Constants::AATXT_OPTION_FIELD_LANGUAGE_AZURE_TRANSLATE_INSTANCE); ?>"
-                            id="<?php echo esc_attr(Constants::AATXT_OPTION_FIELD_LANGUAGE_AZURE_TRANSLATE_INSTANCE); ?>">
+                            id="<?php echo esc_attr(Constants::AATXT_OPTION_FIELD_LANGUAGE_AZURE_TRANSLATE_INSTANCE); ?>"
+                            <?php echo $languageLocked ? 'disabled="disabled"' : ''; ?>>
                         <?php
                         foreach ($supportedLanguages as $key => $language):
                             ?>
@@ -414,44 +467,64 @@ define('AATXT_ENCRYPTION_SALT', '<?php echo esc_html( $suggestedSalt ); ?>');
                         endforeach;
                         ?>
                     </select>
-
                     <?php
+                    if ($languageLocked) {
+                        echo self::constantNotice(Constants::AATXT_OPTION_FIELD_LANGUAGE_AZURE_TRANSLATE_INSTANCE); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+                    }
 
                     echo '</div>';
                 endif;
 
+                $anthropicKeyLocked = self::lockedByConstant(Constants::AATXT_OPTION_FIELD_API_KEY_ANTHROPIC);
                 echo '<div class="plugin-option type-anthropic">';
                 echo '<label for="' . esc_attr(Constants::AATXT_OPTION_FIELD_API_KEY_ANTHROPIC) . '">' . esc_html__('Antrhopic API Key', 'auto-alt-text') . '</label>';
-                echo '<p class="description">' . esc_html__("Enter your API Key", 'auto-alt-text') . '</p>';
-                $apiKey = get_option(Constants::AATXT_OPTION_FIELD_API_KEY_ANTHROPIC);
-                echo '<input type="password" name="' . esc_attr(Constants::AATXT_OPTION_FIELD_API_KEY_ANTHROPIC) . '" value="' . esc_attr((Encryption::make())->decrypt($apiKey)) . '" />';
+                if (! $anthropicKeyLocked) {
+                    echo '<p class="description">' . esc_html__("Enter your API Key", 'auto-alt-text') . '</p>';
+                    $apiKey = get_option(Constants::AATXT_OPTION_FIELD_API_KEY_ANTHROPIC);
+                    echo '<input type="password" name="' . esc_attr(Constants::AATXT_OPTION_FIELD_API_KEY_ANTHROPIC) . '" value="' . esc_attr((Encryption::make())->decrypt($apiKey)) . '" />';
+                } else {
+                    echo '<input type="password" value="••••••••" disabled="disabled" />';
+                    echo self::constantNotice(Constants::AATXT_OPTION_FIELD_API_KEY_ANTHROPIC); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+                }
                 echo '</div>';
 
                 $anthropicModel = self::anthropicModel();
 
+                $anthropicModelLocked = self::lockedByConstant(Constants::AATXT_OPTION_FIELD_MODEL_ANTHROPIC);
                 echo '<div class="plugin-option type-anthropic">';
                 echo '<label for="' .  esc_attr(Constants::AATXT_OPTION_FIELD_MODEL_ANTHROPIC) . '">' . esc_html__('Model', 'auto-alt-text') . '</label>';
 
-                echo '<select name="' . esc_attr(Constants::AATXT_OPTION_FIELD_MODEL_ANTHROPIC) . '" id="' . esc_attr(Constants::AATXT_OPTION_FIELD_MODEL_ANTHROPIC) . '">';
+                echo '<select name="' . esc_attr(Constants::AATXT_OPTION_FIELD_MODEL_ANTHROPIC) . '" id="' . esc_attr(Constants::AATXT_OPTION_FIELD_MODEL_ANTHROPIC) . '"' . ($anthropicModelLocked ? ' disabled="disabled"' : '') . '>';
                 foreach(Constants::AATXT_OPTION_FIELD_MODEL_ANTHROPIC_OPTIONS as $key => $value) {
                     echo '<option value="' . esc_attr($key) . '" ' . esc_attr(self::selected($anthropicModel, $key)) . '>' . esc_html($value) . '</option>';
                 }
                 echo '</select>';
+                if ($anthropicModelLocked) {
+                    echo self::constantNotice(Constants::AATXT_OPTION_FIELD_MODEL_ANTHROPIC); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+                }
                 echo '</div>';
 
+                $anthropicPromptLocked = self::lockedByConstant(Constants::AATXT_OPTION_FIELD_PROMPT_ANTHROPIC);
                 echo '<div class="plugin-option type-anthropic">';
                 echo '<label for="' . esc_attr(Constants::AATXT_OPTION_FIELD_PROMPT_ANTHROPIC) . '">' . esc_html__('Prompt', 'auto-alt-text') . '</label>';
                 echo '<p class="description">' . esc_html__("Enter a specific and detailed prompt according to your needs.", 'auto-alt-text') . '</p>';
                 $defaultPrompt = sprintf(esc_html__("Act like an SEO expert and write an alt text of up to 125 characters for this image. Return only the complete alt text.", 'auto-alt-text'), Constants::AATXT_IMAGE_URL_TAG);
-                $prompt = get_option(Constants::AATXT_OPTION_FIELD_PROMPT_ANTHROPIC) ?: $defaultPrompt;
-                echo '<textarea name="' . esc_attr(Constants::AATXT_OPTION_FIELD_PROMPT_ANTHROPIC) . '" rows="5" cols="50">' . esc_textarea($prompt) . '</textarea>';
+                $anthropicPromptValue = $anthropicPromptLocked ? (self::anthropicPrompt() ?: $defaultPrompt) : (get_option(Constants::AATXT_OPTION_FIELD_PROMPT_ANTHROPIC) ?: $defaultPrompt);
+                echo '<textarea name="' . esc_attr(Constants::AATXT_OPTION_FIELD_PROMPT_ANTHROPIC) . '" rows="5" cols="50"' . ($anthropicPromptLocked ? ' disabled="disabled"' : '') . '>' . esc_textarea($anthropicPromptValue) . '</textarea>';
+                if ($anthropicPromptLocked) {
+                    echo self::constantNotice(Constants::AATXT_OPTION_FIELD_PROMPT_ANTHROPIC); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+                }
                 echo '</div>';
 
+                $preserveLocked = self::lockedByConstant(Constants::AATXT_OPTION_FIELD_PRESERVE_EXISTING_ALT_TEXT);
                 echo '<div class="plugin-option type-article-title type-attachment-title type-openai type-azure type-anthropic">';
                 echo '<label for="' . esc_attr(Constants::AATXT_OPTION_FIELD_PRESERVE_EXISTING_ALT_TEXT) . '">' . esc_html__('Keep existing alt text', 'auto-alt-text') . '</label>';
                 echo '<p class="description">' . esc_html__("If checked, the existing alt text of images will not be overwritten.", 'auto-alt-text') . '</p>';
-                $preserveAltText = get_option(Constants::AATXT_OPTION_FIELD_PRESERVE_EXISTING_ALT_TEXT);
-                echo '<input type="checkbox" name="' . esc_attr(Constants::AATXT_OPTION_FIELD_PRESERVE_EXISTING_ALT_TEXT) . '" value="1" class="notRequired" ' . checked(1, $preserveAltText, false) . ' />';
+                $preserveAltText = $preserveLocked ? self::preserveExistingAltText() : get_option(Constants::AATXT_OPTION_FIELD_PRESERVE_EXISTING_ALT_TEXT);
+                echo '<input type="checkbox" name="' . esc_attr(Constants::AATXT_OPTION_FIELD_PRESERVE_EXISTING_ALT_TEXT) . '" value="1" class="notRequired" ' . checked(1, $preserveAltText, false) . ($preserveLocked ? ' disabled="disabled"' : '') . ' />';
+                if ($preserveLocked) {
+                    echo self::constantNotice(Constants::AATXT_OPTION_FIELD_PRESERVE_EXISTING_ALT_TEXT); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+                }
                 echo '</div>';
 
                 submit_button();
@@ -503,16 +576,25 @@ define('AATXT_ENCRYPTION_SALT', '<?php echo esc_html( $suggestedSalt ); ?>');
      */
     public static function typology(): string
     {
+        if (ConstantsResolver::has(Constants::AATXT_OPTION_FIELD_TYPOLOGY)) {
+            return ConstantsResolver::get(Constants::AATXT_OPTION_FIELD_TYPOLOGY) ?? '';
+        }
         return get_option(Constants::AATXT_OPTION_FIELD_TYPOLOGY);
     }
 
     public static function openAiModel(): string
     {
+        if (ConstantsResolver::has(Constants::AATXT_OPTION_FIELD_MODEL_OPENAI)) {
+            return ConstantsResolver::get(Constants::AATXT_OPTION_FIELD_MODEL_OPENAI) ?? Constants::AATXT_GPT4O;
+        }
         return get_option(Constants::AATXT_OPTION_FIELD_MODEL_OPENAI) ?: Constants::AATXT_GPT4O;
     }
 
     public static function anthropicModel(): string
     {
+        if (ConstantsResolver::has(Constants::AATXT_OPTION_FIELD_MODEL_ANTHROPIC)) {
+            return ConstantsResolver::get(Constants::AATXT_OPTION_FIELD_MODEL_ANTHROPIC) ?? Constants::AATXT_CLAUDE_HAIKU_3_5;
+        }
         return get_option(Constants::AATXT_OPTION_FIELD_MODEL_ANTHROPIC) ?: Constants::AATXT_CLAUDE_HAIKU_3_5;
     }
 
@@ -521,6 +603,9 @@ define('AATXT_ENCRYPTION_SALT', '<?php echo esc_html( $suggestedSalt ); ?>');
      */
     public static function openAiPrompt(): string
     {
+        if (ConstantsResolver::has(Constants::AATXT_OPTION_FIELD_PROMPT_OPENAI)) {
+            return ConstantsResolver::get(Constants::AATXT_OPTION_FIELD_PROMPT_OPENAI) ?? '';
+        }
         return get_option(Constants::AATXT_OPTION_FIELD_PROMPT_OPENAI);
     }
 
@@ -529,6 +614,9 @@ define('AATXT_ENCRYPTION_SALT', '<?php echo esc_html( $suggestedSalt ); ?>');
      */
     public static function anthropicPrompt(): string
     {
+        if (ConstantsResolver::has(Constants::AATXT_OPTION_FIELD_PROMPT_ANTHROPIC)) {
+            return ConstantsResolver::get(Constants::AATXT_OPTION_FIELD_PROMPT_ANTHROPIC) ?? '';
+        }
         return get_option(Constants::AATXT_OPTION_FIELD_PROMPT_ANTHROPIC);
     }
 
@@ -537,6 +625,9 @@ define('AATXT_ENCRYPTION_SALT', '<?php echo esc_html( $suggestedSalt ); ?>');
      */
     public static function apiKeyOpenAI(): string
     {
+        if (ConstantsResolver::has(Constants::AATXT_OPTION_FIELD_API_KEY_OPENAI)) {
+            return ConstantsResolver::get(Constants::AATXT_OPTION_FIELD_API_KEY_OPENAI) ?? '';
+        }
         $apiKey = get_option(Constants::AATXT_OPTION_FIELD_API_KEY_OPENAI);
         return (Encryption::make())->decrypt($apiKey);
     }
@@ -546,6 +637,9 @@ define('AATXT_ENCRYPTION_SALT', '<?php echo esc_html( $suggestedSalt ); ?>');
      */
     public static function apiKeyAnthropic(): string
     {
+        if (ConstantsResolver::has(Constants::AATXT_OPTION_FIELD_API_KEY_ANTHROPIC)) {
+            return ConstantsResolver::get(Constants::AATXT_OPTION_FIELD_API_KEY_ANTHROPIC) ?? '';
+        }
         $apiKey = get_option(Constants::AATXT_OPTION_FIELD_API_KEY_ANTHROPIC);
         return (Encryption::make())->decrypt($apiKey);
     }
@@ -555,6 +649,9 @@ define('AATXT_ENCRYPTION_SALT', '<?php echo esc_html( $suggestedSalt ); ?>');
      */
     public static function apiKeyAzureComputerVision(): string
     {
+        if (ConstantsResolver::has(Constants::AATXT_OPTION_FIELD_API_KEY_AZURE_COMPUTER_VISION)) {
+            return ConstantsResolver::get(Constants::AATXT_OPTION_FIELD_API_KEY_AZURE_COMPUTER_VISION) ?? '';
+        }
         $apiKey = get_option(Constants::AATXT_OPTION_FIELD_API_KEY_AZURE_COMPUTER_VISION);
         return (Encryption::make())->decrypt($apiKey);
     }
@@ -564,6 +661,9 @@ define('AATXT_ENCRYPTION_SALT', '<?php echo esc_html( $suggestedSalt ); ?>');
      */
     public static function endpointAzureComputerVision(): string
     {
+        if (ConstantsResolver::has(Constants::AATXT_OPTION_FIELD_ENDPOINT_AZURE_COMPUTER_VISION)) {
+            return ConstantsResolver::get(Constants::AATXT_OPTION_FIELD_ENDPOINT_AZURE_COMPUTER_VISION) ?? '';
+        }
         return get_option(Constants::AATXT_OPTION_FIELD_ENDPOINT_AZURE_COMPUTER_VISION);
     }
 
@@ -572,6 +672,9 @@ define('AATXT_ENCRYPTION_SALT', '<?php echo esc_html( $suggestedSalt ); ?>');
      */
     public static function apiKeyAzureTranslateInstance(): string
     {
+        if (ConstantsResolver::has(Constants::AATXT_OPTION_FIELD_API_KEY_AZURE_TRANSLATE_INSTANCE)) {
+            return ConstantsResolver::get(Constants::AATXT_OPTION_FIELD_API_KEY_AZURE_TRANSLATE_INSTANCE) ?? '';
+        }
         $apiKey = get_option(Constants::AATXT_OPTION_FIELD_API_KEY_AZURE_TRANSLATE_INSTANCE);
         return (Encryption::make())->decrypt($apiKey);
     }
@@ -581,6 +684,9 @@ define('AATXT_ENCRYPTION_SALT', '<?php echo esc_html( $suggestedSalt ); ?>');
      */
     public static function endpointAzureTranslateInstance(): string
     {
+        if (ConstantsResolver::has(Constants::AATXT_OPTION_FIELD_ENDPOINT_AZURE_TRANSLATE_INSTANCE)) {
+            return ConstantsResolver::get(Constants::AATXT_OPTION_FIELD_ENDPOINT_AZURE_TRANSLATE_INSTANCE) ?? '';
+        }
         return get_option(Constants::AATXT_OPTION_FIELD_ENDPOINT_AZURE_TRANSLATE_INSTANCE);
     }
 
@@ -589,6 +695,9 @@ define('AATXT_ENCRYPTION_SALT', '<?php echo esc_html( $suggestedSalt ); ?>');
      */
     public static function regionAzureTranslateInstance(): string
     {
+        if (ConstantsResolver::has(Constants::AATXT_OPTION_FIELD_REGION_AZURE_TRANSLATE_INSTANCE)) {
+            return ConstantsResolver::get(Constants::AATXT_OPTION_FIELD_REGION_AZURE_TRANSLATE_INSTANCE) ?? '';
+        }
         return get_option(Constants::AATXT_OPTION_FIELD_REGION_AZURE_TRANSLATE_INSTANCE);
     }
 
@@ -597,6 +706,9 @@ define('AATXT_ENCRYPTION_SALT', '<?php echo esc_html( $suggestedSalt ); ?>');
      */
     public static function languageAzureTranslateInstance(): string
     {
+        if (ConstantsResolver::has(Constants::AATXT_OPTION_FIELD_LANGUAGE_AZURE_TRANSLATE_INSTANCE)) {
+            return ConstantsResolver::get(Constants::AATXT_OPTION_FIELD_LANGUAGE_AZURE_TRANSLATE_INSTANCE) ?? 'en';
+        }
         return get_option(Constants::AATXT_OPTION_FIELD_LANGUAGE_AZURE_TRANSLATE_INSTANCE) ?: 'en';
     }
 
@@ -605,7 +717,34 @@ define('AATXT_ENCRYPTION_SALT', '<?php echo esc_html( $suggestedSalt ); ?>');
      */
     public static function preserveExistingAltText(): bool
     {
+        if (ConstantsResolver::has(Constants::AATXT_OPTION_FIELD_PRESERVE_EXISTING_ALT_TEXT)) {
+            return (bool) ConstantsResolver::get(Constants::AATXT_OPTION_FIELD_PRESERVE_EXISTING_ALT_TEXT);
+        }
         return get_option(Constants::AATXT_OPTION_FIELD_PRESERVE_EXISTING_ALT_TEXT);
+    }
+
+    /**
+     * Whether a field is locked by a PHP constant.
+     */
+    private static function lockedByConstant(string $optionKey): bool
+    {
+        return ConstantsResolver::has($optionKey);
+    }
+
+    /**
+     * Render the "locked by constant" notice for a field.
+     */
+    private static function constantNotice(string $optionKey): string
+    {
+        $name = ConstantsResolver::getConstantName($optionKey);
+        return '<p class="description" style="color:#b26900; margin-top:4px;">'
+            . '<span class="dashicons dashicons-lock" style="font-size:14px; vertical-align:middle;"></span> '
+            . sprintf(
+                /* translators: %s: PHP constant name */
+                esc_html__('Set via PHP constant %s — edit in wp-config.php to change.', 'auto-alt-text'),
+                '<code>' . esc_html($name) . '</code>'
+            )
+            . '</p>';
     }
 
     public static function sanitizeUrl($input): string

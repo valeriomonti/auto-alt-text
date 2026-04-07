@@ -139,9 +139,51 @@ In this case, the cause of the error can be seen on the Auto Alt Text -> Error l
 
 We **strongly recommend** defining the new plugin-specific constants in your `wp-config.php`:
 
-`define( 'AAT_ENCRYPTION_KEY',  'a_random_string_of_at_least_64_characters' );`
-`define( 'AAT_ENCRYPTION_SALT', 'another_random_string_of_at_least_64_characters' );`
+`define( 'AATXT_ENCRYPTION_KEY',  'a_random_string_of_at_least_64_characters' );`
+`define( 'AATXT_ENCRYPTION_SALT', 'another_random_string_of_at_least_64_characters' );`
 
 You will find these two define(...) lines already generated for you on the Auto Alt Text » Options page – simply copy & paste them before the `/* That's all, stop editing! Happy publishing. */` line in your `wp-config.php`.
 
 If you choose not to add them, the plugin will continue to work normally, but it will fall back to using your WordPress `LOGGED_IN_KEY` / `LOGGED_IN_SALT`, which may break if those salts are ever changed.
+
+### Configuration via PHP Constants
+
+As an alternative to the admin settings page, any plugin option can be hard-coded directly in `wp-config.php` using PHP constants. This is useful for:
+
+- keeping API keys out of the database entirely
+- locking configuration on managed/multi-environment hosting
+- deploying consistent settings across environments without a database import
+
+When a constant is defined it takes precedence over the database value and the corresponding field in the admin settings page is disabled with a notice indicating which constant controls it.
+
+Add any combination of the following constants to your `wp-config.php` before the `/* That's all, stop editing! */` line:
+
+```php
+// Generation method: 'openai', 'anthropic', 'azure', 'article-title', 'attachment-title', or 'deactivated'
+define( 'AATXT_TYPOLOGY', 'openai' );
+
+// OpenAI
+define( 'AATXT_API_KEY_OPENAI',  'sk-...' );
+define( 'AATXT_MODEL_OPENAI',    'gpt-4o' );   // gpt-4o, gpt-4o-mini, gpt-5, gpt-5-mini, gpt-5-nano
+define( 'AATXT_PROMPT_OPENAI',   'Write a concise alt text for this image.' );
+
+// Anthropic
+define( 'AATXT_API_KEY_ANTHROPIC', 'sk-ant-...' );
+define( 'AATXT_MODEL_ANTHROPIC',   'claude-sonnet-4-20250514' );  // or claude-3-5-haiku-20241022
+define( 'AATXT_PROMPT_ANTHROPIC',  'Write a concise alt text for this image.' );
+
+// Azure Computer Vision
+define( 'AATXT_API_KEY_AZURE_COMPUTER_VISION', '...' );
+define( 'AATXT_ENDPOINT_AZURE_COMPUTER_VISION', 'https://your-instance.cognitiveservices.azure.com/' );
+
+// Azure Translator (optional — only needed if you want a non-English language)
+define( 'AATXT_API_KEY_AZURE_TRANSLATE_INSTANCE', '...' );
+define( 'AATXT_ENDPOINT_AZURE_TRANSLATE_INSTANCE', 'https://api.cognitive.microsofttranslator.com/' );
+define( 'AATXT_REGION_AZURE_TRANSLATE_INSTANCE', 'westeurope' );
+define( 'AATXT_LANGUAGE_AZURE_TRANSLATE_INSTANCE', 'en' );
+
+// Behaviour
+define( 'AATXT_PRESERVE_EXISTING_ALT_TEXT', '1' );  // '1' = keep existing alt text, '0' = overwrite
+```
+
+**Note:** API key constants are plain text — do not encrypt them. The plugin reads them directly and skips the decryption step that applies to database-stored keys.
