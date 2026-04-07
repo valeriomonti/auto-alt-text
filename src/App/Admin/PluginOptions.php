@@ -106,6 +106,15 @@ class PluginOptions
             return;
         }
 
+        $hasStoredApiKey = get_option(Constants::AATXT_OPTION_FIELD_API_KEY_OPENAI)
+            || get_option(Constants::AATXT_OPTION_FIELD_API_KEY_ANTHROPIC)
+            || get_option(Constants::AATXT_OPTION_FIELD_API_KEY_AZURE_COMPUTER_VISION)
+            || get_option(Constants::AATXT_OPTION_FIELD_API_KEY_AZURE_TRANSLATE_INSTANCE);
+
+        if ( ! $hasStoredApiKey ) {
+            return;
+        }
+
         $suggestedKey  = bin2hex(random_bytes(32));
         $suggestedSalt = bin2hex(random_bytes(32));
         ?>
