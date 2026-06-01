@@ -1,4 +1,4 @@
-## [v2.8.0] - 2026-03-25
+## [v2.8.1] - 2026-06-01
 
 ### Changed
-- Implement WP CLI commands for generating alt text
+- Update available Claude models
