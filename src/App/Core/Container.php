@@ -6,6 +6,7 @@ namespace AATXT\App\Core;
 
 use AATXT\App\Admin\MediaLibrary;
 use AATXT\App\Admin\PluginOptions;
+use AATXT\App\AIProviders\Anthropic\AnthropicModelsRegistry;
 use AATXT\App\AIProviders\Anthropic\AnthropicResponse;
 use AATXT\App\AIProviders\Azure\AzureComputerVisionCaptionsResponse;
 use AATXT\App\AIProviders\Azure\AzureTranslator;
@@ -13,6 +14,8 @@ use AATXT\App\AIProviders\OpenAI\OpenAIVision;
 use AATXT\App\Configuration\AnthropicConfig;
 use AATXT\App\Configuration\AzureConfig;
 use AATXT\App\Configuration\OpenAIConfig;
+use AATXT\App\Infrastructure\Cache\CacheInterface;
+use AATXT\App\Infrastructure\Cache\WordPressTransientCache;
 use AATXT\App\Infrastructure\Database\ErrorLogSchema;
 use AATXT\App\Infrastructure\Http\HttpClientInterface;
 use AATXT\App\Infrastructure\Http\WordPressHttpClient;
@@ -139,6 +142,20 @@ final class Container
             // Maps HttpClientInterface to WordPress HTTP client implementation
             HttpClientInterface::class => \DI\create(WordPressHttpClient::class),
 
+            // Cache abstraction
+            // Maps CacheInterface to the WordPress Transients API
+            CacheInterface::class => \DI\create(WordPressTransientCache::class),
+
+            // Anthropic Models Registry
+            // Fetches the available Claude models from the Anthropic API, with caching
+            AnthropicModelsRegistry::class => function ($container) {
+                return new AnthropicModelsRegistry(
+                    $container->get(HttpClientInterface::class),
+                    $container->get(CacheInterface::class),
+                    PluginOptions::apiKeyAnthropic()
+                );
+            },
+
             // OpenAI Configuration
             // Factory that reads configuration from WordPress options
             OpenAIConfig::class => function () {
@@ -184,11 +201,13 @@ final class Container
                 ),
 
             // Anthropic Claude Provider
-            // Automatically injects HttpClientInterface and AnthropicConfig
+            // Automatically injects HttpClientInterface, AnthropicConfig and the models registry
+            // (the registry powers the runtime fallback when the configured model is unavailable)
             AnthropicResponse::class => \DI\create(AnthropicResponse::class)
                 ->constructor(
                     \DI\get(HttpClientInterface::class),
-                    \DI\get(AnthropicConfig::class)
+                    \DI\get(AnthropicConfig::class),
+                    \DI\get(AnthropicModelsRegistry::class)
                 ),
 
             // Azure Translator

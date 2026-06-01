@@ -3,6 +3,7 @@
 namespace AATXT\App\Admin;
 
 use AATXT\App\Logging\DBLogger;
+use AATXT\App\AIProviders\Anthropic\AnthropicModelsRegistry;
 use AATXT\App\AIProviders\Azure\AzureTranslator;
 use AATXT\App\Configuration\AzureConfig;
 use AATXT\App\Core\Container;
@@ -48,6 +49,65 @@ class PluginOptions
         add_action('pre_update_option_' . Constants::AATXT_OPTION_FIELD_API_KEY_ANTHROPIC, [self::$instance, 'encryptDataOnUpdate'], 10, 3);
 
         add_action('admin_notices', [self::$instance, 'encryptionErrorNotice']);
+        add_action('admin_notices', [self::$instance, 'anthropicModelUnavailableNotice']);
+
+        // Bust the cached Anthropic models list whenever the API key changes,
+        // so the next admin page load fetches the model list with the new credentials.
+        add_action('update_option_' . Constants::AATXT_OPTION_FIELD_API_KEY_ANTHROPIC, [self::$instance, 'flushAnthropicModelsCache']);
+        add_action('add_option_' . Constants::AATXT_OPTION_FIELD_API_KEY_ANTHROPIC, [self::$instance, 'flushAnthropicModelsCache']);
+    }
+
+    /**
+     * Resolve the Anthropic models registry from the DI container.
+     */
+    private static function anthropicModelsRegistry(): AnthropicModelsRegistry
+    {
+        return Container::make()->get(AnthropicModelsRegistry::class);
+    }
+
+    public function flushAnthropicModelsCache(): void
+    {
+        self::anthropicModelsRegistry()->flushCache();
+    }
+
+    /**
+     * Warn the admin if the Anthropic model currently saved in the options
+     * is no longer returned by the registry (typically because Anthropic
+     * has retired it). The user has to pick a replacement; in the meantime
+     * AnthropicResponse falls back to the most recent available model so
+     * generation keeps working.
+     */
+    public function anthropicModelUnavailableNotice(): void
+    {
+        if (!current_user_can('manage_options')) {
+            return;
+        }
+
+        $savedModel = get_option(Constants::AATXT_OPTION_FIELD_MODEL_ANTHROPIC);
+        if (!is_string($savedModel) || $savedModel === '') {
+            return;
+        }
+
+        $registry = self::anthropicModelsRegistry();
+        if (!$registry->hasApiKey()) {
+            return;
+        }
+
+        if ($registry->isAvailable($savedModel)) {
+            return;
+        }
+
+        $settingsUrl = esc_url(menu_page_url(Constants::AATXT_PLUGIN_OPTIONS_PAGE_SLUG, false));
+
+        echo '<div class="notice notice-warning is-dismissible">';
+        echo '<p><strong>' . esc_html__('Auto Alt Text', 'auto-alt-text') . ':</strong> ';
+        printf(
+            /* translators: %s is the model id that is no longer available */
+            esc_html__('the Anthropic model "%s" you previously selected is no longer available. Please choose a new model in the plugin settings.', 'auto-alt-text'),
+            esc_html($savedModel)
+        );
+        echo ' <a href="' . $settingsUrl . '">' . esc_html__('Go to settings page', 'auto-alt-text') . '</a>.';
+        echo '</p></div>';
     }
 
     /**
@@ -428,15 +488,38 @@ define('AATXT_ENCRYPTION_SALT', '<?php echo esc_html( $suggestedSalt ); ?>');
                 echo '</div>';
 
                 $anthropicModel = self::anthropicModel();
+                $anthropicRegistry = self::anthropicModelsRegistry();
 
                 echo '<div class="plugin-option type-anthropic">';
                 echo '<label for="' .  esc_attr(Constants::AATXT_OPTION_FIELD_MODEL_ANTHROPIC) . '">' . esc_html__('Model', 'auto-alt-text') . '</label>';
 
-                echo '<select name="' . esc_attr(Constants::AATXT_OPTION_FIELD_MODEL_ANTHROPIC) . '" id="' . esc_attr(Constants::AATXT_OPTION_FIELD_MODEL_ANTHROPIC) . '">';
-                foreach(Constants::AATXT_OPTION_FIELD_MODEL_ANTHROPIC_OPTIONS as $key => $value) {
-                    echo '<option value="' . esc_attr($key) . '" ' . esc_attr(self::selected($anthropicModel, $key)) . '>' . esc_html($value) . '</option>';
+                if (!$anthropicRegistry->hasApiKey()) {
+                    echo '<p class="description">' . esc_html__('Enter and save your Anthropic API Key to load the list of available models.', 'auto-alt-text') . '</p>';
+                    echo '<select name="' . esc_attr(Constants::AATXT_OPTION_FIELD_MODEL_ANTHROPIC) . '" id="' . esc_attr(Constants::AATXT_OPTION_FIELD_MODEL_ANTHROPIC) . '" disabled>';
+                    if ($anthropicModel !== '') {
+                        echo '<option value="' . esc_attr($anthropicModel) . '" selected>' . esc_html($anthropicModel) . '</option>';
+                    } else {
+                        echo '<option value="" selected>' . esc_html__('— API Key required —', 'auto-alt-text') . '</option>';
+                    }
+                    echo '</select>';
+                } else {
+                    $availableModels = $anthropicRegistry->getAvailableModels();
+                    $savedIsLegacy = $anthropicModel !== '' && !array_key_exists($anthropicModel, $availableModels);
+
+                    echo '<select name="' . esc_attr(Constants::AATXT_OPTION_FIELD_MODEL_ANTHROPIC) . '" id="' . esc_attr(Constants::AATXT_OPTION_FIELD_MODEL_ANTHROPIC) . '">';
+                    foreach ($availableModels as $key => $value) {
+                        echo '<option value="' . esc_attr($key) . '" ' . esc_attr(self::selected($anthropicModel, $key)) . '>' . esc_html($value) . '</option>';
+                    }
+                    if ($savedIsLegacy) {
+                        $legacyLabel = sprintf(
+                            /* translators: %s is the saved model id */
+                            esc_html__('%s (no longer available)', 'auto-alt-text'),
+                            $anthropicModel
+                        );
+                        echo '<option value="' . esc_attr($anthropicModel) . '" selected>' . esc_html($legacyLabel) . '</option>';
+                    }
+                    echo '</select>';
                 }
-                echo '</select>';
                 echo '</div>';
 
                 echo '<div class="plugin-option type-anthropic">';
@@ -513,7 +596,7 @@ define('AATXT_ENCRYPTION_SALT', '<?php echo esc_html( $suggestedSalt ); ?>');
 
     public static function anthropicModel(): string
     {
-        return get_option(Constants::AATXT_OPTION_FIELD_MODEL_ANTHROPIC) ?: Constants::AATXT_CLAUDE_HAIKU_3_5;
+        return get_option(Constants::AATXT_OPTION_FIELD_MODEL_ANTHROPIC) ?: Constants::AATXT_CLAUDE_FALLBACK_MODEL;
     }
 
     /**

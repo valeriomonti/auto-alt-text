@@ -31,12 +31,13 @@ class Constants
     const AATXT_OPTION_FIELD_API_KEY_OPENAI = 'aatxt_api_key_openai';
     const AATXT_OPTION_FIELD_API_KEY_ANTHROPIC = 'aatxt_api_key_anthropic';
     const AATXT_OPTION_FIELD_MODEL_ANTHROPIC = 'aatxt_model_anthropic';
-    const AATXT_CLAUDE_SONNET_4 = 'claude-sonnet-4-6';
-    const AATXT_CLAUDE_HAIKU_4_5 = 'claude-haiku-4-5';
+    const AATXT_CLAUDE_SONNET_4 = 'claude-sonnet-4-20250514';
+    const AATXT_CLAUDE_HAIKU_3_5 = 'claude-3-5-haiku-20241022';
+    const AATXT_CLAUDE_FALLBACK_MODEL = 'claude-haiku-4-5';
 
     const AATXT_OPTION_FIELD_MODEL_ANTHROPIC_OPTIONS = [
-        self::AATXT_CLAUDE_HAIKU_4_5 => 'Claude Haiku 4.5',
-        self::AATXT_CLAUDE_SONNET_4 => 'Claude Sonnet 4.6',
+        self::AATXT_CLAUDE_HAIKU_3_5 => 'Claude 3.5 Haiku',
+        self::AATXT_CLAUDE_SONNET_4 => 'Claude Sonnet 4',
     ];
     const AATXT_API_VERSION = '2023-06-01';
     const AATXT_OPTION_FIELD_PROMPT_ANTHROPIC = 'aatxt_prompt_anthropic';
@@ -79,4 +80,6 @@ class Constants
     ];
 
     const AATXT_ANTHROPIC_ENDPOINT = 'https://api.anthropic.com/v1/messages';
+    const AATXT_ANTHROPIC_MODELS_ENDPOINT = 'https://api.anthropic.com/v1/models';
+    const AATXT_ANTHROPIC_MODELS_CACHE_KEY = 'aatxt_anthropic_models_cache';
 }

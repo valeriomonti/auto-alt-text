@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace AATXT\Tests\Unit\AIProviders\Anthropic;
 
+use AATXT\App\AIProviders\Anthropic\AnthropicModelsRegistry;
 use AATXT\App\AIProviders\Anthropic\AnthropicResponse;
 use AATXT\App\Configuration\AIProviderConfig;
 use AATXT\App\Exceptions\Anthropic\AnthropicException;
@@ -379,6 +380,86 @@ class AnthropicResponseTest extends TestCase
 
         // Assert
         $this->assertEquals($expectedAltText, $result);
+    }
+
+    /**
+     * @covers ::response
+     *
+     * Runtime fallback: when the registry says the configured model is no longer
+     * available, AnthropicResponse must transparently send the registry's
+     * default (most recent) model to the API so generation keeps working
+     * until the admin picks a new one from the settings page.
+     */
+    public function testItFallsBackToRegistryDefaultWhenConfiguredModelIsRetired(): void
+    {
+        $retiredModel = 'claude-3-5-haiku-20241022';
+        $replacementModel = 'claude-haiku-4-5';
+
+        $registry = $this->createMock(AnthropicModelsRegistry::class);
+        $registry->expects($this->once())
+            ->method('isAvailable')
+            ->with($retiredModel)
+            ->willReturn(false);
+        $registry->expects($this->once())
+            ->method('getDefaultModel')
+            ->willReturn($replacementModel);
+
+        $httpClient = $this->createMock(HttpClientInterface::class);
+        $httpClient->expects($this->once())
+            ->method('post')
+            ->with(
+                $this->anything(),
+                $this->anything(),
+                $this->callback(function ($body) use ($replacementModel) {
+                    return ($body['model'] ?? null) === $replacementModel;
+                })
+            )
+            ->willReturn(['content' => [['text' => 'Alt text']]]);
+
+        $config = $this->createStub(AIProviderConfig::class);
+        $config->method('getApiKey')->willReturn(self::TEST_API_KEY);
+        $config->method('getPrompt')->willReturn(self::TEST_PROMPT);
+        $config->method('getModel')->willReturn($retiredModel);
+
+        $provider = new AnthropicResponse($httpClient, $config, $registry);
+
+        $provider->response(self::TEST_IMAGE_URL);
+    }
+
+    /**
+     * @covers ::response
+     */
+    public function testItKeepsConfiguredModelWhenRegistryConfirmsItIsAvailable(): void
+    {
+        $currentModel = 'claude-sonnet-4-6';
+
+        $registry = $this->createMock(AnthropicModelsRegistry::class);
+        $registry->expects($this->once())
+            ->method('isAvailable')
+            ->with($currentModel)
+            ->willReturn(true);
+        $registry->expects($this->never())->method('getDefaultModel');
+
+        $httpClient = $this->createMock(HttpClientInterface::class);
+        $httpClient->expects($this->once())
+            ->method('post')
+            ->with(
+                $this->anything(),
+                $this->anything(),
+                $this->callback(function ($body) use ($currentModel) {
+                    return ($body['model'] ?? null) === $currentModel;
+                })
+            )
+            ->willReturn(['content' => [['text' => 'Alt text']]]);
+
+        $config = $this->createStub(AIProviderConfig::class);
+        $config->method('getApiKey')->willReturn(self::TEST_API_KEY);
+        $config->method('getPrompt')->willReturn(self::TEST_PROMPT);
+        $config->method('getModel')->willReturn($currentModel);
+
+        $provider = new AnthropicResponse($httpClient, $config, $registry);
+
+        $provider->response(self::TEST_IMAGE_URL);
     }
 
     /**

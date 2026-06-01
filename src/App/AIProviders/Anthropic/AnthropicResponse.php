@@ -29,15 +29,26 @@ class AnthropicResponse implements AIProviderInterface, SupportsImageValidation,
     private $config;
 
     /**
+     * @var AnthropicModelsRegistry|null
+     */
+    private $modelsRegistry;
+
+    /**
      * Constructor.
      *
      * @param HttpClientInterface $httpClient HTTP client for API calls
      * @param AIProviderConfig $config Configuration with API key, prompt, and model
+     * @param AnthropicModelsRegistry|null $modelsRegistry Optional registry used to fall back
+     *        to a currently-available model when the configured one has been retired
      */
-    public function __construct(HttpClientInterface $httpClient, AIProviderConfig $config)
-    {
+    public function __construct(
+        HttpClientInterface $httpClient,
+        AIProviderConfig $config,
+        ?AnthropicModelsRegistry $modelsRegistry = null
+    ) {
         $this->httpClient = $httpClient;
         $this->config = $config;
+        $this->modelsRegistry = $modelsRegistry;
     }
 
     /**
@@ -98,7 +109,7 @@ class AnthropicResponse implements AIProviderInterface, SupportsImageValidation,
         }
 
         $payload = [
-            "model"      => $this->config->getModel(),
+            "model"      => $this->resolveModel(),
             "max_tokens" => 1024,
             "messages"   => [
                 [
@@ -140,5 +151,25 @@ class AnthropicResponse implements AIProviderInterface, SupportsImageValidation,
         }
 
         return $answer;
+    }
+
+    /**
+     * Return the model id to send to the API, transparently falling back to the
+     * most recent available model when the configured one is no longer listed
+     * by the registry.
+     */
+    private function resolveModel(): string
+    {
+        $configured = $this->config->getModel();
+
+        if ($this->modelsRegistry === null || $configured === '') {
+            return $configured;
+        }
+
+        if ($this->modelsRegistry->isAvailable($configured)) {
+            return $configured;
+        }
+
+        return $this->modelsRegistry->getDefaultModel();
     }
 }
