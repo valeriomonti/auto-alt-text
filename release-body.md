@@ -1,4 +1,4 @@
-## [v2.8.1] - 2026-06-01
+## [v2.8.2] - 2026-06-04
 
 ### Changed
-- Update available Claude models
+- Improve compatibility scoping vendor dependencies
