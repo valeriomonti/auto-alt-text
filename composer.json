@@ -31,12 +31,26 @@
         "phpunit/phpunit": "^9.6.33",
         "phpstan/phpstan": "*",
         "szepeviktor/phpstan-wordpress": "*",
-        "phpstan/extension-installer": "*"
+        "phpstan/extension-installer": "*",
+        "brianhenryie/strauss": "^0.27.3"
     },
     "scripts": {
         "test": "@php -d error_reporting=E_ALL^E_DEPRECATED vendor/bin/phpunit",
         "test:coverage": "@php -d error_reporting=E_ALL^E_DEPRECATED vendor/bin/phpunit --coverage-html coverage",
         "phpstan": "vendor/bin/phpstan analyse --memory-limit=1G",
-        "phpstan:baseline": "vendor/bin/phpstan analyse --memory-limit=1G --generate-baseline"
+        "phpstan:baseline": "vendor/bin/phpstan analyse --memory-limit=1G --generate-baseline",
+        "strauss": [
+            "@php vendor/bin/strauss",
+            "@composer dump-autoload"
+        ]
+    },
+    "extra": {
+        "strauss": {
+            "target_directory": "vendor-prefixed",
+            "namespace_prefix": "AATXT\\Vendor\\",
+            "classmap_prefix": "AATXT_Vendor_",
+            "classmap_output": true,
+            "delete_vendor_packages": true
+        }
     }
 }

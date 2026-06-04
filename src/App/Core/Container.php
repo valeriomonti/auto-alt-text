@@ -38,8 +38,8 @@ use AATXT\App\Events\AltTextGenerationFailedEvent;
 use AATXT\App\Events\Listeners\LogErrorListener;
 use AATXT\App\Events\Listeners\NotifyAdminListener;
 use AATXT\Config\Constants;
-use DI\Container as DIContainer;
-use DI\ContainerBuilder;
+use AATXT\Vendor\DI\Container as DIContainer;
+use AATXT\Vendor\DI\ContainerBuilder;
 
 /**
  * Dependency Injection Container configuration.
@@ -115,36 +115,36 @@ final class Container
 
             // Database Schema Management
             // Manages error logs table schema
-            ErrorLogSchema::class => \DI\create(ErrorLogSchema::class)
-                ->constructor(\DI\get(\wpdb::class)),
+            ErrorLogSchema::class => \AATXT\Vendor\DI\create(ErrorLogSchema::class)
+                ->constructor(\AATXT\Vendor\DI\get(\wpdb::class)),
 
             // Error Log Repository
             // Maps interface to concrete implementation for error log persistence
-            ErrorLogRepositoryInterface::class => \DI\create(ErrorLogRepository::class)
+            ErrorLogRepositoryInterface::class => \AATXT\Vendor\DI\create(ErrorLogRepository::class)
                 ->constructor(
-                    \DI\get(\wpdb::class),
-                    \DI\get(ErrorLogSchema::class)
+                    \AATXT\Vendor\DI\get(\wpdb::class),
+                    \AATXT\Vendor\DI\get(ErrorLogSchema::class)
                 ),
 
             // Config Repository
             // Maps interface to WordPress options implementation for configuration management
-            ConfigRepositoryInterface::class => \DI\create(WordPressConfigRepository::class),
+            ConfigRepositoryInterface::class => \AATXT\Vendor\DI\create(WordPressConfigRepository::class),
 
             // Database Logger
             // Legacy logger refactored to use repository pattern
-            DBLogger::class => \DI\create(DBLogger::class)
+            DBLogger::class => \AATXT\Vendor\DI\create(DBLogger::class)
                 ->constructor(
-                    \DI\get(ErrorLogRepositoryInterface::class),
-                    \DI\get(ErrorLogSchema::class)
+                    \AATXT\Vendor\DI\get(ErrorLogRepositoryInterface::class),
+                    \AATXT\Vendor\DI\get(ErrorLogSchema::class)
                 ),
 
             // HTTP Client abstraction
             // Maps HttpClientInterface to WordPress HTTP client implementation
-            HttpClientInterface::class => \DI\create(WordPressHttpClient::class),
+            HttpClientInterface::class => \AATXT\Vendor\DI\create(WordPressHttpClient::class),
 
             // Cache abstraction
             // Maps CacheInterface to the WordPress Transients API
-            CacheInterface::class => \DI\create(WordPressTransientCache::class),
+            CacheInterface::class => \AATXT\Vendor\DI\create(WordPressTransientCache::class),
 
             // Anthropic Models Registry
             // Fetches the available Claude models from the Anthropic API, with caching
@@ -194,37 +194,37 @@ final class Container
 
             // OpenAI Vision Provider
             // Automatically injects HttpClientInterface and OpenAIConfig
-            OpenAIVision::class => \DI\create(OpenAIVision::class)
+            OpenAIVision::class => \AATXT\Vendor\DI\create(OpenAIVision::class)
                 ->constructor(
-                    \DI\get(HttpClientInterface::class),
-                    \DI\get(OpenAIConfig::class)
+                    \AATXT\Vendor\DI\get(HttpClientInterface::class),
+                    \AATXT\Vendor\DI\get(OpenAIConfig::class)
                 ),
 
             // Anthropic Claude Provider
             // Automatically injects HttpClientInterface, AnthropicConfig and the models registry
             // (the registry powers the runtime fallback when the configured model is unavailable)
-            AnthropicResponse::class => \DI\create(AnthropicResponse::class)
+            AnthropicResponse::class => \AATXT\Vendor\DI\create(AnthropicResponse::class)
                 ->constructor(
-                    \DI\get(HttpClientInterface::class),
-                    \DI\get(AnthropicConfig::class),
-                    \DI\get(AnthropicModelsRegistry::class)
+                    \AATXT\Vendor\DI\get(HttpClientInterface::class),
+                    \AATXT\Vendor\DI\get(AnthropicConfig::class),
+                    \AATXT\Vendor\DI\get(AnthropicModelsRegistry::class)
                 ),
 
             // Azure Translator
             // Automatically injects HttpClientInterface and AzureConfig
-            AzureTranslator::class => \DI\create(AzureTranslator::class)
+            AzureTranslator::class => \AATXT\Vendor\DI\create(AzureTranslator::class)
                 ->constructor(
-                    \DI\get(HttpClientInterface::class),
-                    \DI\get(AzureConfig::class)
+                    \AATXT\Vendor\DI\get(HttpClientInterface::class),
+                    \AATXT\Vendor\DI\get(AzureConfig::class)
                 ),
 
             // Azure Computer Vision Provider
             // Automatically injects HttpClientInterface, AzureConfig, and AzureTranslator
-            AzureComputerVisionCaptionsResponse::class => \DI\create(AzureComputerVisionCaptionsResponse::class)
+            AzureComputerVisionCaptionsResponse::class => \AATXT\Vendor\DI\create(AzureComputerVisionCaptionsResponse::class)
                 ->constructor(
-                    \DI\get(HttpClientInterface::class),
-                    \DI\get(AzureConfig::class),
-                    \DI\get(AzureTranslator::class)
+                    \AATXT\Vendor\DI\get(HttpClientInterface::class),
+                    \AATXT\Vendor\DI\get(AzureConfig::class),
+                    \AATXT\Vendor\DI\get(AzureTranslator::class)
                 ),
 
             // =============================================
@@ -376,7 +376,7 @@ final class Container
 
             // Assets Manager
             // Handles Vite manifest loading for versioned assets
-            AssetsManager::class => \DI\create(AssetsManager::class),
+            AssetsManager::class => \AATXT\Vendor\DI\create(AssetsManager::class),
 
             // Media Library
             // Handles media library UI customization and AJAX alt text generation

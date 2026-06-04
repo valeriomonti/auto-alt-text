@@ -17,6 +17,8 @@ parameters:
     bootstrapFiles:
         - %currentWorkingDirectory%/vendor/php-stubs/wordpress-stubs/wordpress-stubs.php
         - %currentWorkingDirectory%/phpstan-bootstrap.php
+        # Scoped (Strauss-prefixed) dependencies live under their own autoloader
+        - %currentWorkingDirectory%/vendor-prefixed/autoload.php
 
     # Ignore errors from WordPress core functions
     # that might not be perfectly typed in stubs

@@ -8,7 +8,7 @@ use AATXT\App\Admin\BulkActions\GenerateAltTextBulkAction;
 use AATXT\App\Admin\MediaLibrary;
 use AATXT\App\Infrastructure\Database\ErrorLogSchema;
 use AATXT\App\Services\AltTextService;
-use DI\Container as DIContainer;
+use AATXT\Vendor\DI\Container as DIContainer;
 
 /**
  * Bootstrap class for the Auto Alt Text plugin.
