@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace AATXT\Tests\Unit\AIProviders\OpenAI;
 
+use AATXT\App\AIProviders\OpenAI\OpenAIModelsRegistry;
 use AATXT\App\AIProviders\OpenAI\OpenAIVision;
 use AATXT\App\Configuration\AIProviderConfig;
 use AATXT\App\Exceptions\OpenAI\OpenAIException;
@@ -415,6 +416,94 @@ class OpenAIVisionTest extends TestCase
 
         // Assert
         $this->assertEquals($expectedAltText, $result);
+    }
+
+    /**
+     * @covers ::response
+     *
+     * Runtime fallback: when the registry says the configured model is no longer
+     * available, OpenAIVision must transparently send the registry's default
+     * (least expensive) model to the API so generation keeps working until the
+     * admin picks a new one from the settings page.
+     */
+    public function testItFallsBackToRegistryDefaultWhenConfiguredModelIsRetired(): void
+    {
+        $retiredModel = 'gpt-4o';
+        $replacementModel = 'gpt-5-nano';
+
+        $registry = $this->createMock(OpenAIModelsRegistry::class);
+        $registry->expects($this->once())
+            ->method('isAvailable')
+            ->with($retiredModel)
+            ->willReturn(false);
+        $registry->expects($this->once())
+            ->method('getDefaultModel')
+            ->willReturn($replacementModel);
+
+        $httpClient = $this->createMock(HttpClientInterface::class);
+        $httpClient->expects($this->once())
+            ->method('post')
+            ->with(
+                $this->anything(),
+                $this->anything(),
+                $this->callback(function ($body) use ($replacementModel) {
+                    return ($body['model'] ?? null) === $replacementModel;
+                })
+            )
+            ->willReturn([
+                'output' => [
+                    ['type' => 'message', 'content' => [['text' => 'Alt text']]]
+                ]
+            ]);
+
+        $config = $this->createStub(AIProviderConfig::class);
+        $config->method('getApiKey')->willReturn(self::TEST_API_KEY);
+        $config->method('getPrompt')->willReturn(self::TEST_PROMPT);
+        $config->method('getModel')->willReturn($retiredModel);
+
+        $provider = new OpenAIVision($httpClient, $config, $registry);
+
+        $provider->response(self::TEST_IMAGE_URL);
+    }
+
+    /**
+     * @covers ::response
+     */
+    public function testItKeepsConfiguredModelWhenRegistryConfirmsItIsAvailable(): void
+    {
+        $currentModel = 'gpt-5';
+
+        $registry = $this->createMock(OpenAIModelsRegistry::class);
+        $registry->expects($this->once())
+            ->method('isAvailable')
+            ->with($currentModel)
+            ->willReturn(true);
+        $registry->expects($this->never())->method('getDefaultModel');
+
+        $httpClient = $this->createMock(HttpClientInterface::class);
+        $httpClient->expects($this->once())
+            ->method('post')
+            ->with(
+                $this->anything(),
+                $this->anything(),
+                $this->callback(function ($body) use ($currentModel) {
+                    return ($body['model'] ?? null) === $currentModel;
+                })
+            )
+            ->willReturn([
+                'output' => [
+                    ['type' => 'message', 'content' => [['text' => 'Alt text']]]
+                ]
+            ]);
+
+        $config = $this->createStub(AIProviderConfig::class);
+        $config->method('getApiKey')->willReturn(self::TEST_API_KEY);
+        $config->method('getPrompt')->willReturn(self::TEST_PROMPT);
+        $config->method('getModel')->willReturn($currentModel);
+
+        $provider = new OpenAIVision($httpClient, $config, $registry);
+
+        $provider->response(self::TEST_IMAGE_URL);
     }
 
     /**

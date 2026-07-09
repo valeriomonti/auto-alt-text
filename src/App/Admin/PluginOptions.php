@@ -4,6 +4,7 @@ namespace AATXT\App\Admin;
 
 use AATXT\App\Logging\DBLogger;
 use AATXT\App\AIProviders\Anthropic\AnthropicModelsRegistry;
+use AATXT\App\AIProviders\OpenAI\OpenAIModelsRegistry;
 use AATXT\App\AIProviders\Azure\AzureTranslator;
 use AATXT\App\Configuration\AzureConfig;
 use AATXT\App\Core\Container;
@@ -50,11 +51,16 @@ class PluginOptions
 
         add_action('admin_notices', [self::$instance, 'encryptionErrorNotice']);
         add_action('admin_notices', [self::$instance, 'anthropicModelUnavailableNotice']);
+        add_action('admin_notices', [self::$instance, 'openAiModelUnavailableNotice']);
 
         // Bust the cached Anthropic models list whenever the API key changes,
         // so the next admin page load fetches the model list with the new credentials.
         add_action('update_option_' . Constants::AATXT_OPTION_FIELD_API_KEY_ANTHROPIC, [self::$instance, 'flushAnthropicModelsCache']);
         add_action('add_option_' . Constants::AATXT_OPTION_FIELD_API_KEY_ANTHROPIC, [self::$instance, 'flushAnthropicModelsCache']);
+
+        // Same for the cached OpenAI models list.
+        add_action('update_option_' . Constants::AATXT_OPTION_FIELD_API_KEY_OPENAI, [self::$instance, 'flushOpenAiModelsCache']);
+        add_action('add_option_' . Constants::AATXT_OPTION_FIELD_API_KEY_OPENAI, [self::$instance, 'flushOpenAiModelsCache']);
     }
 
     /**
@@ -68,6 +74,59 @@ class PluginOptions
     public function flushAnthropicModelsCache(): void
     {
         self::anthropicModelsRegistry()->flushCache();
+    }
+
+    /**
+     * Resolve the OpenAI models registry from the DI container.
+     */
+    private static function openAiModelsRegistry(): OpenAIModelsRegistry
+    {
+        return Container::make()->get(OpenAIModelsRegistry::class);
+    }
+
+    public function flushOpenAiModelsCache(): void
+    {
+        self::openAiModelsRegistry()->flushCache();
+    }
+
+    /**
+     * Warn the admin if the OpenAI model currently saved in the options
+     * is no longer returned by the registry (typically because OpenAI
+     * has retired it). The user has to pick a replacement; in the meantime
+     * OpenAIVision falls back to the least expensive available model so
+     * generation keeps working.
+     */
+    public function openAiModelUnavailableNotice(): void
+    {
+        if (!current_user_can('manage_options')) {
+            return;
+        }
+
+        $savedModel = get_option(Constants::AATXT_OPTION_FIELD_MODEL_OPENAI);
+        if (!is_string($savedModel) || $savedModel === '') {
+            return;
+        }
+
+        $registry = self::openAiModelsRegistry();
+        if (!$registry->hasApiKey()) {
+            return;
+        }
+
+        if ($registry->isAvailable($savedModel)) {
+            return;
+        }
+
+        $settingsUrl = esc_url(menu_page_url(Constants::AATXT_PLUGIN_OPTIONS_PAGE_SLUG, false));
+
+        echo '<div class="notice notice-warning is-dismissible">';
+        echo '<p><strong>' . esc_html__('Auto Alt Text', 'auto-alt-text') . ':</strong> ';
+        printf(
+            /* translators: %s is the model id that is no longer available */
+            esc_html__('the OpenAI model "%s" you previously selected is no longer available. Please choose a new model in the plugin settings.', 'auto-alt-text'),
+            esc_html($savedModel)
+        );
+        echo ' <a href="' . $settingsUrl . '">' . esc_html__('Go to settings page', 'auto-alt-text') . '</a>.';
+        echo '</p></div>';
     }
 
     /**
@@ -357,20 +416,58 @@ define('AATXT_ENCRYPTION_SALT', '<?php echo esc_html( $suggestedSalt ); ?>');
                     '</div>';
 
                 $openaiModel = self::openAiModel();
+                $openaiRegistry = self::openAiModelsRegistry();
 
                 echo '<div class="plugin-option type-openai">';
                 echo '<label for="' .  esc_attr(Constants::AATXT_OPTION_FIELD_MODEL_OPENAI) . '">' . esc_html__('Model', 'auto-alt-text') . '</label>';
 
-                echo '<select name="' . esc_attr(Constants::AATXT_OPTION_FIELD_MODEL_OPENAI) . '" id="' . esc_attr(Constants::AATXT_OPTION_FIELD_MODEL_OPENAI) . '">';
-                foreach(Constants::AATXT_OPTION_FIELD_MODEL_OPENAI_OPTIONS as $key => $value) {
-                    echo '<option value="' . esc_attr($key) . '" ' . esc_attr(self::selected($openaiModel, $key)) . '>' . esc_html($value) . '</option>';
+                if (!$openaiRegistry->hasApiKey()) {
+                    echo '<p class="description">' . esc_html__('Enter and save your OpenAI API Key to load the list of available models.', 'auto-alt-text') . '</p>';
+                    // The <select> below is disabled and therefore not submitted with
+                    // the form; this hidden field re-submits the currently stored model
+                    // so saving the settings page does not wipe the user's choice.
+                    $rawSavedModel = get_option(Constants::AATXT_OPTION_FIELD_MODEL_OPENAI);
+                    $rawSavedModel = is_string($rawSavedModel) ? $rawSavedModel : '';
+                    echo '<input type="hidden" name="' . esc_attr(Constants::AATXT_OPTION_FIELD_MODEL_OPENAI) . '" value="' . esc_attr($rawSavedModel) . '">';
+                    echo '<select id="' . esc_attr(Constants::AATXT_OPTION_FIELD_MODEL_OPENAI) . '" disabled>';
+                    if ($openaiModel !== '') {
+                        echo '<option value="' . esc_attr($openaiModel) . '" selected>' . esc_html($openaiModel) . '</option>';
+                    } else {
+                        echo '<option value="" selected>' . esc_html__('— API Key required —', 'auto-alt-text') . '</option>';
+                    }
+                    echo '</select>';
+                } else {
+                    $availableModels = $openaiRegistry->getAvailableModels();
+
+                    // Read the raw saved value (not self::openAiModel(), which falls
+                    // back to the static gpt-4o default). This lets us tell "nothing
+                    // saved yet" apart from "gpt-4o explicitly chosen": on a fresh
+                    // install we pre-select the registry's default (least expensive
+                    // available) model instead of flagging gpt-4o as no longer
+                    // available for a model the user never picked.
+                    $savedModel = get_option(Constants::AATXT_OPTION_FIELD_MODEL_OPENAI);
+                    $savedModel = is_string($savedModel) ? $savedModel : '';
+                    $selectedModel = $savedModel !== '' ? $savedModel : $openaiRegistry->getDefaultModel();
+                    $savedIsLegacy = $savedModel !== '' && !array_key_exists($savedModel, $availableModels);
+
+                    echo '<select name="' . esc_attr(Constants::AATXT_OPTION_FIELD_MODEL_OPENAI) . '" id="' . esc_attr(Constants::AATXT_OPTION_FIELD_MODEL_OPENAI) . '">';
+                    foreach ($availableModels as $key => $value) {
+                        echo '<option value="' . esc_attr($key) . '" ' . esc_attr(self::selected($selectedModel, $key)) . '>' . esc_html($value) . '</option>';
+                    }
+                    if ($savedIsLegacy) {
+                        $legacyLabel = sprintf(
+                            /* translators: %s is the saved model id */
+                            esc_html__('%s (no longer available)', 'auto-alt-text'),
+                            $savedModel
+                        );
+                        echo '<option value="' . esc_attr($savedModel) . '" selected>' . esc_html($legacyLabel) . '</option>';
+                    }
+                    echo '</select>';
                 }
-                echo '</select>';
                 echo '</div>';
 
                 echo '<div class="plugin-option type-openai"><strong>' . esc_html__('Notice', 'auto-alt-text') . '</strong>: ' .
-                    esc_html__('Rarely it may happen that the chosen model fails to generate correct alt text for the image.', 'auto-alt-text') . ' ' .
-                    esc_html__('In these cases, the call to the api will be re-performed using the gpt-4o-mini model as fallback.', 'auto-alt-text') . '<br>' .
+                    esc_html__('If the model you selected is retired by OpenAI and is no longer available, the least expensive available model will be used as fallback until you choose a new one.', 'auto-alt-text') . '<br>' .
                     esc_html__('In case of errors, it is still possible to find the specific reason stated on the', 'auto-alt-text') . ' <a href="' . esc_url(menu_page_url(Constants::AATXT_PLUGIN_OPTION_LOG_PAGE_SLUG, false)) . '">' . esc_html__('error log page', 'auto-alt-text') . '</a>.' .
                     '</div>';
 
@@ -495,7 +592,13 @@ define('AATXT_ENCRYPTION_SALT', '<?php echo esc_html( $suggestedSalt ); ?>');
 
                 if (!$anthropicRegistry->hasApiKey()) {
                     echo '<p class="description">' . esc_html__('Enter and save your Anthropic API Key to load the list of available models.', 'auto-alt-text') . '</p>';
-                    echo '<select name="' . esc_attr(Constants::AATXT_OPTION_FIELD_MODEL_ANTHROPIC) . '" id="' . esc_attr(Constants::AATXT_OPTION_FIELD_MODEL_ANTHROPIC) . '" disabled>';
+                    // The <select> below is disabled and therefore not submitted with
+                    // the form; this hidden field re-submits the currently stored model
+                    // so saving the settings page does not wipe the user's choice.
+                    $rawSavedModel = get_option(Constants::AATXT_OPTION_FIELD_MODEL_ANTHROPIC);
+                    $rawSavedModel = is_string($rawSavedModel) ? $rawSavedModel : '';
+                    echo '<input type="hidden" name="' . esc_attr(Constants::AATXT_OPTION_FIELD_MODEL_ANTHROPIC) . '" value="' . esc_attr($rawSavedModel) . '">';
+                    echo '<select id="' . esc_attr(Constants::AATXT_OPTION_FIELD_MODEL_ANTHROPIC) . '" disabled>';
                     if ($anthropicModel !== '') {
                         echo '<option value="' . esc_attr($anthropicModel) . '" selected>' . esc_html($anthropicModel) . '</option>';
                     } else {

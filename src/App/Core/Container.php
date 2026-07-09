@@ -10,6 +10,7 @@ use AATXT\App\AIProviders\Anthropic\AnthropicModelsRegistry;
 use AATXT\App\AIProviders\Anthropic\AnthropicResponse;
 use AATXT\App\AIProviders\Azure\AzureComputerVisionCaptionsResponse;
 use AATXT\App\AIProviders\Azure\AzureTranslator;
+use AATXT\App\AIProviders\OpenAI\OpenAIModelsRegistry;
 use AATXT\App\AIProviders\OpenAI\OpenAIVision;
 use AATXT\App\Configuration\AnthropicConfig;
 use AATXT\App\Configuration\AzureConfig;
@@ -156,6 +157,16 @@ final class Container
                 );
             },
 
+            // OpenAI Models Registry
+            // Fetches the available OpenAI models from the OpenAI API, with caching
+            OpenAIModelsRegistry::class => function ($container) {
+                return new OpenAIModelsRegistry(
+                    $container->get(HttpClientInterface::class),
+                    $container->get(CacheInterface::class),
+                    PluginOptions::apiKeyOpenAI()
+                );
+            },
+
             // OpenAI Configuration
             // Factory that reads configuration from WordPress options
             OpenAIConfig::class => function () {
@@ -193,11 +204,13 @@ final class Container
             },
 
             // OpenAI Vision Provider
-            // Automatically injects HttpClientInterface and OpenAIConfig
+            // Automatically injects HttpClientInterface, OpenAIConfig and the models registry
+            // (the registry powers the runtime fallback when the configured model is unavailable)
             OpenAIVision::class => \AATXT\Vendor\DI\create(OpenAIVision::class)
                 ->constructor(
                     \AATXT\Vendor\DI\get(HttpClientInterface::class),
-                    \AATXT\Vendor\DI\get(OpenAIConfig::class)
+                    \AATXT\Vendor\DI\get(OpenAIConfig::class),
+                    \AATXT\Vendor\DI\get(OpenAIModelsRegistry::class)
                 ),
 
             // Anthropic Claude Provider

@@ -19,6 +19,7 @@ class Constants
     const AATXT_GPT5 = 'gpt-5';
     const AATXT_GPT5_MINI = 'gpt-5-mini';
     const AATXT_GPT5_NANO = 'gpt-5-nano';
+    const AATXT_OPENAI_FALLBACK_MODEL = self::AATXT_GPT5_NANO;
     const AATXT_OPTION_FIELD_MODEL_OPENAI_OPTIONS = [
         self::AATXT_GPT4O => 'GPT-4o',
         self::AATXT_GPT4O_MINI => 'GPT-4o Mini',
@@ -58,6 +59,8 @@ class Constants
     const AATXT_IMAGE_URL_TAG = '%imageUrl%';
     const AATXT_OPENAI_DEFAULT_PROMPT = "Act like an SEO expert and write an English alt text of up to 125 characters for this image.";
     const AATXT_OPENAI_RESPONSES_API_ENDPOINT = 'https://api.openai.com/v1/responses';
+    const AATXT_OPENAI_MODELS_ENDPOINT = 'https://api.openai.com/v1/models';
+    const AATXT_OPENAI_MODELS_CACHE_KEY = 'aatxt_openai_models_cache';
     const AATXT_AJAX_GENERATE_ALT_TEXT_NONCE = 'generate_alt_text_nonce';
     const AATXT_OPENAI_ALLOWED_MIME_TYPES = [
         'image/png',

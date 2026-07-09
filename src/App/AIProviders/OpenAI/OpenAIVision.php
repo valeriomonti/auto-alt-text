@@ -16,14 +16,25 @@ use AATXT\Config\Constants;
 class OpenAIVision extends OpenAIResponse
 {
     /**
+     * @var OpenAIModelsRegistry|null
+     */
+    private $modelsRegistry;
+
+    /**
      * Constructor.
      *
      * @param HttpClientInterface $httpClient HTTP client for API calls
      * @param AIProviderConfig $config Configuration with API key, prompt, and model
+     * @param OpenAIModelsRegistry|null $modelsRegistry Optional registry used to fall back
+     *        to the least expensive available model when the configured one has been retired
      */
-    public function __construct(HttpClientInterface $httpClient, AIProviderConfig $config)
-    {
+    public function __construct(
+        HttpClientInterface $httpClient,
+        AIProviderConfig $config,
+        ?OpenAIModelsRegistry $modelsRegistry = null
+    ) {
         parent::__construct($httpClient, $config);
+        $this->modelsRegistry = $modelsRegistry;
     }
 
     /**
@@ -35,7 +46,7 @@ class OpenAIVision extends OpenAIResponse
     public function response(string $imageUrl): string
     {
         $prompt = parent::prompt();
-        $requestBody = parent::prepareRequestBody($this->config->getModel(), $prompt, $imageUrl);
+        $requestBody = parent::prepareRequestBody($this->resolveModel(), $prompt, $imageUrl);
         $decodedBody = parent::decodedResponseBody($requestBody, Constants::AATXT_OPENAI_RESPONSES_API_ENDPOINT);
 
         foreach($decodedBody['output'] as $output) {
@@ -45,5 +56,25 @@ class OpenAIVision extends OpenAIResponse
         }
 
         return '';
+    }
+
+    /**
+     * Return the model id to send to the API, transparently falling back to the
+     * least expensive available model when the configured one is no longer
+     * listed by the registry.
+     */
+    private function resolveModel(): string
+    {
+        $configured = $this->config->getModel();
+
+        if ($this->modelsRegistry === null || $configured === '') {
+            return $configured;
+        }
+
+        if ($this->modelsRegistry->isAvailable($configured)) {
+            return $configured;
+        }
+
+        return $this->modelsRegistry->getDefaultModel();
     }
 }
