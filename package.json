@@ -9,10 +9,8 @@
   "devDependencies": {
     "postcss-custom-properties": "^13.3.2",
     "postcss-nested": "^6.0.1",
+    "vite": "^8.1.4",
     "vite-plugin-manifest": "^0.0.1"
-  },
-  "dependencies": {
-    "vite": ">=7.1.11"
   },
   "volta": {
     "node": "20.19.0"
