@@ -24,6 +24,7 @@ ___
 This plugin allows you to generate alt texts in the following ways:
 - using Openai APIs (GPT-4o, GPT-4o Mini, o1 Mini)
 - using Anthropic Claude API
+- using Google Gemini API
 - using Azure APIs for computational vision;
 - recovering the title of the image
 - recovering the title of the article in which the image is uploaded
@@ -44,6 +45,14 @@ Enter a prompt for generating the alt text according to your needs.
 
 ### Claude Anthropic's APIs
 In your Anthropic account, retrieve the following data to enter on the options page:
+- API Key
+
+Choose the model you want to use for generating the alt text.
+Enter a prompt for generating the alt text according to your needs.
+
+
+### Google Gemini's APIs
+In your Google AI Studio account, retrieve the following data to enter on the options page:
 - API Key
 
 Choose the model you want to use for generating the alt text.
@@ -125,6 +134,13 @@ Selecting the generation method "Anthropic's APIs" will use the API services of 
 This plugin does not collect any information from your Anthropic Claude account. The data transmitted to Anthropic Claude mainly consists of the image files uploaded to your website and the specified prompt.
 
 For accurate information on privacy and conditions of use, please consult the [privacy policy](https://www.anthropic.com/legal/privacy), [terms and conditions for consumers](https://www.anthropic.com/legal/consumer-terms) and [terms and conditions for commercial](https://www.anthropic.com/legal/commercial-terms) directly on the official website. It is also advisable to check the costs and usage statistics of the API service on the Anthropic website.
+
+### Google Gemini
+Selecting the generation method "Google Gemini's APIs" will use the API services of [Google Gemini](https://ai.google.dev/).
+
+This plugin does not collect any information from your Google account. The data transmitted to Google mainly consists of the image files uploaded to your website and the specified prompt.
+
+For accurate information on privacy and conditions of use, please consult the [privacy policy](https://policies.google.com/privacy) and [terms of service](https://ai.google.dev/gemini-api/terms) directly on the official website. It is also advisable to check the costs and usage statistics of the API service on the Google AI website.
 
 ### Azure
 Selecting the "Azure's APIs" generation method will use the API services of [Microsoft Azure](https://azure.microsoft.com/en-us/).

@@ -9,6 +9,7 @@ This plugin allows you to generate alt texts in the following ways:
 
 - using Openai APIs (GPT-5, GPT-5 mini, GPT-5 nano, GPT-4o, GPT-4o Mini, o1 Mini)
 - using Claude Anthropic APIs
+- using Google Gemini APIs
 - using Azure APIs for computational vision;
 - recovering the title of the image
 - recovering the title of the article in which the image is uploaded
@@ -52,6 +53,15 @@ Enter a prompt for generating the alt text according to your needs.
 ### Claude Anthropic's APIs
 
 In your Anthropic account, retrieve the following data to enter on the options page:
+
+- API Key
+
+Choose the model you want to use for generating the alt text.
+Enter a prompt for generating the alt text according to your needs.
+
+### Google Gemini's APIs
+
+In your Google AI Studio account, retrieve the following data to enter on the options page:
 
 - API Key
 

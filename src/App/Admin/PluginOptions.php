@@ -4,6 +4,7 @@ namespace AATXT\App\Admin;
 
 use AATXT\App\Logging\DBLogger;
 use AATXT\App\AIProviders\Anthropic\AnthropicModelsRegistry;
+use AATXT\App\AIProviders\Gemini\GeminiModelsRegistry;
 use AATXT\App\AIProviders\OpenAI\OpenAIModelsRegistry;
 use AATXT\App\AIProviders\Azure\AzureTranslator;
 use AATXT\App\Configuration\AzureConfig;
@@ -48,10 +49,12 @@ class PluginOptions
         add_action('pre_update_option_' . Constants::AATXT_OPTION_FIELD_API_KEY_AZURE_TRANSLATE_INSTANCE, [self::$instance, 'encryptDataOnUpdate'], 10, 3);
         add_action('pre_update_option_' . Constants::AATXT_OPTION_FIELD_API_KEY_OPENAI, [self::$instance, 'encryptDataOnUpdate'], 10, 3);
         add_action('pre_update_option_' . Constants::AATXT_OPTION_FIELD_API_KEY_ANTHROPIC, [self::$instance, 'encryptDataOnUpdate'], 10, 3);
+        add_action('pre_update_option_' . Constants::AATXT_OPTION_FIELD_API_KEY_GEMINI, [self::$instance, 'encryptDataOnUpdate'], 10, 3);
 
         add_action('admin_notices', [self::$instance, 'encryptionErrorNotice']);
         add_action('admin_notices', [self::$instance, 'anthropicModelUnavailableNotice']);
         add_action('admin_notices', [self::$instance, 'openAiModelUnavailableNotice']);
+        add_action('admin_notices', [self::$instance, 'geminiModelUnavailableNotice']);
 
         // Bust the cached Anthropic models list whenever the API key changes,
         // so the next admin page load fetches the model list with the new credentials.
@@ -61,6 +64,10 @@ class PluginOptions
         // Same for the cached OpenAI models list.
         add_action('update_option_' . Constants::AATXT_OPTION_FIELD_API_KEY_OPENAI, [self::$instance, 'flushOpenAiModelsCache']);
         add_action('add_option_' . Constants::AATXT_OPTION_FIELD_API_KEY_OPENAI, [self::$instance, 'flushOpenAiModelsCache']);
+
+        // Same for the cached Gemini models list.
+        add_action('update_option_' . Constants::AATXT_OPTION_FIELD_API_KEY_GEMINI, [self::$instance, 'flushGeminiModelsCache']);
+        add_action('add_option_' . Constants::AATXT_OPTION_FIELD_API_KEY_GEMINI, [self::$instance, 'flushGeminiModelsCache']);
     }
 
     /**
@@ -87,6 +94,19 @@ class PluginOptions
     public function flushOpenAiModelsCache(): void
     {
         self::openAiModelsRegistry()->flushCache();
+    }
+
+    /**
+     * Resolve the Gemini models registry from the DI container.
+     */
+    private static function geminiModelsRegistry(): GeminiModelsRegistry
+    {
+        return Container::make()->get(GeminiModelsRegistry::class);
+    }
+
+    public function flushGeminiModelsCache(): void
+    {
+        self::geminiModelsRegistry()->flushCache();
     }
 
     /**
@@ -163,6 +183,46 @@ class PluginOptions
         printf(
             /* translators: %s is the model id that is no longer available */
             esc_html__('the Anthropic model "%s" you previously selected is no longer available. Please choose a new model in the plugin settings.', 'auto-alt-text'),
+            esc_html($savedModel)
+        );
+        echo ' <a href="' . $settingsUrl . '">' . esc_html__('Go to settings page', 'auto-alt-text') . '</a>.';
+        echo '</p></div>';
+    }
+
+    /**
+     * Warn the admin if the Gemini model currently saved in the options
+     * is no longer returned by the registry (typically because Google
+     * has retired it). The user has to pick a replacement; in the meantime
+     * GeminiResponse falls back to the least expensive available model so
+     * generation keeps working.
+     */
+    public function geminiModelUnavailableNotice(): void
+    {
+        if (!current_user_can('manage_options')) {
+            return;
+        }
+
+        $savedModel = get_option(Constants::AATXT_OPTION_FIELD_MODEL_GEMINI);
+        if (!is_string($savedModel) || $savedModel === '') {
+            return;
+        }
+
+        $registry = self::geminiModelsRegistry();
+        if (!$registry->hasApiKey()) {
+            return;
+        }
+
+        if ($registry->isAvailable($savedModel)) {
+            return;
+        }
+
+        $settingsUrl = esc_url(menu_page_url(Constants::AATXT_PLUGIN_OPTIONS_PAGE_SLUG, false));
+
+        echo '<div class="notice notice-warning is-dismissible">';
+        echo '<p><strong>' . esc_html__('Auto Alt Text', 'auto-alt-text') . ':</strong> ';
+        printf(
+            /* translators: %s is the model id that is no longer available */
+            esc_html__('the Gemini model "%s" you previously selected is no longer available. Please choose a new model in the plugin settings.', 'auto-alt-text'),
             esc_html($savedModel)
         );
         echo ' <a href="' . $settingsUrl . '">' . esc_html__('Go to settings page', 'auto-alt-text') . '</a>.';
@@ -371,6 +431,9 @@ define('AATXT_ENCRYPTION_SALT', '<?php echo esc_html( $suggestedSalt ); ?>');
                         <strong><?php esc_html_e("OpenAI's APIs", 'auto-alt-text'); ?></strong>: <?php esc_html_e("the image will be analyzed by the AI services provided by OpenAI and an alt text will be generated based on the prompt you set;", 'auto-alt-text'); ?>
                     </li>
                     <li>
+                        <strong><?php esc_html_e("Google Gemini's APIs", 'auto-alt-text'); ?></strong>: <?php esc_html_e("the image will be analyzed by the AI services provided by Google and an alt text will be generated based on the prompt you set;", 'auto-alt-text'); ?>
+                    </li>
+                    <li>
                         <strong><?php esc_html_e("Azure's APIs", 'auto-alt-text'); ?></strong>: <?php esc_html_e("the image will be analyzed by the AI services provided by Azure and an alt text will be generated in the language of your choice;", 'auto-alt-text'); ?>
                     </li>
                     <li>
@@ -403,6 +466,7 @@ define('AATXT_ENCRYPTION_SALT', '<?php echo esc_html( $suggestedSalt ); ?>');
                     <option value="<?php echo esc_attr(Constants::AATXT_OPTION_TYPOLOGY_DEACTIVATED); ?>"<?php echo esc_attr(self::selected($typology, Constants::AATXT_OPTION_TYPOLOGY_DEACTIVATED)); ?>><?php esc_html_e("Deactivated", 'auto-alt-text'); ?></option>
                     <option value="<?php echo esc_attr(Constants::AATXT_OPTION_TYPOLOGY_CHOICE_OPENAI); ?>"<?php echo esc_attr(self::selected($typology, Constants::AATXT_OPTION_TYPOLOGY_CHOICE_OPENAI)); ?>><?php esc_html_e("OpenAI's APIs", 'auto-alt-text'); ?></option>
                     <option value="<?php echo esc_attr(Constants::AATXT_OPTION_TYPOLOGY_CHOICE_ANTHROPIC); ?>"<?php echo esc_attr(self::selected($typology, Constants::AATXT_OPTION_TYPOLOGY_CHOICE_ANTHROPIC)); ?>><?php esc_html_e("Antrhopic's APIs", 'auto-alt-text'); ?></option>
+                    <option value="<?php echo esc_attr(Constants::AATXT_OPTION_TYPOLOGY_CHOICE_GEMINI); ?>"<?php echo esc_attr(self::selected($typology, Constants::AATXT_OPTION_TYPOLOGY_CHOICE_GEMINI)); ?>><?php esc_html_e("Google Gemini's APIs", 'auto-alt-text'); ?></option>
                     <option value="<?php echo esc_attr(Constants::AATXT_OPTION_TYPOLOGY_CHOICE_AZURE); ?>"<?php echo esc_attr(self::selected($typology, Constants::AATXT_OPTION_TYPOLOGY_CHOICE_AZURE)); ?>><?php esc_html_e("Azure's APIs", 'auto-alt-text'); ?></option>
                     <option value="<?php echo esc_attr(Constants::AATXT_OPTION_TYPOLOGY_CHOICE_ARTICLE_TITLE); ?>"<?php echo esc_attr(self::selected($typology, Constants::AATXT_OPTION_TYPOLOGY_CHOICE_ARTICLE_TITLE)); ?>><?php esc_html_e("Title of the article (not AI)", 'auto-alt-text'); ?></option>
                     <option value="<?php echo esc_attr(Constants::AATXT_OPTION_TYPOLOGY_CHOICE_ATTACHMENT_TITLE); ?>"<?php echo esc_attr(self::selected($typology, Constants::AATXT_OPTION_TYPOLOGY_CHOICE_ATTACHMENT_TITLE)); ?>><?php esc_html_e("Title of the attachment (not AI)", 'auto-alt-text'); ?></option>
@@ -633,7 +697,68 @@ define('AATXT_ENCRYPTION_SALT', '<?php echo esc_html( $suggestedSalt ); ?>');
                 echo '<textarea name="' . esc_attr(Constants::AATXT_OPTION_FIELD_PROMPT_ANTHROPIC) . '" rows="5" cols="50">' . esc_textarea($prompt) . '</textarea>';
                 echo '</div>';
 
-                echo '<div class="plugin-option type-article-title type-attachment-title type-openai type-azure type-anthropic">';
+                echo '<div class="plugin-option type-gemini">';
+                echo '<label for="' . esc_attr(Constants::AATXT_OPTION_FIELD_API_KEY_GEMINI) . '">' . esc_html__('Gemini API Key', 'auto-alt-text') . '</label>';
+                echo '<p class="description">' . esc_html__("Enter your API Key", 'auto-alt-text') . '</p>';
+                $apiKey = get_option(Constants::AATXT_OPTION_FIELD_API_KEY_GEMINI);
+                echo '<input type="password" name="' . esc_attr(Constants::AATXT_OPTION_FIELD_API_KEY_GEMINI) . '" value="' . esc_attr((Encryption::make())->decrypt($apiKey)) . '" />';
+                echo '</div>';
+
+                $geminiModel = self::geminiModel();
+                $geminiRegistry = self::geminiModelsRegistry();
+
+                echo '<div class="plugin-option type-gemini">';
+                echo '<label for="' .  esc_attr(Constants::AATXT_OPTION_FIELD_MODEL_GEMINI) . '">' . esc_html__('Model', 'auto-alt-text') . '</label>';
+
+                if (!$geminiRegistry->hasApiKey()) {
+                    echo '<p class="description">' . esc_html__('Enter and save your Gemini API Key to load the list of available models.', 'auto-alt-text') . '</p>';
+                    // The <select> below is disabled and therefore not submitted with
+                    // the form; this hidden field re-submits the currently stored model
+                    // so saving the settings page does not wipe the user's choice.
+                    $rawSavedModel = get_option(Constants::AATXT_OPTION_FIELD_MODEL_GEMINI);
+                    $rawSavedModel = is_string($rawSavedModel) ? $rawSavedModel : '';
+                    echo '<input type="hidden" name="' . esc_attr(Constants::AATXT_OPTION_FIELD_MODEL_GEMINI) . '" value="' . esc_attr($rawSavedModel) . '">';
+                    echo '<select id="' . esc_attr(Constants::AATXT_OPTION_FIELD_MODEL_GEMINI) . '" disabled>';
+                    if ($geminiModel !== '') {
+                        echo '<option value="' . esc_attr($geminiModel) . '" selected>' . esc_html($geminiModel) . '</option>';
+                    } else {
+                        echo '<option value="" selected>' . esc_html__('— API Key required —', 'auto-alt-text') . '</option>';
+                    }
+                    echo '</select>';
+                } else {
+                    $availableModels = $geminiRegistry->getAvailableModels();
+                    $savedIsLegacy = $geminiModel !== '' && !array_key_exists($geminiModel, $availableModels);
+
+                    echo '<select name="' . esc_attr(Constants::AATXT_OPTION_FIELD_MODEL_GEMINI) . '" id="' . esc_attr(Constants::AATXT_OPTION_FIELD_MODEL_GEMINI) . '">';
+                    foreach ($availableModels as $key => $value) {
+                        echo '<option value="' . esc_attr($key) . '" ' . esc_attr(self::selected($geminiModel, $key)) . '>' . esc_html($value) . '</option>';
+                    }
+                    if ($savedIsLegacy) {
+                        $legacyLabel = sprintf(
+                            /* translators: %s is the saved model id */
+                            esc_html__('%s (no longer available)', 'auto-alt-text'),
+                            $geminiModel
+                        );
+                        echo '<option value="' . esc_attr($geminiModel) . '" selected>' . esc_html($legacyLabel) . '</option>';
+                    }
+                    echo '</select>';
+                }
+                echo '</div>';
+
+                echo '<div class="plugin-option type-gemini"><strong>' . esc_html__('Notice', 'auto-alt-text') . '</strong>: ' .
+                    esc_html__('If the model you selected is retired by Google and is no longer available, the least expensive available model will be used as fallback until you choose a new one.', 'auto-alt-text') . '<br>' .
+                    esc_html__('In case of errors, it is still possible to find the specific reason stated on the', 'auto-alt-text') . ' <a href="' . esc_url(menu_page_url(Constants::AATXT_PLUGIN_OPTION_LOG_PAGE_SLUG, false)) . '">' . esc_html__('error log page', 'auto-alt-text') . '</a>.' .
+                    '</div>';
+
+                echo '<div class="plugin-option type-gemini">';
+                echo '<label for="' . esc_attr(Constants::AATXT_OPTION_FIELD_PROMPT_GEMINI) . '">' . esc_html__('Prompt', 'auto-alt-text') . '</label>';
+                echo '<p class="description">' . esc_html__("Enter a specific and detailed prompt according to your needs.", 'auto-alt-text') . '</p>';
+                $defaultPrompt = sprintf(esc_html__("Act like an SEO expert and write an alt text of up to 125 characters for this image. Return only the complete alt text.", 'auto-alt-text'), Constants::AATXT_IMAGE_URL_TAG);
+                $prompt = get_option(Constants::AATXT_OPTION_FIELD_PROMPT_GEMINI) ?: $defaultPrompt;
+                echo '<textarea name="' . esc_attr(Constants::AATXT_OPTION_FIELD_PROMPT_GEMINI) . '" rows="5" cols="50">' . esc_textarea($prompt) . '</textarea>';
+                echo '</div>';
+
+                echo '<div class="plugin-option type-article-title type-attachment-title type-openai type-azure type-anthropic type-gemini">';
                 echo '<label for="' . esc_attr(Constants::AATXT_OPTION_FIELD_PRESERVE_EXISTING_ALT_TEXT) . '">' . esc_html__('Keep existing alt text', 'auto-alt-text') . '</label>';
                 echo '<p class="description">' . esc_html__("If checked, the existing alt text of images will not be overwritten.", 'auto-alt-text') . '</p>';
                 $preserveAltText = get_option(Constants::AATXT_OPTION_FIELD_PRESERVE_EXISTING_ALT_TEXT);
@@ -682,6 +807,9 @@ define('AATXT_ENCRYPTION_SALT', '<?php echo esc_html( $suggestedSalt ); ?>');
         register_setting('auto_alt_text_options', Constants::AATXT_OPTION_FIELD_API_KEY_ANTHROPIC);
         register_setting('auto_alt_text_options', Constants::AATXT_OPTION_FIELD_PROMPT_ANTHROPIC, [self::class, 'sanitizeTextArea']);
         register_setting('auto_alt_text_options', Constants::AATXT_OPTION_FIELD_MODEL_ANTHROPIC, [self::class, 'sanitizeText']);
+        register_setting('auto_alt_text_options', Constants::AATXT_OPTION_FIELD_API_KEY_GEMINI);
+        register_setting('auto_alt_text_options', Constants::AATXT_OPTION_FIELD_PROMPT_GEMINI, [self::class, 'sanitizeTextArea']);
+        register_setting('auto_alt_text_options', Constants::AATXT_OPTION_FIELD_MODEL_GEMINI, [self::class, 'sanitizeText']);
     }
 
     /**
@@ -700,6 +828,11 @@ define('AATXT_ENCRYPTION_SALT', '<?php echo esc_html( $suggestedSalt ); ?>');
     public static function anthropicModel(): string
     {
         return get_option(Constants::AATXT_OPTION_FIELD_MODEL_ANTHROPIC) ?: Constants::AATXT_CLAUDE_FALLBACK_MODEL;
+    }
+
+    public static function geminiModel(): string
+    {
+        return get_option(Constants::AATXT_OPTION_FIELD_MODEL_GEMINI) ?: Constants::AATXT_GEMINI_FALLBACK_MODEL;
     }
 
     /**
@@ -721,6 +854,14 @@ define('AATXT_ENCRYPTION_SALT', '<?php echo esc_html( $suggestedSalt ); ?>');
     /**
      * @return string
      */
+    public static function geminiPrompt(): string
+    {
+        return get_option(Constants::AATXT_OPTION_FIELD_PROMPT_GEMINI);
+    }
+
+    /**
+     * @return string
+     */
     public static function apiKeyOpenAI(): string
     {
         $apiKey = get_option(Constants::AATXT_OPTION_FIELD_API_KEY_OPENAI);
@@ -733,6 +874,15 @@ define('AATXT_ENCRYPTION_SALT', '<?php echo esc_html( $suggestedSalt ); ?>');
     public static function apiKeyAnthropic(): string
     {
         $apiKey = get_option(Constants::AATXT_OPTION_FIELD_API_KEY_ANTHROPIC);
+        return (Encryption::make())->decrypt($apiKey);
+    }
+
+    /**
+     * @return string
+     */
+    public static function apiKeyGemini(): string
+    {
+        $apiKey = get_option(Constants::AATXT_OPTION_FIELD_API_KEY_GEMINI);
         return (Encryption::make())->decrypt($apiKey);
     }
 

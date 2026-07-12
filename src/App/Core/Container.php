@@ -10,10 +10,13 @@ use AATXT\App\AIProviders\Anthropic\AnthropicModelsRegistry;
 use AATXT\App\AIProviders\Anthropic\AnthropicResponse;
 use AATXT\App\AIProviders\Azure\AzureComputerVisionCaptionsResponse;
 use AATXT\App\AIProviders\Azure\AzureTranslator;
+use AATXT\App\AIProviders\Gemini\GeminiModelsRegistry;
+use AATXT\App\AIProviders\Gemini\GeminiResponse;
 use AATXT\App\AIProviders\OpenAI\OpenAIModelsRegistry;
 use AATXT\App\AIProviders\OpenAI\OpenAIVision;
 use AATXT\App\Configuration\AnthropicConfig;
 use AATXT\App\Configuration\AzureConfig;
+use AATXT\App\Configuration\GeminiConfig;
 use AATXT\App\Configuration\OpenAIConfig;
 use AATXT\App\Infrastructure\Cache\CacheInterface;
 use AATXT\App\Infrastructure\Cache\WordPressTransientCache;
@@ -167,6 +170,16 @@ final class Container
                 );
             },
 
+            // Gemini Models Registry
+            // Fetches the available Gemini models from the Google API, with caching
+            GeminiModelsRegistry::class => function ($container) {
+                return new GeminiModelsRegistry(
+                    $container->get(HttpClientInterface::class),
+                    $container->get(CacheInterface::class),
+                    PluginOptions::apiKeyGemini()
+                );
+            },
+
             // OpenAI Configuration
             // Factory that reads configuration from WordPress options
             OpenAIConfig::class => function () {
@@ -184,6 +197,16 @@ final class Container
                     PluginOptions::apiKeyAnthropic(),
                     PluginOptions::anthropicPrompt(),
                     PluginOptions::anthropicModel()
+                );
+            },
+
+            // Gemini Configuration
+            // Factory that reads configuration from WordPress options
+            GeminiConfig::class => function () {
+                return new GeminiConfig(
+                    PluginOptions::apiKeyGemini(),
+                    PluginOptions::geminiPrompt(),
+                    PluginOptions::geminiModel()
                 );
             },
 
@@ -221,6 +244,16 @@ final class Container
                     \AATXT\Vendor\DI\get(HttpClientInterface::class),
                     \AATXT\Vendor\DI\get(AnthropicConfig::class),
                     \AATXT\Vendor\DI\get(AnthropicModelsRegistry::class)
+                ),
+
+            // Google Gemini Provider
+            // Automatically injects HttpClientInterface, GeminiConfig and the models registry
+            // (the registry powers the runtime fallback when the configured model is unavailable)
+            GeminiResponse::class => \AATXT\Vendor\DI\create(GeminiResponse::class)
+                ->constructor(
+                    \AATXT\Vendor\DI\get(HttpClientInterface::class),
+                    \AATXT\Vendor\DI\get(GeminiConfig::class),
+                    \AATXT\Vendor\DI\get(GeminiModelsRegistry::class)
                 ),
 
             // Azure Translator
@@ -263,6 +296,15 @@ final class Container
                     ->build();
             },
 
+            // Decorated Gemini Provider
+            // Applies cleaning and validation decorators
+            'gemini.decorated' => function ($container) {
+                return DecoratorBuilder::wrap($container->get(GeminiResponse::class))
+                    ->withCleaning()
+                    ->withValidation(false)
+                    ->build();
+            },
+
             // Decorated Azure Provider
             // Applies cleaning and validation decorators
             // Note: Azure has built-in translation, so cleaning is important
@@ -295,6 +337,16 @@ final class Container
                     function () use ($container) {
                         return AltTextGeneratorAi::make(
                             $container->get('anthropic.decorated')
+                        );
+                    }
+                );
+
+                // Register Gemini generator (decorated)
+                $factory->register(
+                    Constants::AATXT_OPTION_TYPOLOGY_CHOICE_GEMINI,
+                    function () use ($container) {
+                        return AltTextGeneratorAi::make(
+                            $container->get('gemini.decorated')
                         );
                     }
                 );

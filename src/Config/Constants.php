@@ -42,6 +42,17 @@ class Constants
     ];
     const AATXT_API_VERSION = '2023-06-01';
     const AATXT_OPTION_FIELD_PROMPT_ANTHROPIC = 'aatxt_prompt_anthropic';
+    const AATXT_OPTION_FIELD_API_KEY_GEMINI = 'aatxt_api_key_gemini';
+    const AATXT_OPTION_FIELD_MODEL_GEMINI = 'aatxt_model_gemini';
+    const AATXT_OPTION_FIELD_PROMPT_GEMINI = 'aatxt_prompt_gemini';
+    const AATXT_GEMINI_FLASH_3_5 = 'gemini-3.5-flash';
+    const AATXT_GEMINI_FLASH_2_5 = 'gemini-2.5-flash';
+    const AATXT_GEMINI_FALLBACK_MODEL = self::AATXT_GEMINI_FLASH_3_5;
+
+    const AATXT_OPTION_FIELD_MODEL_GEMINI_OPTIONS = [
+        self::AATXT_GEMINI_FLASH_3_5 => 'Gemini 3.5 Flash',
+        self::AATXT_GEMINI_FLASH_2_5 => 'Gemini 2.5 Flash',
+    ];
     const AATXT_OPTION_FIELD_API_KEY_AZURE_COMPUTER_VISION = 'aatxt_api_key_azure_computer_vision';
     const AATXT_OPTION_FIELD_API_KEY_AZURE_TRANSLATE_INSTANCE = 'aatxt_api_key_azure_translate_instance';
     const AATXT_OPTION_TYPOLOGY_CHOICE_ARTICLE_TITLE = 'article-title';
@@ -49,6 +60,7 @@ class Constants
     const AATXT_OPTION_TYPOLOGY_CHOICE_OPENAI = 'openai';
     const AATXT_OPTION_TYPOLOGY_CHOICE_AZURE = 'azure';
     const AATXT_OPTION_TYPOLOGY_CHOICE_ANTHROPIC = 'anthropic';
+    const AATXT_OPTION_TYPOLOGY_CHOICE_GEMINI = 'gemini';
     const AATXT_OPTION_TYPOLOGY_DEACTIVATED = 'deactivated';
     const AATXT_OPTION_FIELD_ENDPOINT_AZURE_COMPUTER_VISION = 'aatxt_endpoint-azure-computer-vision';
     const AATXT_OPTION_FIELD_ENDPOINT_AZURE_TRANSLATE_INSTANCE = 'aatxt_endpoint-azure-translate-instance';
@@ -85,4 +97,17 @@ class Constants
     const AATXT_ANTHROPIC_ENDPOINT = 'https://api.anthropic.com/v1/messages';
     const AATXT_ANTHROPIC_MODELS_ENDPOINT = 'https://api.anthropic.com/v1/models';
     const AATXT_ANTHROPIC_MODELS_CACHE_KEY = 'aatxt_anthropic_models_cache';
+
+    // Google Gemini does not support GIF images (only PNG, JPEG, WEBP, HEIC, HEIF)
+    const AATXT_GEMINI_ALLOWED_MIME_TYPES = [
+        'image/png',
+        'image/jpeg',
+        'image/webp',
+        'image/heic',
+        'image/heif',
+    ];
+
+    const AATXT_GEMINI_INTERACTIONS_ENDPOINT = 'https://generativelanguage.googleapis.com/v1beta/interactions';
+    const AATXT_GEMINI_MODELS_ENDPOINT = 'https://generativelanguage.googleapis.com/v1beta/models';
+    const AATXT_GEMINI_MODELS_CACHE_KEY = 'aatxt_gemini_models_cache';
 }

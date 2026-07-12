@@ -57,7 +57,7 @@ parameters:
 		-
 			message: '#^Action callback returns string\|null but should not return anything\.$#'
 			identifier: return.void
-			count: 4
+			count: 5
 			path: src/App/Admin/PluginOptions.php
 
 		-
@@ -83,6 +83,48 @@ parameters:
 			identifier: argument.type
 			count: 1
 			path: src/App/Admin/PluginOptions.php
+
+		-
+			message: '#^Call to static method error\(\) on an unknown class WP_CLI\.$#'
+			identifier: class.notFound
+			count: 4
+			path: src/App/CLI/AutoAltTextCommand.php
+
+		-
+			message: '#^Call to static method log\(\) on an unknown class WP_CLI\.$#'
+			identifier: class.notFound
+			count: 4
+			path: src/App/CLI/AutoAltTextCommand.php
+
+		-
+			message: '#^Call to static method success\(\) on an unknown class WP_CLI\.$#'
+			identifier: class.notFound
+			count: 2
+			path: src/App/CLI/AutoAltTextCommand.php
+
+		-
+			message: '#^Function WP_CLI\\Utils\\make_progress_bar not found\.$#'
+			identifier: function.notFound
+			count: 1
+			path: src/App/CLI/AutoAltTextCommand.php
+
+		-
+			message: '#^Method AATXT\\App\\CLI\\AutoAltTextCommand\:\:generate\(\) has parameter \$args with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/App/CLI/AutoAltTextCommand.php
+
+		-
+			message: '#^Method AATXT\\App\\CLI\\AutoAltTextCommand\:\:generate\(\) has parameter \$assocArgs with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/App/CLI/AutoAltTextCommand.php
+
+		-
+			message: '#^Call to static method add_command\(\) on an unknown class WP_CLI\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/App/Core/PluginBootstrap.php
 
 		-
 			message: '#^Method AATXT\\App\\Domain\\Entities\\ErrorLog\:\:fromDatabaseRow\(\) has parameter \$row with no value type specified in iterable type array\.$#'

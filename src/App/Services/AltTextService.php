@@ -11,6 +11,7 @@ use AATXT\App\Events\AltTextGenerationFailedEvent;
 use AATXT\App\Events\EventDispatcherInterface;
 use AATXT\App\Exceptions\Anthropic\AnthropicException;
 use AATXT\App\Exceptions\Azure\AzureException;
+use AATXT\App\Exceptions\Gemini\GeminiException;
 use AATXT\App\Exceptions\OpenAI\OpenAIException;
 use AATXT\App\Infrastructure\Repositories\ConfigRepositoryInterface;
 use AATXT\App\Infrastructure\Repositories\ErrorLogRepositoryInterface;
@@ -86,6 +87,7 @@ final class AltTextService
         $this->allowedMimeTypes = [
             Constants::AATXT_OPTION_TYPOLOGY_CHOICE_OPENAI => Constants::AATXT_OPENAI_ALLOWED_MIME_TYPES,
             Constants::AATXT_OPTION_TYPOLOGY_CHOICE_ANTHROPIC => Constants::AATXT_ANTHROPIC_ALLOWED_MIME_TYPES,
+            Constants::AATXT_OPTION_TYPOLOGY_CHOICE_GEMINI => Constants::AATXT_GEMINI_ALLOWED_MIME_TYPES,
             Constants::AATXT_OPTION_TYPOLOGY_CHOICE_AZURE => Constants::AATXT_AZURE_ALLOWED_MIME_TYPES,
         ];
     }
@@ -173,6 +175,10 @@ final class AltTextService
         } catch (AnthropicException $e) {
             $this->logError($attachmentId, 'Anthropic', $e->getMessage());
             $this->dispatchFailureEvent($attachmentId, 'Anthropic', $e);
+            return '';
+        } catch (GeminiException $e) {
+            $this->logError($attachmentId, 'Gemini', $e->getMessage());
+            $this->dispatchFailureEvent($attachmentId, 'Gemini', $e);
             return '';
         } catch (AzureException $e) {
             $this->logError($attachmentId, 'Azure', $e->getMessage());

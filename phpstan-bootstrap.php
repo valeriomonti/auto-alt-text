@@ -22,3 +22,11 @@ if (!defined('AATXT_URL')) {
 if (!defined('AATXT_LANGUAGES_RELATIVE_PATH')) {
     define('AATXT_LANGUAGES_RELATIVE_PATH', 'auto-alt-text/languages/');
 }
+
+// Stub for the WP-CLI base class, not included in the WordPress stubs,
+// so PHPStan can analyze src/App/CLI/AutoAltTextCommand.php.
+if (!class_exists('WP_CLI_Command')) {
+    class WP_CLI_Command
+    {
+    }
+}
