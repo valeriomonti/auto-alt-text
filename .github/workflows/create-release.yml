@@ -36,6 +36,7 @@ jobs:
         run: |
           curl -o strauss.phar -L -s https://github.com/BrianHenryIE/strauss/releases/latest/download/strauss.phar
           php strauss.phar
+          php bin/patch-implicit-nullable.php
           composer dump-autoload --no-dev --optimize --classmap-authoritative
       - name: Verify dependencies were scoped
         run: |
@@ -59,6 +60,33 @@ jobs:
             exit 1
           fi
           echo "No dev dependencies found in vendor directory"
+      - name: Verify release payload is clean
+        run: |
+          # The PHP 8.4 nullable patch must have been applied to the scoped copies.
+          php bin/patch-implicit-nullable.php --check
+
+          # A botched Strauss run once copied an entire Composer home - auth.json
+          # included - into vendor-prefixed/. The zip below ships vendor-prefixed/
+          # wholesale, so refuse to package anything that looks like a credential.
+          leaked=$(find vendor vendor-prefixed \
+            \( -name 'auth.json' -o -name 'auth.jsonbak' -o -name '.netrc' \
+               -o -name '.npmrc' -o -name '.env' -o -name 'id_rsa*' \) -print)
+          if [ -n "$leaked" ]; then
+            echo "Error: credential-like files found in the release payload:"
+            echo "$leaked"
+            exit 1
+          fi
+
+          # Same failure mode, detected structurally: scoped packages never contain
+          # a vendor directory of their own.
+          nested=$(find vendor-prefixed -type d -name vendor -print)
+          if [ -n "$nested" ]; then
+            echo "Error: nested vendor directory inside vendor-prefixed - Strauss copied something it should not have:"
+            echo "$nested"
+            exit 1
+          fi
+
+          echo "Release payload is clean"
       - name: Create zip file
         run: |
           zip -r auto-alt-text.zip *.php composer.json composer.lock readme.txt dist languages src vendor vendor-prefixed -x "*.git*"
