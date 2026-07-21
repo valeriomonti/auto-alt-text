@@ -102,11 +102,14 @@ final class HooksRegistrar
         // Auto-generate alt text on image upload
         add_action('add_attachment', [$this, 'addAltText']);
 
-        // Fill missing alt text on images rendered in post content.
+        // Fill missing alt text on images rendered in post content, only when the
+        // corresponding option is enabled (disabled by default).
         // Priority 20 runs after do_blocks (9) — so the Gutenberg image block is
         // already rendered with its wp-image-<ID> class — and after core's
         // wp_filter_content_tags (12).
-        add_filter('the_content', [$this, 'enrichContentAltText'], 20);
+        if (PluginOptions::autoRenderAltText()) {
+            add_filter('the_content', [$this, 'enrichContentAltText'], 20);
+        }
 
         // Load translations
         add_action('plugins_loaded', [$this, 'loadTextDomain']);
