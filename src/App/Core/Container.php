@@ -31,6 +31,7 @@ use AATXT\App\Logging\DBLogger;
 use AATXT\App\Services\AltTextGeneratorFactory;
 use AATXT\App\Services\ConfigBasedGeneratorFactory;
 use AATXT\App\Services\AltTextService;
+use AATXT\App\Services\ContentAltTextEnricher;
 use AATXT\App\Utilities\AssetsManager;
 use AATXT\App\AIProviders\Decorators\DecoratorBuilder;
 use AATXT\App\AltTextGeneratorAi;
@@ -438,6 +439,11 @@ final class Container
                     $container->get(EventDispatcherInterface::class)
                 );
             },
+
+            // Content Alt Text Enricher
+            // Fills missing alt text on <img> tags in rendered post content
+            // by resolving each image against the media library (the_content filter)
+            ContentAltTextEnricher::class => \AATXT\Vendor\DI\create(ContentAltTextEnricher::class),
 
             // Assets Manager
             // Handles Vite manifest loading for versioned assets

@@ -10,7 +10,7 @@
  * Domain Path: /languages
  * License: GPL v3
  * Requires PHP: 7.4
- * Requires WP: 6.0
+ * Requires at least: 6.2.0
  * Namespace: AATXT
  */
 

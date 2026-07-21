@@ -2,7 +2,7 @@
 Contributors: valeriomonti
 Donate link: https://ko-fi.com/valeriomonti
 Tags: alt text, alt tag, accessibility, openai, seo
-Requires at least: 6.0
+Requires at least: 6.2.0
 Tested up to: 6.9.0
 Stable tag: 2.8.2
 Requires PHP: 7.4

@@ -6,6 +6,7 @@ use AATXT\App\Admin\BulkActions\BulkActionHandler;
 use AATXT\App\Admin\MediaLibrary;
 use AATXT\App\Admin\PluginOptions;
 use AATXT\App\Services\AltTextService;
+use AATXT\App\Services\ContentAltTextEnricher;
 
 /**
  * Registers all WordPress hooks for the plugin.
@@ -44,6 +45,13 @@ final class HooksRegistrar
     private $mediaLibrary;
 
     /**
+     * Content alt text enricher
+     *
+     * @var ContentAltTextEnricher
+     */
+    private $contentAltTextEnricher;
+
+    /**
      * Path to the main plugin file
      *
      * @var string
@@ -57,6 +65,7 @@ final class HooksRegistrar
      * @param BulkActionHandler $bulkActionHandler Handler for bulk actions
      * @param PluginLifecycle $lifecycle Plugin lifecycle handler
      * @param MediaLibrary $mediaLibrary Media library handler
+     * @param ContentAltTextEnricher $contentAltTextEnricher Fills missing alt text in post content
      * @param string $pluginFile Path to the main plugin file
      */
     public function __construct(
@@ -64,12 +73,14 @@ final class HooksRegistrar
         BulkActionHandler $bulkActionHandler,
         PluginLifecycle $lifecycle,
         MediaLibrary $mediaLibrary,
+        ContentAltTextEnricher $contentAltTextEnricher,
         string $pluginFile
     ) {
         $this->altTextService = $altTextService;
         $this->bulkActionHandler = $bulkActionHandler;
         $this->lifecycle = $lifecycle;
         $this->mediaLibrary = $mediaLibrary;
+        $this->contentAltTextEnricher = $contentAltTextEnricher;
         $this->pluginFile = $pluginFile;
     }
 
@@ -90,6 +101,12 @@ final class HooksRegistrar
 
         // Auto-generate alt text on image upload
         add_action('add_attachment', [$this, 'addAltText']);
+
+        // Fill missing alt text on images rendered in post content.
+        // Priority 20 runs after do_blocks (9) — so the Gutenberg image block is
+        // already rendered with its wp-image-<ID> class — and after core's
+        // wp_filter_content_tags (12).
+        add_filter('the_content', [$this, 'enrichContentAltText'], 20);
 
         // Load translations
         add_action('plugins_loaded', [$this, 'loadTextDomain']);
@@ -119,6 +136,17 @@ final class HooksRegistrar
         if (!empty($altText)) {
             update_post_meta($attachmentId, '_wp_attachment_image_alt', $altText);
         }
+    }
+
+    /**
+     * Fill missing alt text on images in the rendered post content.
+     *
+     * @param string $content The post content HTML
+     * @return string The content with alt text filled where possible
+     */
+    public function enrichContentAltText(string $content): string
+    {
+        return $this->contentAltTextEnricher->enrich($content);
     }
 
     /**
