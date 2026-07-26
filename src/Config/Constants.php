@@ -74,7 +74,8 @@ class Constants
     const AATXT_OPENAI_RESPONSES_API_ENDPOINT = 'https://api.openai.com/v1/responses';
     const AATXT_OPENAI_MODELS_ENDPOINT = 'https://api.openai.com/v1/models';
     const AATXT_OPENAI_MODELS_CACHE_KEY = 'aatxt_openai_models_cache';
-    const AATXT_AJAX_GENERATE_ALT_TEXT_NONCE = 'generate_alt_text_nonce';
+    const AATXT_REST_NAMESPACE = 'auto-alt-text/v1';
+    const AATXT_REST_ROUTE_GENERATE_ALT_TEXT = '/generate-alt-text';
     const AATXT_OPENAI_ALLOWED_MIME_TYPES = [
         'image/png',
         'image/jpeg',

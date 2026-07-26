@@ -44,8 +44,8 @@ class MediaLibrary
         // Add button to generate alt text in media library
         add_filter('attachment_fields_to_edit', [$this, 'addGenerateAltTextButton'], 10, 2);
 
-        // Handle AJAX request to generate alt text
-        add_action('wp_ajax_generate_alt_text', [$this, 'generateAltText']);
+        // Register REST route to generate alt text
+        add_action('rest_api_init', [$this, 'registerRestRoutes']);
     }
 
     public function enqueue(): void
@@ -67,8 +67,10 @@ class MediaLibrary
                 Constants::AATXT_PLUGIN_MEDIA_LIBRARY_HANDLE,
                 'AATXT',
                 [
-                    'altTextNonce' => wp_create_nonce(Constants::AATXT_AJAX_GENERATE_ALT_TEXT_NONCE),
-                    'ajaxUrl'      => admin_url('admin-ajax.php'),
+                    'restNonce' => wp_create_nonce('wp_rest'),
+                    'restUrl'   => esc_url_raw(
+                        rest_url(Constants::AATXT_REST_NAMESPACE . Constants::AATXT_REST_ROUTE_GENERATE_ALT_TEXT)
+                    ),
                 ]
             );
         }
@@ -122,23 +124,76 @@ class MediaLibrary
         return $form_fields;
     }
 
-    public function generateAltText(): void
+    /**
+     * Register the REST API routes handled by this class.
+     *
+     * @return void
+     */
+    public function registerRestRoutes(): void
     {
-        check_ajax_referer(Constants::AATXT_AJAX_GENERATE_ALT_TEXT_NONCE, 'nonce');
+        register_rest_route(
+            Constants::AATXT_REST_NAMESPACE,
+            Constants::AATXT_REST_ROUTE_GENERATE_ALT_TEXT,
+            [
+                'methods'             => 'POST',
+                'callback'            => [$this, 'generateAltText'],
+                'permission_callback' => [$this, 'canGenerateAltText'],
+                'args'                => [
+                    'post_id' => [
+                        'required'          => true,
+                        'type'              => 'integer',
+                        'sanitize_callback' => 'absint',
+                        'validate_callback' => static function ($value): bool {
+                            return absint($value) > 0;
+                        },
+                    ],
+                ],
+            ]
+        );
+    }
 
-        $postId = isset($_POST['post_id']) ? intval($_POST['post_id']) : 0;
-        if (! $postId) {
-            wp_send_json_error('Invalid Post ID');
-            return;
+    /**
+     * Permission check for the alt text generation endpoint.
+     *
+     * @param \WP_REST_Request<array<string, mixed>> $request The REST request.
+     * @return bool True if the current user may generate alt text.
+     */
+    public function canGenerateAltText(\WP_REST_Request $request): bool
+    {
+        $postId = absint($request->get_param('post_id'));
+
+        return $postId > 0 && current_user_can('edit_post', $postId);
+    }
+
+    /**
+     * Generate alt text for an attachment.
+     *
+     * @param \WP_REST_Request<array<string, mixed>> $request The REST request.
+     * @return \WP_REST_Response|\WP_Error The generated alt text or an error.
+     */
+    public function generateAltText(\WP_REST_Request $request)
+    {
+        $postId = absint($request->get_param('post_id'));
+
+        if (! wp_attachment_is_image($postId)) {
+            return new \WP_Error(
+                'aatxt_invalid_attachment',
+                __('The provided ID is not an image attachment.', 'auto-alt-text'),
+                ['status' => 404]
+            );
         }
 
         $mediaUrl = wp_get_attachment_url($postId);
         if (! $mediaUrl) {
-            wp_send_json_error('Media not found');
-            return;
+            return new \WP_Error(
+                'aatxt_media_not_found',
+                __('Media not found.', 'auto-alt-text'),
+                ['status' => 404]
+            );
         }
 
         $generatedAltText = $this->altTextService->generateForAttachment($postId);
-        wp_send_json_success(['alt_text' => $generatedAltText]);
+
+        return new \WP_REST_Response(['alt_text' => $generatedAltText], 200);
     }
 }

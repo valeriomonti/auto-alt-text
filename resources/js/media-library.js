@@ -14,34 +14,33 @@ document.addEventListener('DOMContentLoaded', () => {
         // Reference to the spinner element, used to indicate loading state
         const spinner = document.getElementById('loading-spinner');
 
-        // Nonce token provided by WordPress for security
-        const nonce = AATXT?.altTextNonce;
+        // Nonce token provided by WordPress for REST authentication
+        const nonce = AATXT?.restNonce;
 
         // Set UI to loading state: disable button and show spinner
         toggleUIState(button, spinner, true);
 
         try {
-            // Send a POST request to the WordPress AJAX handler
-            const response = await fetch(ajaxurl, {
+            // Send a POST request to the WordPress REST API endpoint
+            const response = await fetch(AATXT?.restUrl, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                body: new URLSearchParams({
-                    action: 'generate_alt_text', // WordPress action hook
-                    nonce,
-                    post_id: postId
-                })
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-WP-Nonce': nonce
+                },
+                body: JSON.stringify({ post_id: postId })
             });
 
             // Parse the JSON response from the server
             const data = await response.json();
 
-            // If the server indicates success, update the alt text fields
-            if (!data.success) {
+            // A non-2xx response carries a WP_Error payload ({ code, message, ... })
+            if (!response.ok) {
                 console.error('Error generating alt text:', data);
                 return;
             }
 
-            updateAltTextFields(data.data.alt_text);
+            updateAltTextFields(data.alt_text);
 
         } catch (error) {
             // Handle any network or JavaScript errors that occur during fetch
