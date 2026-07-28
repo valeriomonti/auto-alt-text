@@ -4,7 +4,7 @@ Donate link: https://ko-fi.com/valeriomonti
 Tags: alt text, alt tag, accessibility, openai, seo
 Requires at least: 6.2.0
 Tested up to: 6.9.0
-Stable tag: 2.8.2
+Stable tag: 3.0.0
 Requires PHP: 7.4
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
@@ -15,19 +15,21 @@ This plugin allows you to automatically generate an Alt Text for images uploaded
 
 This plugin implements the automatic creation of alt text for images uploaded to the media library. The alt text is generated at the time of uploading the image and it is also possible to generate the alt text for images already present in the media library.
 
-To generate the alt text, you can choose to use the artificial intelligence of OpenAI or Azure, or decide if you simply want to copy the title of the article where the image is uploaded or the name of the image.
+To generate the alt text, you can choose to use the artificial intelligence of OpenAI, Anthropic Claude, Google Gemini or Azure, or decide if you simply want to copy the title of the article where the image is uploaded or the name of the image.
 
 Clearly, using artificial intelligence will allow for a more accurate and useful alt texts.
 
 ## Features
 ___
 This plugin allows you to generate alt texts in the following ways:
-- using Openai APIs (GPT-4o, GPT-4o Mini, o1 Mini)
+- using Openai APIs (the most recently released models and any other compatible model available on your account)
 - using Anthropic Claude API
 - using Google Gemini API
 - using Azure APIs for computational vision;
 - recovering the title of the image
 - recovering the title of the article in which the image is uploaded
+
+It can also fill in, on the fly, the missing alt texts of the images already published in your content, using the alt text stored in the media library.
 
 
 = Getting Started =
@@ -39,6 +41,9 @@ Select the Generation Method you prefer
 ### OpenAI's APIs
 In your OpenAI account, retrieve the following data to enter on the options page:
 - API Key
+
+Once the API Key is saved, the list of the models available on your account is retrieved directly from OpenAI, so you can always choose among the up-to-date models.
+If the model you selected is retired by OpenAI, a notice is displayed in the administration area and the least expensive available model is used as a fallback until you choose a new one.
 
 Choose the model you want to use for generating the alt text.
 Enter a prompt for generating the alt text according to your needs.
@@ -54,6 +59,9 @@ Enter a prompt for generating the alt text according to your needs.
 ### Google Gemini's APIs
 In your Google AI Studio account, retrieve the following data to enter on the options page:
 - API Key
+
+Once the API Key is saved, the list of the models available on your account is retrieved directly from Google, so you can always choose among the up-to-date models.
+If the model you selected is retired by Google, a notice is displayed in the administration area and the least expensive available model is used as a fallback until you choose a new one.
 
 Choose the model you want to use for generating the alt text.
 Enter a prompt for generating the alt text according to your needs.
@@ -89,6 +97,15 @@ Once the plugin is configured, each time an image is uploaded to the media libra
 For images already in the media library, you can create bulk alt texts. Open the Media Library in the "list" view, select the images for which to generate the alt text, and choose the "Generate alt text" bulk action. (Depending on the number of images chosen and their weight, this may take some time.)
 
 You can also generate the alt text of a single image directly from the media library. Open the Media Library in “grid” mode, choose the image for which to generate the alt text, and click the “Generate alt text” button. In no time the alt text field will be overwritten by the generated description.
+
+### Automatic alt text rendering in content
+Images that were inserted in your posts and pages before the alt text was generated keep the empty alt attribute saved in the content, even after the media library has been filled.
+
+By enabling the “Automatically render alt text in content” option, when a page is displayed the plugin looks at every image of the content and, for those without an alt text, it writes the alt text stored in the media library (when available). Images that already have an alt text are never touched, and your saved content is not modified in any way: the alt text is only added to the rendered HTML.
+
+The option is disabled by default and it is independent of the chosen generation method.
+
+Developers can also control this behaviour with two filters: `aatxt_content_alt_text_enabled` to skip the processing for a specific request, and `aatxt_content_image_alt_text` to filter the alt text before it is written into the image tag.
 
 ### WP-CLI
 If you prefer generating alt text in batch (e.g., to avoid processing in the Media Library UI), you can use WP-CLI.
@@ -208,6 +225,14 @@ Once you’ve re-entered your API Key (and, if desired, added the constants), hi
 6. Single image alt text generation
 
 == Changelog ==
+= 3.0.0 =
+- Implement the Google Gemini API as an alternative for generating alt text
+- Fill missing alt text on images rendered in the post content, using the alt text stored in the media library, without modifying the saved content
+- Add the "Automatically render alt text in content" option to enable/disable this behaviour (disabled by default)
+- Retrieve the available OpenAI and Gemini models automatically, and notify the user when the selected model is no longer available
+- Replace the admin-ajax call for the single image generation with a REST API endpoint
+- Update translations, Vite and the Composer dependencies
+
 = 2.8.2 =
 - Improve compatibility scoping vendor dependencies
 
@@ -313,4 +338,5 @@ Once you’ve re-entered your API Key (and, if desired, added the constants), hi
 - Plugin released
 
 == Upgrade Notice ==
-- Plugin released
+= 3.0.0 =
+Adds the Google Gemini generation method and the optional automatic rendering of the alt text in the content (disabled by default). The OpenAI and Gemini model lists are now retrieved from the provider APIs: after the update, check that the model selected on the options page is still available.
