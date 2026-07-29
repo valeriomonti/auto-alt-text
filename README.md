@@ -135,6 +135,8 @@ add_filter( 'aatxt_content_image_alt_text', function ( string $altText, int $att
 
 If you prefer generating alt text in batch (e.g., to avoid slow/error-prone processing in the Media Library UI), you can use WP-CLI.
 
+This is the recommended way to work on a large media library: the bulk action of the Media Library runs inside a single web request, so depending on your server settings (PHP `max_execution_time`, PHP-FPM `request_terminate_timeout`, web server or proxy timeouts) it can be interrupted before all the selected images have been processed, leaving the remaining ones without alt text. WP-CLI is not affected by those limits, shows a progress bar and can be resumed with `--offset`.
+
 Generate alt text for a list of attachment IDs:
 
 ```bash
@@ -168,15 +170,15 @@ In case of an error in the API call, the image will still be uploaded but withou
 
 If the generation of the alt text via AI is set, in case of errors, to avoid blocking the editorial work, the image is loaded anyway but without the alt text being compiled.
 
-When a call to the Azure or OpenAI API fails, a record containing the error message is saved in a custom database table.
+When a call to the OpenAI, Anthropic, Gemini or Azure API fails, a record containing the error message is saved in a custom database table.
 In this case, the cause of the error can be seen on the Auto Alt Text -> Error log page.
 
 ### Encryption Constants
 
 We **strongly recommend** defining the new plugin-specific constants in your `wp-config.php`:
 
-`define( 'AAT_ENCRYPTION_KEY',  'a_random_string_of_at_least_64_characters' );`
-`define( 'AAT_ENCRYPTION_SALT', 'another_random_string_of_at_least_64_characters' );`
+`define( 'AATXT_ENCRYPTION_KEY',  'a_random_string_of_at_least_64_characters' );`
+`define( 'AATXT_ENCRYPTION_SALT', 'another_random_string_of_at_least_64_characters' );`
 
 You will find these two define(...) lines already generated for you on the Auto Alt Text » Options page – simply copy & paste them before the `/* That's all, stop editing! Happy publishing. */` line in your `wp-config.php`.
 

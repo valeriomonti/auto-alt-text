@@ -110,6 +110,8 @@ Developers can also control this behaviour with two filters: `aatxt_content_alt_
 ### WP-CLI
 If you prefer generating alt text in batch (e.g., to avoid processing in the Media Library UI), you can use WP-CLI.
 
+This is the recommended way to work on a large media library: the bulk action of the Media Library runs inside a single web request, so depending on your server settings (PHP `max_execution_time`, PHP-FPM `request_terminate_timeout`, web server or proxy timeouts) it can be interrupted before all the selected images have been processed. WP-CLI is not affected by those limits, shows a progress bar and can be resumed with `--offset`.
+
 Generate alt text for a list of attachment IDs:
 
 `wp auto-alt-text generate --ids=123,456,789`
@@ -132,7 +134,7 @@ Force overwrite of existing alt text (even if “Keep existing alt text” is en
 ### Logging
 If the generation of the alt text via AI is set, in case of errors, to avoid blocking the editorial work, the image is loaded anyway but without the alt text being compiled.
 
-When a call to the Azure or OpenAI API fails, a record containing the error message is saved in a custom database table.
+When a call to the OpenAI, Anthropic, Gemini or Azure API fails, a record containing the error message is saved in a custom database table.
 In this case, the cause of the error can be seen on the Auto Alt Text -> Error log page.
 
 ## External Services
@@ -170,8 +172,8 @@ For accurate information on privacy and conditions of use, please directly consu
 
 We **strongly recommend** defining the new plugin-specific constants in your `wp-config.php`:
 
-`define( 'AAT_ENCRYPTION_KEY',  'a_random_string_of_at_least_64_characters' );`
-`define( 'AAT_ENCRYPTION_SALT', 'another_random_string_of_at_least_64_characters' );`
+`define( 'AATXT_ENCRYPTION_KEY',  'a_random_string_of_at_least_64_characters' );`
+`define( 'AATXT_ENCRYPTION_SALT', 'another_random_string_of_at_least_64_characters' );`
 
 You will find these two define(...) lines already generated for you on the Auto Alt Text » Options page – simply copy & paste them before the `/* That's all, stop editing! Happy publishing. */` line in your `wp-config.php`.
 
@@ -189,10 +191,55 @@ AI Engine developer and related parties are not responsible for any problems or 
 == Frequently Asked Questions ==
 
 = Is it mandatory to use external AI services? =
-No, but if you want to leverage the capabilities of AI, you must have an Azure or OpenAI account. Otherwise, you can choose one of the two methods that do not use AI.
+No. If you want to leverage the capabilities of AI you need an account with one of the supported services (OpenAI, Anthropic Claude, Google Gemini or Azure) and its API Key. Otherwise you can choose one of the two methods that do not use AI, which copy the title of the article or the title of the image.
 
 = Which generation method should I choose to obtain an accurate description of the image? =
-If you wish to obtain the most accurate description possible of the image, you should use the "OpenAI's APIs" or "Azure's APIs" method.
+Any of the AI based methods ("OpenAI's APIs", "Anthropic's APIs", "Google Gemini's APIs" or "Azure's APIs") produces a real description of the image content. The methods based on the article title or on the attachment title do not look at the image at all, so they should be seen as a quick fallback rather than as an accessible description.
+
+= Is the plugin free? =
+The plugin is free, but the AI services are not: every generated alt text is a request billed by the provider you chose, according to its own pricing. Costs and usage statistics are always available in your provider account.
+
+= Can I generate the alt text for images already in the media library? =
+Yes, in three ways: the "Generate alt text" bulk action in the list view of the Media Library, the "Generate alt text" button available on each image in the grid view, and the WP-CLI command `wp auto-alt-text generate`, which is the recommended option for large libraries.
+
+= I have a lot of images: should I use the Media Library or WP-CLI? =
+Use WP-CLI. Every alt text is generated with a call to an external AI service, so the time needed for the bulk action in the Media Library grows with the number of selected images: depending on your server settings (PHP `max_execution_time`, PHP-FPM `request_terminate_timeout`, the web server or the proxy timeout) the request can be interrupted before all the images have been processed, and the images that were not reached yet are left without alt text. WP-CLI runs from the command line, where those web timeouts do not apply, it shows a progress bar, and it can be resumed at any time. As a rule of thumb, use the Media Library for a handful of images and WP-CLI from a few dozen upwards.
+
+= How do I generate the alt text with WP-CLI? =
+Run the command from the root of your WordPress installation. For a specific list of attachment IDs:
+
+`wp auto-alt-text generate --ids=123,456,789`
+
+For the whole media library, in batches:
+
+`wp auto-alt-text generate --all --limit=200 --offset=0`
+`wp auto-alt-text generate --all --limit=200 --offset=200`
+
+Only images are processed; other attachments are skipped.
+
+= Which options does the WP-CLI command support? =
+`--ids=<ids>` a comma-separated list of attachment IDs; `--all` to process the image attachments of the whole library; `--limit=<n>` the maximum number of attachments to process (it defaults to 100 with `--all`); `--offset=<n>` where to start from when using `--all`; `--dry-run` to see what would happen without saving anything (the alt text is still generated, and therefore still billed by the AI provider); `--force` to regenerate the alt text even when the "Keep existing alt text" option is enabled. Either `--ids` or `--all` is required. At the end of the run the command prints how many images were processed, updated, skipped and failed.
+
+= Does the WP-CLI command use the settings of the plugin? =
+Yes. It generates the alt text with the same method, provider, model and prompt you configured in the plugin options, it honours the "Keep existing alt text" option (unless you pass `--force`) and it writes the failed calls to the Auto Alt Text » Error log page, exactly like the Media Library. Remember that each generated alt text is a request billed by your AI provider, so it is a good idea to try a small batch first (for example with `--limit=10`) before processing thousands of images.
+
+= Will my existing alt texts be overwritten? =
+No, if the "Keep existing alt text" option is enabled: images that already have an alt text are skipped. The single image button in the media library always regenerates the alt text of the image you clicked, and with WP-CLI you can force the regeneration with the `--force` flag.
+
+= Why is no alt text generated for some images? =
+The most common reason is the file format: each service supports a specific set of MIME types (for example Google Gemini does not support GIF images), and images that are not supported by the selected provider are skipped. It may also be that the API call failed: in that case the image is uploaded anyway, without alt text, and the reason is recorded on the Auto Alt Text » Error log page.
+
+= Does the plugin modify the content of my posts? =
+No. The "Automatically render alt text in content" option only adds the missing alt attributes to the HTML that is sent to the browser, while your saved content stays untouched. If you disable the option, the content is served exactly as it was before.
+
+= Why does the model list show “— API Key required —”? =
+The available models are requested to OpenAI and to Google using your API Key, so the list can only be built after the key has been saved. Enter the API Key, save the options, and the list will be populated. The list is cached and refreshed automatically every time you save a new API Key.
+
+= What happens if the model I selected is retired by the provider? =
+A notice is displayed in the administration area and the alt text generation keeps working using the least expensive available model, so your uploads are never blocked. Open the plugin options and select a new model to dismiss the notice.
+
+= Where can I see why a generation failed? =
+On the Auto Alt Text » Error log page: whenever a call to an AI service fails, the error message returned by the provider is stored in a dedicated database table. Errors never block the upload of the image.
 
 = Why do I see the error “There was a problem with the encryption of your API Key for alt text generation. Please re-enter the key and save”? =
 
@@ -200,15 +247,15 @@ This message appears because the plugin was unable to decrypt your stored API Ke
 
 **Common causes**
 - You (or another plugin) have changed the WordPress authentication salts (`LOGGED_IN_KEY` / `LOGGED_IN_SALT`) in your `wp-config.php` after saving the API Key.
-- You haven’t defined the recommended plugin-specific constants (`AAT_ENCRYPTION_KEY` / `AAT_ENCRYPTION_SALT`) in your `wp-config.php`, so the plugin fell back to the WordPress salts.
+- You haven’t defined the recommended plugin-specific constants (`AATXT_ENCRYPTION_KEY` / `AATXT_ENCRYPTION_SALT`) in your `wp-config.php`, so the plugin fell back to the WordPress salts.
 
 **How to fix**
 1. Go to **Auto Alt Text » Options** in your WordPress admin.
 2. Re-enter your API Key in the appropriate field and click **Save Changes**.
 3. _(Recommended)_ Prevent this issue in the future by adding these lines **before** the `/* That's all, stop editing! Happy publishing. */` comment in your `wp-config.php`:
    ```
-   define( 'AAT_ENCRYPTION_KEY',  'a_random_string_of_at_least_64_characters' );
-   define( 'AAT_ENCRYPTION_SALT', 'another_random_string_of_at_least_64_characters' );
+   define( 'AATXT_ENCRYPTION_KEY',  'a_random_string_of_at_least_64_characters' );
+   define( 'AATXT_ENCRYPTION_SALT', 'another_random_string_of_at_least_64_characters' );
    ```
 
 This ensures the plugin uses stable, plugin-specific values for encryption and won’t break if WordPress salts are ever changed again.
