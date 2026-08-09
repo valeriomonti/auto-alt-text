@@ -183,3 +183,13 @@ We **strongly recommend** defining the new plugin-specific constants in your `wp
 You will find these two define(...) lines already generated for you on the Auto Alt Text » Options page – simply copy & paste them before the `/* That's all, stop editing! Happy publishing. */` line in your `wp-config.php`.
 
 If you choose not to add them, the plugin will continue to work normally, but it will fall back to using your WordPress `LOGGED_IN_KEY` / `LOGGED_IN_SALT`, which may break if those salts are ever changed.
+
+## Credits
+
+A big thank you to everyone who has improved this plugin with a pull request:
+
+- [@joshuafredrickson](https://github.com/joshuafredrickson) — native WP-CLI support for batch alt text generation, and the Media Library bulk action redirect fix that preserves pagination and filters
+
+The full list is available on the [contributors page](https://github.com/valeriomonti/auto-alt-text/graphs/contributors).
+
+Contributions are welcome: feel free to open an issue or a pull request.

@@ -271,6 +271,16 @@ Once you’ve re-entered your API Key (and, if desired, added the constants), hi
 5. Bulk alt text generation
 6. Single image alt text generation
 
+== Credits ==
+
+A big thank you to everyone who has improved this plugin with a pull request:
+
+* [joshuafredrickson](https://github.com/joshuafredrickson) - native WP-CLI support for batch alt text generation, and the Media Library bulk action redirect fix that preserves pagination and filters
+
+The full list is available on the [contributors page](https://github.com/valeriomonti/auto-alt-text/graphs/contributors).
+
+Contributions are welcome: feel free to open an issue or a pull request on [GitHub](https://github.com/valeriomonti/auto-alt-text).
+
 == Changelog ==
 = 3.0.0 =
 - Implement the Google Gemini API as an alternative for generating alt text
