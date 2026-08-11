@@ -169,24 +169,19 @@ final class AltTextService
             // Typology not registered in factory
             return '';
         } catch (OpenAIException $e) {
-            $this->logError($attachmentId, 'OpenAI', $e->getMessage());
-            $this->dispatchFailureEvent($attachmentId, 'OpenAI', $e);
+            $this->handleFailure($attachmentId, 'OpenAI', $e);
             return '';
         } catch (AnthropicException $e) {
-            $this->logError($attachmentId, 'Anthropic', $e->getMessage());
-            $this->dispatchFailureEvent($attachmentId, 'Anthropic', $e);
+            $this->handleFailure($attachmentId, 'Anthropic', $e);
             return '';
         } catch (GeminiException $e) {
-            $this->logError($attachmentId, 'Gemini', $e->getMessage());
-            $this->dispatchFailureEvent($attachmentId, 'Gemini', $e);
+            $this->handleFailure($attachmentId, 'Gemini', $e);
             return '';
         } catch (AzureException $e) {
-            $this->logError($attachmentId, 'Azure', $e->getMessage());
-            $this->dispatchFailureEvent($attachmentId, 'Azure', $e);
+            $this->handleFailure($attachmentId, 'Azure', $e);
             return '';
         } catch (Exception $e) {
-            $this->logError($attachmentId, 'Unknown', $e->getMessage());
-            $this->dispatchFailureEvent($attachmentId, 'Unknown', $e);
+            $this->handleFailure($attachmentId, 'Unknown', $e);
             return '';
         }
     }
@@ -328,15 +323,32 @@ final class AltTextService
     }
 
     /**
-     * Dispatch a failure event after alt text generation fails.
+     * Handle a generation failure, making sure it is persisted exactly once.
+     *
+     * The error is normally logged by the listeners subscribed to
+     * AltTextGenerationFailedEvent (see LogErrorListener). We only write to the
+     * repository ourselves when nothing else did: either because no dispatcher
+     * is configured, or because no subscribed listener marked the event as
+     * handled. Logging here unconditionally would duplicate every row in the
+     * error log.
      *
      * @param int $imageId WordPress attachment ID
      * @param string $provider Provider name
      * @param Exception $exception The exception that caused the failure
      * @return void
      */
-    private function dispatchFailureEvent(int $imageId, string $provider, Exception $exception): void
+    private function handleFailure(int $imageId, string $provider, Exception $exception): void
     {
-        $this->dispatchEvent(new AltTextGenerationFailedEvent($imageId, $provider, $exception));
+        if ($this->eventDispatcher === null) {
+            $this->logError($imageId, $provider, $exception->getMessage());
+            return;
+        }
+
+        $event = new AltTextGenerationFailedEvent($imageId, $provider, $exception);
+        $this->eventDispatcher->dispatch($event);
+
+        if (!$event->isHandled()) {
+            $this->logError($imageId, $provider, $exception->getMessage());
+        }
     }
 }
