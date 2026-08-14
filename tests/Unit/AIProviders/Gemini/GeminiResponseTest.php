@@ -9,6 +9,7 @@ use AATXT\App\AIProviders\Gemini\GeminiResponse;
 use AATXT\App\Configuration\AIProviderConfig;
 use AATXT\App\Exceptions\Gemini\GeminiException;
 use AATXT\App\Infrastructure\Http\HttpClientInterface;
+use AATXT\App\Infrastructure\Http\ImageFetcherInterface;
 use AATXT\Config\Constants;
 use PHPUnit\Framework\TestCase;
 
@@ -25,6 +26,21 @@ class GeminiResponseTest extends TestCase
     private const TEST_PROMPT = 'Describe this image for alt text';
     private const TEST_MODEL = 'gemini-3.5-flash';
     private const TEST_IMAGE_URL = 'https://example.com/image.jpg';
+    private const TEST_IMAGE_BASE64 = 'aW1hZ2UtYnl0ZXM=';
+
+    /**
+     * Build an image fetcher returning fixed base64 contents.
+     *
+     * The Interactions API only accepts inline image data, so every request
+     * carries the encoded bytes of the image.
+     */
+    private function imageFetcher(string $base64 = self::TEST_IMAGE_BASE64): ImageFetcherInterface
+    {
+        $fetcher = $this->createStub(ImageFetcherInterface::class);
+        $fetcher->method('fetchAsBase64')->willReturn($base64);
+
+        return $fetcher;
+    }
 
     /**
      * Build a successful Interaction API response containing the given text.
@@ -66,7 +82,7 @@ class GeminiResponseTest extends TestCase
         $config->method('getPrompt')->willReturn(self::TEST_PROMPT);
         $config->method('getModel')->willReturn(self::TEST_MODEL);
 
-        $provider = new GeminiResponse($httpClient, $config);
+        $provider = new GeminiResponse($httpClient, $config, $this->imageFetcher());
 
         // Act
         $result = $provider->response(self::TEST_IMAGE_URL);
@@ -88,7 +104,7 @@ class GeminiResponseTest extends TestCase
         $config->method('getPrompt')->willReturn(self::TEST_PROMPT);
         $config->method('getModel')->willReturn(self::TEST_MODEL);
 
-        $provider = new GeminiResponse($httpClient, $config);
+        $provider = new GeminiResponse($httpClient, $config, $this->imageFetcher());
 
         // Assert
         $this->expectException(GeminiException::class);
@@ -115,7 +131,7 @@ class GeminiResponseTest extends TestCase
         $config->method('getPrompt')->willReturn(self::TEST_PROMPT);
         $config->method('getModel')->willReturn(self::TEST_MODEL);
 
-        $provider = new GeminiResponse($httpClient, $config);
+        $provider = new GeminiResponse($httpClient, $config, $this->imageFetcher());
 
         // Assert
         $this->expectException(GeminiException::class);
@@ -140,7 +156,7 @@ class GeminiResponseTest extends TestCase
         $config->method('getPrompt')->willReturn(self::TEST_PROMPT);
         $config->method('getModel')->willReturn(self::TEST_MODEL);
 
-        $provider = new GeminiResponse($httpClient, $config);
+        $provider = new GeminiResponse($httpClient, $config, $this->imageFetcher());
 
         // Assert
         $this->expectException(GeminiException::class);
@@ -176,7 +192,7 @@ class GeminiResponseTest extends TestCase
         $config->method('getPrompt')->willReturn(self::TEST_PROMPT);
         $config->method('getModel')->willReturn(self::TEST_MODEL);
 
-        $provider = new GeminiResponse($httpClient, $config);
+        $provider = new GeminiResponse($httpClient, $config, $this->imageFetcher());
 
         // Act
         $provider->response(self::TEST_IMAGE_URL);
@@ -205,7 +221,7 @@ class GeminiResponseTest extends TestCase
                     $hasText = false;
                     foreach ($input as $item) {
                         if ($item['type'] === 'image'
-                            && $item['uri'] === self::TEST_IMAGE_URL
+                            && $item['data'] === self::TEST_IMAGE_BASE64
                             && $item['mime_type'] === 'image/jpeg') {
                             $hasImage = true;
                         }
@@ -223,7 +239,7 @@ class GeminiResponseTest extends TestCase
         $config->method('getPrompt')->willReturn(self::TEST_PROMPT);
         $config->method('getModel')->willReturn(self::TEST_MODEL);
 
-        $provider = new GeminiResponse($httpClient, $config);
+        $provider = new GeminiResponse($httpClient, $config, $this->imageFetcher());
 
         // Act
         $provider->response(self::TEST_IMAGE_URL);
@@ -257,7 +273,7 @@ class GeminiResponseTest extends TestCase
         $config->method('getPrompt')->willReturn(self::TEST_PROMPT);
         $config->method('getModel')->willReturn(self::TEST_MODEL);
 
-        $provider = new GeminiResponse($httpClient, $config);
+        $provider = new GeminiResponse($httpClient, $config, $this->imageFetcher());
 
         // Act
         $provider->response('https://example.com/image.png?w=300');
@@ -278,7 +294,7 @@ class GeminiResponseTest extends TestCase
         $config->method('getPrompt')->willReturn(self::TEST_PROMPT);
         $config->method('getModel')->willReturn(self::TEST_MODEL);
 
-        $provider = new GeminiResponse($httpClient, $config);
+        $provider = new GeminiResponse($httpClient, $config, $this->imageFetcher());
 
         // Assert - empty string is falsy, so it should throw
         $this->expectException(GeminiException::class);
@@ -297,7 +313,7 @@ class GeminiResponseTest extends TestCase
         $httpClient = $this->createStub(HttpClientInterface::class);
         $config = $this->createStub(AIProviderConfig::class);
 
-        $provider = new GeminiResponse($httpClient, $config);
+        $provider = new GeminiResponse($httpClient, $config, $this->imageFetcher());
 
         // Act
         $mimeTypes = $provider->getSupportedMimeTypes();
@@ -321,7 +337,7 @@ class GeminiResponseTest extends TestCase
         $httpClient = $this->createStub(HttpClientInterface::class);
         $config = $this->createStub(AIProviderConfig::class);
 
-        $provider = new GeminiResponse($httpClient, $config);
+        $provider = new GeminiResponse($httpClient, $config, $this->imageFetcher());
 
         // Assert
         $this->assertTrue($provider->supportsImage('image/jpeg'));
@@ -351,9 +367,9 @@ class GeminiResponseTest extends TestCase
         $emptyConfig = $this->createStub(AIProviderConfig::class);
         $emptyConfig->method('getApiKey')->willReturn('');
 
-        $validProvider = new GeminiResponse($httpClient, $validConfig);
-        $shortProvider = new GeminiResponse($httpClient, $shortConfig);
-        $emptyProvider = new GeminiResponse($httpClient, $emptyConfig);
+        $validProvider = new GeminiResponse($httpClient, $validConfig, $this->imageFetcher());
+        $shortProvider = new GeminiResponse($httpClient, $shortConfig, $this->imageFetcher());
+        $emptyProvider = new GeminiResponse($httpClient, $emptyConfig, $this->imageFetcher());
 
         // Assert
         $this->assertTrue($validProvider->validateCredentials());
@@ -375,8 +391,8 @@ class GeminiResponseTest extends TestCase
         $configWithoutKey = $this->createStub(AIProviderConfig::class);
         $configWithoutKey->method('getApiKey')->willReturn('');
 
-        $providerWithKey = new GeminiResponse($httpClient, $configWithKey);
-        $providerWithoutKey = new GeminiResponse($httpClient, $configWithoutKey);
+        $providerWithKey = new GeminiResponse($httpClient, $configWithKey, $this->imageFetcher());
+        $providerWithoutKey = new GeminiResponse($httpClient, $configWithoutKey, $this->imageFetcher());
 
         // Assert
         $this->assertTrue($providerWithKey->hasApiKey());
@@ -422,7 +438,7 @@ class GeminiResponseTest extends TestCase
         $config->method('getPrompt')->willReturn(self::TEST_PROMPT);
         $config->method('getModel')->willReturn($retiredModel);
 
-        $provider = new GeminiResponse($httpClient, $config, $registry);
+        $provider = new GeminiResponse($httpClient, $config, $this->imageFetcher(), $registry);
 
         $provider->response(self::TEST_IMAGE_URL);
     }
@@ -458,7 +474,7 @@ class GeminiResponseTest extends TestCase
         $config->method('getPrompt')->willReturn(self::TEST_PROMPT);
         $config->method('getModel')->willReturn($currentModel);
 
-        $provider = new GeminiResponse($httpClient, $config, $registry);
+        $provider = new GeminiResponse($httpClient, $config, $this->imageFetcher(), $registry);
 
         $provider->response(self::TEST_IMAGE_URL);
     }
@@ -501,8 +517,103 @@ class GeminiResponseTest extends TestCase
         $config->method('getPrompt')->willReturn(self::TEST_PROMPT);
         $config->method('getModel')->willReturn(self::TEST_MODEL);
 
-        $provider = new GeminiResponse($httpClient, $config);
+        $provider = new GeminiResponse($httpClient, $config, $this->imageFetcher());
 
         $this->assertEquals($expectedAltText, $provider->response(self::TEST_IMAGE_URL));
+    }
+
+    /**
+     * @covers ::response
+     *
+     * The Interactions API does not download image URLs on our behalf: sending
+     * "uri" gets the request rejected. Guards against reintroducing it.
+     */
+    public function testItSendsTheImageInlineAndNeverAsUri(): void
+    {
+        $httpClient = $this->createMock(HttpClientInterface::class);
+        $httpClient->expects($this->once())
+            ->method('post')
+            ->with(
+                $this->anything(),
+                $this->anything(),
+                $this->callback(function ($body) {
+                    foreach ($body['input'] as $item) {
+                        if ($item['type'] === 'image') {
+                            return !isset($item['uri'])
+                                && ($item['data'] ?? null) === self::TEST_IMAGE_BASE64;
+                        }
+                    }
+                    return false;
+                })
+            )
+            ->willReturn($this->interactionResponse('Alt text'));
+
+        $config = $this->createStub(AIProviderConfig::class);
+        $config->method('getApiKey')->willReturn(self::TEST_API_KEY);
+        $config->method('getPrompt')->willReturn(self::TEST_PROMPT);
+        $config->method('getModel')->willReturn(self::TEST_MODEL);
+
+        $provider = new GeminiResponse($httpClient, $config, $this->imageFetcher());
+
+        $provider->response(self::TEST_IMAGE_URL);
+    }
+
+    /**
+     * @covers ::response
+     *
+     * Recent flash models think by default and burn tokens even on trivial
+     * prompts, which is pure waste for a 125 character alt text.
+     */
+    public function testItRequestsMinimalThinking(): void
+    {
+        $httpClient = $this->createMock(HttpClientInterface::class);
+        $httpClient->expects($this->once())
+            ->method('post')
+            ->with(
+                $this->anything(),
+                $this->anything(),
+                $this->callback(function ($body) {
+                    return ($body['generation_config']['thinking_level'] ?? null) === 'minimal';
+                })
+            )
+            ->willReturn($this->interactionResponse('Alt text'));
+
+        $config = $this->createStub(AIProviderConfig::class);
+        $config->method('getApiKey')->willReturn(self::TEST_API_KEY);
+        $config->method('getPrompt')->willReturn(self::TEST_PROMPT);
+        $config->method('getModel')->willReturn(self::TEST_MODEL);
+
+        $provider = new GeminiResponse($httpClient, $config, $this->imageFetcher());
+
+        $provider->response(self::TEST_IMAGE_URL);
+    }
+
+    /**
+     * @covers ::response
+     *
+     * An unreadable image must surface as a GeminiException so the event system
+     * logs it and the upload proceeds without alt text, instead of bubbling up
+     * a raw exception.
+     */
+    public function testItThrowsExceptionWhenTheImageCannotBeRead(): void
+    {
+        $httpClient = $this->createMock(HttpClientInterface::class);
+        $httpClient->expects($this->never())->method('post');
+
+        $fetcher = $this->createStub(ImageFetcherInterface::class);
+        $fetcher->method('fetchAsBase64')
+            ->willThrowException(new \Exception('Unable to download the image: HTTP status 404'));
+
+        $config = $this->createStub(AIProviderConfig::class);
+        $config->method('getApiKey')->willReturn(self::TEST_API_KEY);
+        $config->method('getPrompt')->willReturn(self::TEST_PROMPT);
+        $config->method('getModel')->willReturn(self::TEST_MODEL);
+
+        $provider = new GeminiResponse($httpClient, $config, $fetcher);
+
+        $this->expectException(GeminiException::class);
+        $this->expectExceptionMessageMatches('/Unable to read the image/');
+
+        $provider->response(self::TEST_IMAGE_URL);
     }
 }

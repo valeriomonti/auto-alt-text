@@ -8,19 +8,31 @@ use AATXT\App\AIProviders\Contracts\SupportsImageValidation;
 use AATXT\App\Configuration\AIProviderConfig;
 use AATXT\App\Exceptions\Gemini\GeminiException;
 use AATXT\App\Infrastructure\Http\HttpClientInterface;
+use AATXT\App\Infrastructure\Http\ImageFetcherInterface;
 use AATXT\Config\Constants;
 
 /**
  * Google Gemini provider for generating alt text using Gemini models.
  *
  * Uses the Interactions API (https://ai.google.dev/gemini-api/docs/image-understanding),
- * passing the publicly reachable image URL directly to the API.
+ * sending the image inline as base64 data. The API does not fetch image URLs on
+ * our behalf, so the bytes must travel with the request - which also means
+ * generation works on sites Google cannot reach (local, staging, HTTP auth).
  *
  * Implements SupportsImageValidation and RequiresAuthentication interfaces
  * following the Interface Segregation Principle.
  */
 class GeminiResponse implements AIProviderInterface, SupportsImageValidation, RequiresAuthentication
 {
+    /**
+     * Reasoning effort requested from the model.
+     *
+     * Recent flash models think by default, spending hundreds of tokens even on
+     * trivial prompts. Describing an image in 125 characters does not need it,
+     * so the lowest level keeps cost and latency down.
+     */
+    private const THINKING_LEVEL = 'minimal';
+
     /**
      * @var HttpClientInterface
      */
@@ -32,6 +44,11 @@ class GeminiResponse implements AIProviderInterface, SupportsImageValidation, Re
     private $config;
 
     /**
+     * @var ImageFetcherInterface
+     */
+    private $imageFetcher;
+
+    /**
      * @var GeminiModelsRegistry|null
      */
     private $modelsRegistry;
@@ -41,16 +58,19 @@ class GeminiResponse implements AIProviderInterface, SupportsImageValidation, Re
      *
      * @param HttpClientInterface $httpClient HTTP client for API calls
      * @param AIProviderConfig $config Configuration with API key, prompt, and model
+     * @param ImageFetcherInterface $imageFetcher Reads the image bytes to send inline
      * @param GeminiModelsRegistry|null $modelsRegistry Optional registry used to fall back
      *        to a currently-available model when the configured one has been retired
      */
     public function __construct(
         HttpClientInterface $httpClient,
         AIProviderConfig $config,
+        ImageFetcherInterface $imageFetcher,
         ?GeminiModelsRegistry $modelsRegistry = null
     ) {
         $this->httpClient = $httpClient;
         $this->config = $config;
+        $this->imageFetcher = $imageFetcher;
         $this->modelsRegistry = $modelsRegistry;
     }
 
@@ -111,6 +131,12 @@ class GeminiResponse implements AIProviderInterface, SupportsImageValidation, Re
             throw new GeminiException('Gemini API key is missing in plugin settings');
         }
 
+        try {
+            $imageData = $this->imageFetcher->fetchAsBase64($imageUrl);
+        } catch (\Exception $e) {
+            throw new GeminiException('Unable to read the image: ' . $e->getMessage());
+        }
+
         $payload = [
             "model" => $this->resolveModel(),
             "input" => [
@@ -120,9 +146,12 @@ class GeminiResponse implements AIProviderInterface, SupportsImageValidation, Re
                 ],
                 [
                     "type"      => "image",
-                    "uri"       => $imageUrl,
                     "mime_type" => $this->mimeTypeFromUrl($imageUrl),
+                    "data"      => $imageData,
                 ],
+            ],
+            "generation_config" => [
+                "thinking_level" => self::THINKING_LEVEL,
             ],
         ];
 

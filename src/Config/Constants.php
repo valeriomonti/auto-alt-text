@@ -45,11 +45,13 @@ class Constants
     const AATXT_OPTION_FIELD_API_KEY_GEMINI = 'aatxt_api_key_gemini';
     const AATXT_OPTION_FIELD_MODEL_GEMINI = 'aatxt_model_gemini';
     const AATXT_OPTION_FIELD_PROMPT_GEMINI = 'aatxt_prompt_gemini';
+    const AATXT_GEMINI_FLASH_3_6 = 'gemini-3.6-flash';
     const AATXT_GEMINI_FLASH_3_5 = 'gemini-3.5-flash';
     const AATXT_GEMINI_FLASH_2_5 = 'gemini-2.5-flash';
-    const AATXT_GEMINI_FALLBACK_MODEL = self::AATXT_GEMINI_FLASH_3_5;
+    const AATXT_GEMINI_FALLBACK_MODEL = self::AATXT_GEMINI_FLASH_3_6;
 
     const AATXT_OPTION_FIELD_MODEL_GEMINI_OPTIONS = [
+        self::AATXT_GEMINI_FLASH_3_6 => 'Gemini 3.6 Flash',
         self::AATXT_GEMINI_FLASH_3_5 => 'Gemini 3.5 Flash',
         self::AATXT_GEMINI_FLASH_2_5 => 'Gemini 2.5 Flash',
     ];
