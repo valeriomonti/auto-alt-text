@@ -4,7 +4,7 @@ Donate link: https://ko-fi.com/valeriomonti
 Tags: alt text, alt tag, accessibility, openai, seo
 Requires at least: 6.2.0
 Tested up to: 6.9.0
-Stable tag: 3.0.0
+Stable tag: 3.0.1
 Requires PHP: 7.4
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
@@ -282,11 +282,14 @@ The full list is available on the [contributors page](https://github.com/valerio
 Contributions are welcome: feel free to open an issue or a pull request on [GitHub](https://github.com/valeriomonti/auto-alt-text).
 
 == Changelog ==
-= 3.0.0 =
+= 3.0.1 =
 - Implement the Google Gemini API as an alternative for generating alt text
 - Fill missing alt text on images rendered in the post content, using the alt text stored in the media library, without modifying the saved content
 - Add the "Automatically render alt text in content" option to enable/disable this behaviour (disabled by default)
 - Retrieve the available OpenAI and Gemini models automatically, and notify the user when the selected model is no longer available
+- Add the Gemini 3.6 Flash model, now used as the fallback when the selected one is unavailable
+- Send the image to Gemini inline instead of by URL, so the generation also works on sites Google cannot reach (local, staging, HTTP authentication)
+- Avoid duplicate entries in the error log
 - Replace the admin-ajax call for the single image generation with a REST API endpoint
 - Update translations, Vite and the Composer dependencies
 
@@ -395,5 +398,5 @@ Contributions are welcome: feel free to open an issue or a pull request on [GitH
 - Plugin released
 
 == Upgrade Notice ==
-= 3.0.0 =
+= 3.0.1 =
 Adds the Google Gemini generation method and the optional automatic rendering of the alt text in the content (disabled by default). The OpenAI and Gemini model lists are now retrieved from the provider APIs: after the update, check that the model selected on the options page is still available.

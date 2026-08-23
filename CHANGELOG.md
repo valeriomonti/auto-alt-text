@@ -6,6 +6,19 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [v3.0.1] - 2026-08-14
+First 3.x release published on the WordPress.org repository: v3.0.0 was tagged on GitHub but never shipped, so users upgrade from v2.8.2 straight to this version.
+
+### Added
+- Add the Gemini 3.6 Flash model, now used as the fallback when the configured one is no longer available
+
+### Fixed
+- Send the image to Gemini inline as base64 data instead of by URL: the Interactions API does not fetch image URLs on our behalf, so the generation failed on every site Google cannot reach (local, staging, HTTP authentication)
+- Avoid duplicate entries in the error log
+
+### Changed
+- Request a `minimal` thinking level from Gemini: recent flash models think by default and spend tokens even on a 125 character alt text
+
 ## [v3.0.0] - 2026-07-28
 ### Added
 - Implement the Google Gemini API as an alternative for generating alt text, with its own API Key, model and prompt options
