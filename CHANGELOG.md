@@ -6,6 +6,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [v3.0.2] - 2026-08-24
+
+### Fixed
+- Pin the outbound API requests to IPv4: cURL prefers the IPv6 address, and Google geolocates several datacenter IPv6 ranges outside the regions where the Gemini API is offered, so the generation failed with an HTTP 400 about the caller's location on hosts where the very same request succeeds over IPv4
+- Explain in the error log that a rejection based on the caller's location depends on the server outbound IP, not on the API key or the plan
+- Request a `low` thinking level from Gemini instead of `minimal`: the accepted levels differ per model and are not exposed by the models endpoint, so a newly released model could reach the settings dropdown and then refuse every request, as Gemini 3.7 Flash does
+
 ## [v3.0.1] - 2026-08-14
 First 3.x release published on the WordPress.org repository: v3.0.0 was tagged on GitHub but never shipped, so users upgrade from v2.8.2 straight to this version.
 
