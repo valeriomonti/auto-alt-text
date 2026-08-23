@@ -29,9 +29,16 @@ class GeminiResponse implements AIProviderInterface, SupportsImageValidation, Re
      *
      * Recent flash models think by default, spending hundreds of tokens even on
      * trivial prompts. Describing an image in 125 characters does not need it,
-     * so the lowest level keeps cost and latency down.
+     * so a low level keeps cost and latency down.
+     *
+     * Not "minimal", even though it is cheaper still: the accepted levels vary
+     * per model and the models endpoint does not expose them, while the model
+     * list shown in the settings is fetched from that endpoint. A model can
+     * therefore reach the dropdown before we know what it takes -
+     * gemini-3.7-flash rejects "minimal" with HTTP 400, allowing only medium,
+     * low and high. "low" is the cheapest level common to every model.
      */
-    private const THINKING_LEVEL = 'minimal';
+    private const THINKING_LEVEL = 'low';
 
     /**
      * @var HttpClientInterface

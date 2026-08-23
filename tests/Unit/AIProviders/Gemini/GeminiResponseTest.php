@@ -562,9 +562,10 @@ class GeminiResponseTest extends TestCase
      * @covers ::response
      *
      * Recent flash models think by default and burn tokens even on trivial
-     * prompts, which is pure waste for a 125 character alt text.
+     * prompts, which is pure waste for a 125 character alt text. The level has
+     * to stay "low" rather than "minimal": not every model accepts the latter.
      */
-    public function testItRequestsMinimalThinking(): void
+    public function testItRequestsLowThinking(): void
     {
         $httpClient = $this->createMock(HttpClientInterface::class);
         $httpClient->expects($this->once())
@@ -573,7 +574,7 @@ class GeminiResponseTest extends TestCase
                 $this->anything(),
                 $this->anything(),
                 $this->callback(function ($body) {
-                    return ($body['generation_config']['thinking_level'] ?? null) === 'minimal';
+                    return ($body['generation_config']['thinking_level'] ?? null) === 'low';
                 })
             )
             ->willReturn($this->interactionResponse('Alt text'));
