@@ -6,6 +6,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [v3.0.3] - 2026-08-24
+
+### Changed
+Test plugin on WordPress 7.1
+
 ## [v3.0.2] - 2026-08-24
 
 ### Fixed

@@ -3,8 +3,8 @@ Contributors: valeriomonti
 Donate link: https://ko-fi.com/valeriomonti
 Tags: alt text, alt tag, accessibility, openai, seo
 Requires at least: 6.2.0
-Tested up to: 6.9.0
-Stable tag: 3.0.2
+Tested up to: 7.1.0
+Stable tag: 3.0.3
 Requires PHP: 7.4
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
@@ -282,12 +282,10 @@ The full list is available on the [contributors page](https://github.com/valerio
 Contributions are welcome: feel free to open an issue or a pull request on [GitHub](https://github.com/valeriomonti/auto-alt-text).
 
 == Changelog ==
-= 3.0.2 =
+= 3.0.3 =
 - Send the API requests over IPv4, so the generation no longer fails on hosts whose IPv6 address Google geolocates outside the supported regions
 - Explain in the error log that a rejection based on the location depends on the server outbound IP, not on the API key or the plan
 - Ask Gemini for a low thinking level instead of a minimal one, which the most recent models refuse
-
-= 3.0.1 =
 - Implement the Google Gemini API as an alternative for generating alt text
 - Fill missing alt text on images rendered in the post content, using the alt text stored in the media library, without modifying the saved content
 - Add the "Automatically render alt text in content" option to enable/disable this behaviour (disabled by default)
@@ -401,10 +399,3 @@ Contributions are welcome: feel free to open an issue or a pull request on [GitH
 
 = 1.0.0 =
 - Plugin released
-
-== Upgrade Notice ==
-= 3.0.2 =
-Fixes the Gemini generation failing with an HTTP 400 about your location on hosts that reach Google over IPv6, and the "not a supported thinking level" error on the most recent Gemini models.
-
-= 3.0.1 =
-Adds the Google Gemini generation method and the optional automatic rendering of the alt text in the content (disabled by default). The OpenAI and Gemini model lists are now retrieved from the provider APIs: after the update, check that the model selected on the options page is still available.
