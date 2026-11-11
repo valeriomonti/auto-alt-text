@@ -20,7 +20,7 @@ It can also fill in, on the fly, the missing alt texts of the images already pub
 
 Please ensure you have the following tools installed:
 
-- PHP version: >= 7.4
+- PHP version: >= 8.0
 - composer
 - node version: 18
 - npm

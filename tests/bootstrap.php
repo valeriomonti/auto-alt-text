@@ -8,8 +8,7 @@
 
 declare(strict_types=1);
 
-// Suppress deprecation warnings from PHP-DI BEFORE loading autoloader
-// PHP-DI 6.x has deprecation warnings on PHP 8.4+ but is compatible with PHP 7.4+
+// Suppress deprecation warnings from dev dependencies (PHPUnit 9.x) on newer PHP versions
 error_reporting(E_ALL & ~E_DEPRECATED);
 
 // Load scoped (Strauss-prefixed) dependencies first, then the Composer autoloader
@@ -17,9 +16,6 @@ if (file_exists(dirname(__DIR__) . '/vendor-prefixed/autoload.php')) {
     require_once dirname(__DIR__) . '/vendor-prefixed/autoload.php';
 }
 require_once dirname(__DIR__) . '/vendor/autoload.php';
-
-// Restore full error reporting after autoload (except deprecations from dependencies)
-error_reporting(E_ALL & ~E_DEPRECATED);
 
 // Define plugin directory
 define('AATXT_PLUGIN_DIR', dirname(__DIR__));

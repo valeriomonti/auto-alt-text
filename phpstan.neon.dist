@@ -11,7 +11,7 @@ parameters:
         - src/Config/Constants.php
 
     # PHP version compatibility
-    phpVersion: 70400
+    phpVersion: 80000
 
     # Treat code as if it was running in WordPress environment
     bootstrapFiles:
