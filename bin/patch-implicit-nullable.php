@@ -10,12 +10,21 @@
  *
  * Upstream fixed this only in PHP-DI 7.x, which requires PHP >= 8.0, so we can't
  * upgrade without dropping the plugin's PHP 7.4 support. Instead we rewrite the
- * scoped copies in vendor-prefixed/ after Strauss runs. `?Type $x = null` and
- * `A|B|null $x = null` are both valid PHP 7.4 syntax, so the minimum version is
- * unaffected.
+ * scoped copies in vendor-prefixed/ after Strauss runs. `?Type $x = null` is
+ * valid PHP 7.4 syntax, so the minimum version is unaffected. Union types
+ * (`A|B $x = null`, PHP 8.0+) get `|null` appended instead; they can only appear
+ * in dependencies that already require PHP 8.
+ *
+ * Intersection types (`A&B $x = null`, PHP 8.1+) cannot be fixed this way: the
+ * explicit form `(A&B)|null` needs PHP 8.2. They are reported, never rewritten,
+ * and make the script exit non-zero so the problem cannot go unnoticed.
  *
  * Run automatically by `composer strauss`. Idempotent: already-explicit
  * signatures are left alone.
+ *
+ * On PHP 7.4 `#[...]` is tokenized as a line comment, so a parameter sharing a
+ * line with an attribute is invisible there. Such code cannot run on PHP 7.4
+ * anyway; the release workflow's PHP 8.4 lint catches anything left over.
  *
  * Usage: php bin/patch-implicit-nullable.php [--check] [directory]
  *
@@ -40,6 +49,7 @@ if (!is_dir($targetDir)) {
 
 $patchedFiles = 0;
 $patchedParams = 0;
+$unfixable = [];
 
 $files = new RecursiveIteratorIterator(
     new RecursiveDirectoryIterator(realpath($targetDir), FilesystemIterator::SKIP_DOTS)
@@ -51,18 +61,39 @@ foreach ($files as $file) {
     }
 
     $original = file_get_contents($file->getPathname());
-    $patched = patchSource($original, $count);
+    if ($original === false) {
+        fwrite(STDERR, "patch-implicit-nullable: cannot read {$file->getPathname()}\n");
+        exit(1);
+    }
+
+    $patched = patchSource($original, $count, $problems);
+
+    foreach ($problems as $problem) {
+        $unfixable[] = "{$file->getPathname()}:{$problem}";
+    }
 
     if ($count > 0) {
-        if (!$checkOnly) {
-            file_put_contents($file->getPathname(), $patched);
+        if (!$checkOnly && file_put_contents($file->getPathname(), $patched) === false) {
+            fwrite(STDERR, "patch-implicit-nullable: cannot write {$file->getPathname()}\n");
+            exit(1);
         }
         $patchedFiles++;
         $patchedParams += $count;
     }
 }
 
+if ($unfixable !== []) {
+    fwrite(STDERR, "patch-implicit-nullable: implicitly nullable intersection-type parameter(s) cannot be made explicit while keeping PHP 7.4 support:\n");
+    foreach ($unfixable as $location) {
+        fwrite(STDERR, "  - {$location}\n");
+    }
+}
+
 if ($checkOnly) {
+    if ($unfixable !== []) {
+        exit(1);
+    }
+
     if ($patchedParams > 0) {
         fwrite(STDERR, "patch-implicit-nullable: {$patchedParams} implicitly nullable parameter(s) still present in {$patchedFiles} file(s) — the patch did not run.\n");
         exit(1);
@@ -74,12 +105,18 @@ if ($checkOnly) {
 
 echo "patch-implicit-nullable: {$patchedParams} parameter(s) made explicitly nullable in {$patchedFiles} file(s).\n";
 
+exit($unfixable === [] ? 0 : 1);
+
 /**
  * Rewrites every implicitly nullable parameter in a PHP source string.
+ *
+ * @param array<int, string>|null $problems Filled with "line N: description" for
+ *                                         parameters that cannot be rewritten.
  */
-function patchSource(string $code, ?int &$count = null): string
+function patchSource(string $code, ?int &$count = null, ?array &$problems = null): string
 {
     $count = 0;
+    $problems = [];
     $tokens = token_get_all($code);
     $total = count($tokens);
 
@@ -113,12 +150,18 @@ function patchSource(string $code, ?int &$count = null): string
         $parameters = splitParameters($tokens, $open + 1, $close - 1);
 
         foreach ($parameters as $position => $parameter) {
+            $problem = null;
             $edits = nullableEdits(
                 $tokens,
                 $parameter[0],
                 $parameter[1],
-                hasLaterRequiredParameter($tokens, $parameters, $position)
+                hasLaterRequiredParameter($tokens, $parameters, $position),
+                $problem
             );
+
+            if ($problem !== null) {
+                $problems[] = 'line ' . lineOf($tokens, $parameter[0], $parameter[1]) . ": {$problem}";
+            }
 
             if ($edits === []) {
                 continue;
@@ -159,10 +202,11 @@ function patchSource(string $code, ?int &$count = null): string
 /**
  * Decides whether a single parameter needs patching.
  *
- * @param bool $beforeRequired Whether a later parameter of the same signature is required.
+ * @param bool        $beforeRequired Whether a later parameter of the same signature is required.
+ * @param string|null $problem        Set when the parameter needs patching but cannot be patched.
  * @return array<int, array{0:string,1:int,2:string}> Edits as [kind, token index, text].
  */
-function nullableEdits(array $tokens, int $start, int $end, bool $beforeRequired): array
+function nullableEdits(array $tokens, int $start, int $end, bool $beforeRequired, ?string &$problem = null): array
 {
     $i = skipParameterPrefix($tokens, $start, $end);
     if ($i === null) {
@@ -181,8 +225,16 @@ function nullableEdits(array $tokens, int $start, int $end, bool $beforeRequired
             break;
         }
 
+        // PHP 8.1+ tokenizes the by-reference `&` of `A &$x` separately from the
+        // `&` of an intersection type `A&B $x`.
+        if (defined('T_AMPERSAND_FOLLOWED_BY_VAR_OR_VARARG')
+            && isTokenOfType($token, [T_AMPERSAND_FOLLOWED_BY_VAR_OR_VARARG])
+        ) {
+            break;
+        }
+
         if ($token === '&') {
-            // `A&B $x` is an intersection type; `A &$x` is by-reference.
+            // PHP < 8.1: `A&B $x` is an intersection type; `A &$x` is by-reference.
             $next = nextSignificant($tokens, $i, $end);
             if ($next === null || isTokenOfType($tokens[$next], [T_VARIABLE, T_ELLIPSIS])) {
                 break;
@@ -216,12 +268,14 @@ function nullableEdits(array $tokens, int $start, int $end, bool $beforeRequired
         return []; // Already explicitly nullable.
     }
 
-    if (strpos($type, '&') !== false) {
-        return []; // Intersection types cannot be nullable.
-    }
-
     // `mixed` already includes null; `null` on its own is fine too.
     if (preg_match('/(^|\|)\s*\\\\?(mixed|null)\s*($|\|)/i', $type)) {
+        return [];
+    }
+
+    if (strpos($type, '&') !== false) {
+        // Only `(A&B)|null` (PHP 8.2+) is valid here — report, don't rewrite.
+        $problem = "intersection type `{$type}` with a null default";
         return [];
     }
 
@@ -311,6 +365,8 @@ function skipParameterPrefix(array $tokens, int $start, int $end): ?int
 function nullDefaultTokens(array $tokens, int $start, int $end): ?array
 {
     $equals = null;
+    $value = '';
+    $last = null;
 
     for ($i = $start; $i <= $end; $i++) {
         $token = $tokens[$i];
@@ -324,29 +380,47 @@ function nullDefaultTokens(array $tokens, int $start, int $end): ?array
                 $equals = $i;
                 continue;
             }
-            if (isTokenOfType($token, [T_VARIABLE])) {
+            // The variable name, optionally passed by reference (`&$x`).
+            if ($token === '&' || isTokenOfType($token, [T_VARIABLE])
+                || (defined('T_AMPERSAND_FOLLOWED_BY_VAR_OR_VARARG')
+                    && isTokenOfType($token, [T_AMPERSAND_FOLLOWED_BY_VAR_OR_VARARG]))
+            ) {
                 continue;
             }
             return null;
         }
 
-        // After `=` we only accept the bare constant `null`.
-        if (isTokenOfType($token, [T_STRING]) && strtolower($token[1]) === 'null'
-            && nextSignificant($tokens, $i, $end) === null
-        ) {
-            // Swallow the whitespace before `=` too, so removing the default
-            // doesn't leave a dangling space after the variable name.
-            if ($equals > $start && isTokenOfType($tokens[$equals - 1], [T_WHITESPACE])) {
-                $equals--;
-            }
+        $value .= is_array($token) ? $token[1] : $token;
+        $last = $i;
+    }
 
-            return range($equals, $i);
-        }
-
+    // After `=` we only accept the constant `null`, optionally fully qualified
+    // (`\null` is one token on PHP 8, two on PHP 7.4).
+    if ($equals === null || !in_array(strtolower($value), ['null', '\\null'], true)) {
         return null;
     }
 
-    return null;
+    // Swallow the whitespace before `=` too, so removing the default doesn't
+    // leave a dangling space after the variable name.
+    if ($equals > $start && isTokenOfType($tokens[$equals - 1], [T_WHITESPACE])) {
+        $equals--;
+    }
+
+    return range($equals, $last);
+}
+
+/**
+ * Line number of the first token of a parameter, for error messages.
+ */
+function lineOf(array $tokens, int $start, int $end): int
+{
+    for ($i = $start; $i <= $end; $i++) {
+        if (is_array($tokens[$i]) && !isTokenOfType($tokens[$i], [T_WHITESPACE])) {
+            return $tokens[$i][2];
+        }
+    }
+
+    return is_array($tokens[$start]) ? $tokens[$start][2] : 0;
 }
 
 /**

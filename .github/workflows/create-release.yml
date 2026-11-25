@@ -33,8 +33,12 @@ jobs:
         run: |
           composer install --no-dev --no-interaction --optimize-autoloader --classmap-authoritative
       - name: Scope dependencies with Strauss
+        env:
+          # Keep in sync with brianhenryie/strauss in composer.json require-dev, so
+          # releases are scoped by the same version that was tested locally.
+          STRAUSS_VERSION: '0.27.3'
         run: |
-          curl -o strauss.phar -L -s https://github.com/BrianHenryIE/strauss/releases/latest/download/strauss.phar
+          curl -o strauss.phar -fsSL "https://github.com/BrianHenryIE/strauss/releases/download/${STRAUSS_VERSION}/strauss.phar"
           php strauss.phar
           php bin/patch-implicit-nullable.php
           composer dump-autoload --no-dev --optimize --classmap-authoritative
@@ -87,6 +91,25 @@ jobs:
           fi
 
           echo "Release payload is clean"
+      - name: Setup PHP 8.4 for the deprecation check
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4'
+          tools: none
+      - name: Verify no deprecations on PHP 8.4
+        run: |
+          # The --check above only sees what the patcher knows how to parse. Linting
+          # on PHP 8.4 lets the engine itself report every compile-time deprecation
+          # (implicit nullable included) in the code we are about to ship.
+          problems=$(find src vendor-prefixed -name '*.php' -print0 \
+            | xargs -0 -n1 php -d error_reporting=E_ALL -d display_errors=1 -l 2>&1 \
+            | grep -E 'Deprecated|Parse error|Fatal error' || true)
+          if [ -n "$problems" ]; then
+            echo "Error: PHP 8.4 reports problems in the release payload:"
+            echo "$problems"
+            exit 1
+          fi
+          echo "No deprecations on PHP 8.4"
       - name: Create zip file
         run: |
           zip -r auto-alt-text.zip *.php composer.json composer.lock readme.txt dist languages src vendor vendor-prefixed -x "*.git*"
