@@ -1,18 +1,20 @@
 # Auto Alt Text
 
 This WordPress plugin allows you to automatically generate an Alt Text for images uploaded into the media library.
-This plugin is able to use the AI of external services of OpenaAI or Azure to generate an alt text that is as faithful as possible to the content of the image.
+This plugin is able to use the AI of external services of OpenAI, Anthropic Claude, Google Gemini or Azure to generate an alt text that is as faithful as possible to the content of the image.
 
 ## Features
 
 This plugin allows you to generate alt texts in the following ways:
 
-- using Openai APIs (GPT-5, GPT-5 mini, GPT-5 nano, GPT-4o, GPT-4o Mini, o1 Mini)
+- using Openai APIs (the most recently released models and any other compatible model available on your account)
 - using Claude Anthropic APIs
 - using Google Gemini APIs
 - using Azure APIs for computational vision;
 - recovering the title of the image
 - recovering the title of the article in which the image is uploaded
+
+It can also fill in, on the fly, the missing alt texts of the images already published in your content, using the alt text stored in the media library.
 
 ## Prerequisites
 
@@ -47,6 +49,8 @@ In your OpenAI account, retrieve the following data to enter on the options page
 
 - API Key
 
+Once the API Key is saved, the list of the models available on your account is retrieved directly from OpenAI (and cached), so you can always choose among the up-to-date models. If the model you selected is retired by OpenAI, a notice is displayed in the administration area and the least expensive available model is used as a fallback until you choose a new one.
+
 Choose the model you want to use for generating the alt text.
 Enter a prompt for generating the alt text according to your needs.
 
@@ -64,6 +68,8 @@ Enter a prompt for generating the alt text according to your needs.
 In your Google AI Studio account, retrieve the following data to enter on the options page:
 
 - API Key
+
+Once the API Key is saved, the list of the models available on your account is retrieved directly from Google (and cached), so you can always choose among the up-to-date models. If the model you selected is retired by Google, a notice is displayed in the administration area and the least expensive available model is used as a fallback until you choose a new one.
 
 Choose the model you want to use for generating the alt text.
 Enter a prompt for generating the alt text according to your needs.
@@ -103,11 +109,33 @@ Once the plugin is configured, each time an image is uploaded to the media libra
 
 For images already in the media library, you can create bulk alt texts. Open the Media Library in the "list" view, select the images for which to generate the alt text, and choose the "Generate alt text" bulk action. (Depending on the number of images chosen and their weight, this may take some time.)
 
-You can also generate the alt text of a single image directly from the media library. Open the Media Library in “grid” mode, choose the image for which to generate the alt text, and click the “Generate alt text” button. In no time the alt text field will be overwritten by the generated description.
+You can also generate the alt text of a single image directly from the media library. Open the Media Library in “grid” mode, choose the image for which to generate the alt text, and click the “Generate alt text” button. In no time the alt text field will be overwritten by the generated description. The generation is performed through the REST endpoint `POST /wp-json/auto-alt-text/v1/generate-alt-text`, protected by the `wp_rest` nonce and by an `edit_post` capability check.
+
+## Automatic alt text rendering in content
+
+Images that were inserted in your posts and pages before the alt text was generated keep the empty alt attribute saved in the content, even after the media library has been filled.
+
+By enabling the "Automatically render alt text in content" option, when a page is displayed the plugin scans every image of the content and, for those without an alt text, it writes the alt text stored in the media library (when available). Images that already have an alt text are never touched, and the saved content is not modified: the alt text is only added to the rendered HTML.
+
+Attachments are resolved through the `wp-image-<ID>` class added by the editor and, as a fallback, through the image `src` URL. The option is disabled by default and it is independent of the chosen generation method.
+
+Two filters are available for developers:
+
+```php
+// Skip the processing for a specific request/context.
+add_filter( 'aatxt_content_alt_text_enabled', '__return_false' );
+
+// Filter the alt text resolved from the media library before it is written into the tag.
+add_filter( 'aatxt_content_image_alt_text', function ( string $altText, int $attachmentId ): string {
+    return $altText;
+}, 10, 2 );
+```
 
 ## WP-CLI
 
 If you prefer generating alt text in batch (e.g., to avoid slow/error-prone processing in the Media Library UI), you can use WP-CLI.
+
+This is the recommended way to work on a large media library: the bulk action of the Media Library runs inside a single web request, so depending on your server settings (PHP `max_execution_time`, PHP-FPM `request_terminate_timeout`, web server or proxy timeouts) it can be interrupted before all the selected images have been processed, leaving the remaining ones without alt text. WP-CLI is not affected by those limits, shows a progress bar and can be resumed with `--offset`.
 
 Generate alt text for a list of attachment IDs:
 
@@ -142,16 +170,26 @@ In case of an error in the API call, the image will still be uploaded but withou
 
 If the generation of the alt text via AI is set, in case of errors, to avoid blocking the editorial work, the image is loaded anyway but without the alt text being compiled.
 
-When a call to the Azure or OpenAI API fails, a record containing the error message is saved in a custom database table.
+When a call to the OpenAI, Anthropic, Gemini or Azure API fails, a record containing the error message is saved in a custom database table.
 In this case, the cause of the error can be seen on the Auto Alt Text -> Error log page.
 
 ### Encryption Constants
 
 We **strongly recommend** defining the new plugin-specific constants in your `wp-config.php`:
 
-`define( 'AAT_ENCRYPTION_KEY',  'a_random_string_of_at_least_64_characters' );`
-`define( 'AAT_ENCRYPTION_SALT', 'another_random_string_of_at_least_64_characters' );`
+`define( 'AATXT_ENCRYPTION_KEY',  'a_random_string_of_at_least_64_characters' );`
+`define( 'AATXT_ENCRYPTION_SALT', 'another_random_string_of_at_least_64_characters' );`
 
 You will find these two define(...) lines already generated for you on the Auto Alt Text » Options page – simply copy & paste them before the `/* That's all, stop editing! Happy publishing. */` line in your `wp-config.php`.
 
 If you choose not to add them, the plugin will continue to work normally, but it will fall back to using your WordPress `LOGGED_IN_KEY` / `LOGGED_IN_SALT`, which may break if those salts are ever changed.
+
+## Credits
+
+A big thank you to everyone who has improved this plugin with a pull request:
+
+- [@joshuafredrickson](https://github.com/joshuafredrickson) — native WP-CLI support for batch alt text generation, and the Media Library bulk action redirect fix that preserves pagination and filters
+
+The full list is available on the [contributors page](https://github.com/valeriomonti/auto-alt-text/graphs/contributors).
+
+Contributions are welcome: feel free to open an issue or a pull request.

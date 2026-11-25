@@ -22,7 +22,9 @@ use AATXT\App\Infrastructure\Cache\CacheInterface;
 use AATXT\App\Infrastructure\Cache\WordPressTransientCache;
 use AATXT\App\Infrastructure\Database\ErrorLogSchema;
 use AATXT\App\Infrastructure\Http\HttpClientInterface;
+use AATXT\App\Infrastructure\Http\ImageFetcherInterface;
 use AATXT\App\Infrastructure\Http\WordPressHttpClient;
+use AATXT\App\Infrastructure\Http\WordPressImageFetcher;
 use AATXT\App\Infrastructure\Repositories\ConfigRepositoryInterface;
 use AATXT\App\Infrastructure\Repositories\ErrorLogRepository;
 use AATXT\App\Infrastructure\Repositories\ErrorLogRepositoryInterface;
@@ -31,6 +33,7 @@ use AATXT\App\Logging\DBLogger;
 use AATXT\App\Services\AltTextGeneratorFactory;
 use AATXT\App\Services\ConfigBasedGeneratorFactory;
 use AATXT\App\Services\AltTextService;
+use AATXT\App\Services\ContentAltTextEnricher;
 use AATXT\App\Utilities\AssetsManager;
 use AATXT\App\AIProviders\Decorators\DecoratorBuilder;
 use AATXT\App\AltTextGeneratorAi;
@@ -146,6 +149,10 @@ final class Container
             // Maps HttpClientInterface to WordPress HTTP client implementation
             HttpClientInterface::class => \AATXT\Vendor\DI\create(WordPressHttpClient::class),
 
+            // Image fetcher abstraction
+            // Reads image bytes for providers that require inline (base64) image data
+            ImageFetcherInterface::class => \AATXT\Vendor\DI\create(WordPressImageFetcher::class),
+
             // Cache abstraction
             // Maps CacheInterface to the WordPress Transients API
             CacheInterface::class => \AATXT\Vendor\DI\create(WordPressTransientCache::class),
@@ -247,12 +254,14 @@ final class Container
                 ),
 
             // Google Gemini Provider
-            // Automatically injects HttpClientInterface, GeminiConfig and the models registry
-            // (the registry powers the runtime fallback when the configured model is unavailable)
+            // Automatically injects HttpClientInterface, GeminiConfig, the image fetcher
+            // (the Interactions API only accepts inline base64 image data) and the models
+            // registry (which powers the runtime fallback when the configured model is unavailable)
             GeminiResponse::class => \AATXT\Vendor\DI\create(GeminiResponse::class)
                 ->constructor(
                     \AATXT\Vendor\DI\get(HttpClientInterface::class),
                     \AATXT\Vendor\DI\get(GeminiConfig::class),
+                    \AATXT\Vendor\DI\get(ImageFetcherInterface::class),
                     \AATXT\Vendor\DI\get(GeminiModelsRegistry::class)
                 ),
 
@@ -438,6 +447,11 @@ final class Container
                     $container->get(EventDispatcherInterface::class)
                 );
             },
+
+            // Content Alt Text Enricher
+            // Fills missing alt text on <img> tags in rendered post content
+            // by resolving each image against the media library (the_content filter)
+            ContentAltTextEnricher::class => \AATXT\Vendor\DI\create(ContentAltTextEnricher::class),
 
             // Assets Manager
             // Handles Vite manifest loading for versioned assets

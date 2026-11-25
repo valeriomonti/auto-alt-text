@@ -5,9 +5,45 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+
+## [v3.0.3] - 2026-08-24
+
+### Changed
+Test plugin on WordPress 7.1
+
+## [v3.0.2] - 2026-08-24
+
+### Fixed
+- Pin the outbound API requests to IPv4: cURL prefers the IPv6 address, and Google geolocates several datacenter IPv6 ranges outside the regions where the Gemini API is offered, so the generation failed with an HTTP 400 about the caller's location on hosts where the very same request succeeds over IPv4
+- Explain in the error log that a rejection based on the caller's location depends on the server outbound IP, not on the API key or the plan
+- Request a `low` thinking level from Gemini instead of `minimal`: the accepted levels differ per model and are not exposed by the models endpoint, so a newly released model could reach the settings dropdown and then refuse every request, as Gemini 3.7 Flash does
+
+## [v3.0.1] - 2026-08-14
+First 3.x release published on the WordPress.org repository: v3.0.0 was tagged on GitHub but never shipped, so users upgrade from v2.8.2 straight to this version.
+
 ### Added
-- Implement the Google Gemini API as an alternative for generating alt text
-- Retrieve openai models automatically
+- Add the Gemini 3.6 Flash model, now used as the fallback when the configured one is no longer available
+
+### Fixed
+- Send the image to Gemini inline as base64 data instead of by URL: the Interactions API does not fetch image URLs on our behalf, so the generation failed on every site Google cannot reach (local, staging, HTTP authentication)
+- Avoid duplicate entries in the error log
+
+### Changed
+- Request a `minimal` thinking level from Gemini: recent flash models think by default and spend tokens even on a 125 character alt text
+
+## [v3.0.0] - 2026-07-28
+### Added
+- Implement the Google Gemini API as an alternative for generating alt text, with its own API Key, model and prompt options
+- Fill missing alt text on images rendered in the post content: on the front-end, images without an alt text inherit the one stored in the media library, without modifying the saved content
+- Add the "Automatically render alt text in content" option to enable/disable the content rendering (disabled by default)
+- Add the `aatxt_content_alt_text_enabled` and `aatxt_content_image_alt_text` filters to control the content rendering
+- Retrieve the available OpenAI and Gemini models automatically from the provider APIs, with a cached list refreshed when the API Key is saved
+- Show an admin notice when the previously selected OpenAI or Gemini model is no longer available, falling back to the least expensive available model until a new one is chosen
+
+### Changed
+- Replace the admin-ajax call for the single image generation with a REST API endpoint (`POST /auto-alt-text/v1/generate-alt-text`), protected by the `wp_rest` nonce and an `edit_post` permission callback
+- Update the Italian translations and the translation template
+- Update Vite and the Composer dependencies
 
 ## [v2.8.2] - 2026-06-04
 ### Changed

@@ -399,6 +399,17 @@ msgstr ""
 msgid "If checked, the existing alt text of images will not be overwritten."
 msgstr ""
 
+#: src/App/Admin/PluginOptions.php:772
+msgid "Automatically render alt text in content"
+msgstr ""
+
+#: src/App/Admin/PluginOptions.php:773
+msgid ""
+"If checked, when a page is displayed, images in the content that have no alt "
+"text are automatically filled with the alt text stored in the media library "
+"(when available). It does not modify your saved content."
+msgstr ""
+
 #: src/App/AIProviders/Azure/AzureTranslator.php:106
 #: src/App/AIProviders/Azure/AzureTranslator.php:112
 msgid "No language retrieved: maybe the translation endpoint is wrong. Please check it out and try again."

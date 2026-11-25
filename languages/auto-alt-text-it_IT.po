@@ -521,6 +521,20 @@ msgstr ""
 "Se spuntato, gli alt text già esistenti delle immagini non verranno "
 "sovrascritti."
 
+#: src/App/Admin/PluginOptions.php:772
+msgid "Automatically render alt text in content"
+msgstr "Applica automaticamente gli alt text nel contenuto"
+
+#: src/App/Admin/PluginOptions.php:773
+msgid ""
+"If checked, when a page is displayed, images in the content that have no alt "
+"text are automatically filled with the alt text stored in the media library "
+"(when available). It does not modify your saved content."
+msgstr ""
+"Se spuntato, quando una pagina viene visualizzata, le immagini nel contenuto "
+"prive di alt text vengono riempite automaticamente con l'alt text salvato "
+"nella libreria media (se disponibile). Non modifica il contenuto salvato."
+
 #: src/App/AIProviders/Azure/AzureTranslator.php:106
 #: src/App/AIProviders/Azure/AzureTranslator.php:112
 msgid ""

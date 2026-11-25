@@ -45,11 +45,13 @@ class Constants
     const AATXT_OPTION_FIELD_API_KEY_GEMINI = 'aatxt_api_key_gemini';
     const AATXT_OPTION_FIELD_MODEL_GEMINI = 'aatxt_model_gemini';
     const AATXT_OPTION_FIELD_PROMPT_GEMINI = 'aatxt_prompt_gemini';
+    const AATXT_GEMINI_FLASH_3_6 = 'gemini-3.6-flash';
     const AATXT_GEMINI_FLASH_3_5 = 'gemini-3.5-flash';
     const AATXT_GEMINI_FLASH_2_5 = 'gemini-2.5-flash';
-    const AATXT_GEMINI_FALLBACK_MODEL = self::AATXT_GEMINI_FLASH_3_5;
+    const AATXT_GEMINI_FALLBACK_MODEL = self::AATXT_GEMINI_FLASH_3_6;
 
     const AATXT_OPTION_FIELD_MODEL_GEMINI_OPTIONS = [
+        self::AATXT_GEMINI_FLASH_3_6 => 'Gemini 3.6 Flash',
         self::AATXT_GEMINI_FLASH_3_5 => 'Gemini 3.5 Flash',
         self::AATXT_GEMINI_FLASH_2_5 => 'Gemini 2.5 Flash',
     ];
@@ -67,13 +69,15 @@ class Constants
     const AATXT_OPTION_FIELD_REGION_AZURE_TRANSLATE_INSTANCE = 'aatxt_region_azure_translate_instance';
     const AATXT_OPTION_FIELD_LANGUAGE_AZURE_TRANSLATE_INSTANCE = 'aatxt_language_azure_translate_instance';
     const AATXT_OPTION_FIELD_PRESERVE_EXISTING_ALT_TEXT = 'aatxt_preserve_existing_alt_text';
+    const AATXT_OPTION_FIELD_AUTO_RENDER_ALT_TEXT = 'aatxt_auto_render_alt_text';
     const AATXT_LEGACY_ENCRYPTION_MIGRATION_DONE = 'aatxt_legacy_encryption_migration_done';
     const AATXT_IMAGE_URL_TAG = '%imageUrl%';
     const AATXT_OPENAI_DEFAULT_PROMPT = "Act like an SEO expert and write an English alt text of up to 125 characters for this image.";
     const AATXT_OPENAI_RESPONSES_API_ENDPOINT = 'https://api.openai.com/v1/responses';
     const AATXT_OPENAI_MODELS_ENDPOINT = 'https://api.openai.com/v1/models';
     const AATXT_OPENAI_MODELS_CACHE_KEY = 'aatxt_openai_models_cache';
-    const AATXT_AJAX_GENERATE_ALT_TEXT_NONCE = 'generate_alt_text_nonce';
+    const AATXT_REST_NAMESPACE = 'auto-alt-text/v1';
+    const AATXT_REST_ROUTE_GENERATE_ALT_TEXT = '/generate-alt-text';
     const AATXT_OPENAI_ALLOWED_MIME_TYPES = [
         'image/png',
         'image/jpeg',

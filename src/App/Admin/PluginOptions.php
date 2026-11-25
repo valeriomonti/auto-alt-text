@@ -765,6 +765,16 @@ define('AATXT_ENCRYPTION_SALT', '<?php echo esc_html( $suggestedSalt ); ?>');
                 echo '<input type="checkbox" name="' . esc_attr(Constants::AATXT_OPTION_FIELD_PRESERVE_EXISTING_ALT_TEXT) . '" value="1" class="notRequired" ' . checked(1, $preserveAltText, false) . ' />';
                 echo '</div>';
 
+                // Standalone option (no .plugin-option class, so it is always visible
+                // regardless of the selected generation method): this feature works on
+                // the front-end content and is independent of how alt texts are created.
+                echo '<div>';
+                echo '<label for="' . esc_attr(Constants::AATXT_OPTION_FIELD_AUTO_RENDER_ALT_TEXT) . '">' . esc_html__('Automatically render alt text in content', 'auto-alt-text') . '</label>';
+                echo '<p class="description">' . esc_html__("If checked, when a page is displayed, images in the content that have no alt text are automatically filled with the alt text stored in the media library (when available). It does not modify your saved content.", 'auto-alt-text') . '</p>';
+                $autoRenderAltText = get_option(Constants::AATXT_OPTION_FIELD_AUTO_RENDER_ALT_TEXT);
+                echo '<input type="checkbox" name="' . esc_attr(Constants::AATXT_OPTION_FIELD_AUTO_RENDER_ALT_TEXT) . '" value="1" class="notRequired" ' . checked(1, $autoRenderAltText, false) . ' />';
+                echo '</div>';
+
                 submit_button();
                 ?>
             </form>
@@ -804,6 +814,7 @@ define('AATXT_ENCRYPTION_SALT', '<?php echo esc_html( $suggestedSalt ); ?>');
         register_setting('auto_alt_text_options', Constants::AATXT_OPTION_FIELD_REGION_AZURE_TRANSLATE_INSTANCE, [self::class, 'sanitizeText']);
         register_setting('auto_alt_text_options', Constants::AATXT_OPTION_FIELD_LANGUAGE_AZURE_TRANSLATE_INSTANCE, [self::class, 'sanitizeText']);
         register_setting('auto_alt_text_options', Constants::AATXT_OPTION_FIELD_PRESERVE_EXISTING_ALT_TEXT);
+        register_setting('auto_alt_text_options', Constants::AATXT_OPTION_FIELD_AUTO_RENDER_ALT_TEXT);
         register_setting('auto_alt_text_options', Constants::AATXT_OPTION_FIELD_API_KEY_ANTHROPIC);
         register_setting('auto_alt_text_options', Constants::AATXT_OPTION_FIELD_PROMPT_ANTHROPIC, [self::class, 'sanitizeTextArea']);
         register_setting('auto_alt_text_options', Constants::AATXT_OPTION_FIELD_MODEL_ANTHROPIC, [self::class, 'sanitizeText']);
@@ -942,6 +953,17 @@ define('AATXT_ENCRYPTION_SALT', '<?php echo esc_html( $suggestedSalt ); ?>');
     public static function preserveExistingAltText(): bool
     {
         return get_option(Constants::AATXT_OPTION_FIELD_PRESERVE_EXISTING_ALT_TEXT);
+    }
+
+    /**
+     * Whether missing alt text should be filled automatically when rendering
+     * post content on the front-end. Unchecked (disabled) by default.
+     *
+     * @return bool
+     */
+    public static function autoRenderAltText(): bool
+    {
+        return (bool) get_option(Constants::AATXT_OPTION_FIELD_AUTO_RENDER_ALT_TEXT);
     }
 
     public static function sanitizeUrl($input): string
