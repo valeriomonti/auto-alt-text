@@ -6,6 +6,15 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [v3.0.4] - 2026-11-27
+
+### Fixed
+Fix the "Implicitly marking parameter as nullable is deprecated" notices emitted by the bundled PHP-DI library on PHP 8.4 and 8.5, which on some setups (e.g. Sage/Acorn themes) also caused a fatal "headers already sent" error in the admin
+
+### Changed
+Run Strauss automatically after `composer install`, with a guard against running it twice
+Update development dependencies flagged by Dependabot (composer/composer, league/flysystem, vite, postcss-selector-parser)
+
 ## [v3.0.3] - 2026-08-24
 
 ### Changed

@@ -4,7 +4,7 @@ Donate link: https://ko-fi.com/valeriomonti
 Tags: alt text, alt tag, accessibility, openai, seo
 Requires at least: 6.2.0
 Tested up to: 7.1.0
-Stable tag: 3.0.3
+Stable tag: 3.0.4
 Requires PHP: 7.4
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
@@ -282,6 +282,10 @@ The full list is available on the [contributors page](https://github.com/valerio
 Contributions are welcome: feel free to open an issue or a pull request on [GitHub](https://github.com/valeriomonti/auto-alt-text).
 
 == Changelog ==
+= 3.0.4 =
+- Fix the "Implicitly marking parameter as nullable is deprecated" notices on PHP 8.4 and 8.5, which on some setups (e.g. Sage/Acorn themes) also caused a fatal "headers already sent" error in the admin
+- Update development dependencies flagged by security advisories
+
 = 3.0.3 =
 - Send the API requests over IPv4, so the generation no longer fails on hosts whose IPv6 address Google geolocates outside the supported regions
 - Explain in the error log that a rejection based on the location depends on the server outbound IP, not on the API key or the plan
