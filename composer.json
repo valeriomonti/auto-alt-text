@@ -40,9 +40,13 @@
         "phpstan": "vendor/bin/phpstan analyse --memory-limit=1G",
         "phpstan:baseline": "vendor/bin/phpstan analyse --memory-limit=1G --generate-baseline",
         "strauss": [
+            "@php bin/assert-unscoped-vendor.php",
             "@php vendor/bin/strauss",
             "@php bin/patch-implicit-nullable.php",
             "@composer dump-autoload"
+        ],
+        "post-install-cmd": [
+            "@strauss"
         ]
     },
     "extra": {

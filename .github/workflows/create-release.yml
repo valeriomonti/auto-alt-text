@@ -31,7 +31,9 @@ jobs:
           rm -f composer.lock
       - name: Install production dependencies
         run: |
-          composer install --no-dev --no-interaction --optimize-autoloader --classmap-authoritative
+          # --no-scripts: post-install-cmd would run the dev-only Strauss binary;
+          # the next step scopes dependencies with the pinned phar instead.
+          composer install --no-dev --no-scripts --no-interaction --optimize-autoloader --classmap-authoritative
       - name: Scope dependencies with Strauss
         env:
           # Keep in sync with brianhenryie/strauss in composer.json require-dev, so
